@@ -1,0 +1,733 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Intervals.icu API",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://intervals.icu",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "APIKey": [],
+      "AccessToken": []
+    }
+  ],
+  "paths": {
+    "/api/v1/athlete/{id}/wellness/{date}": {
+      "get": {
+        "tags": [
+          "Wellness"
+        ],
+        "summary": "Get wellness record for date (local ISO-8601 day)",
+        "operationId": "getRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wellness"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Wellness"
+        ],
+        "summary": "Update the wellness record for the date (ISO-8601)",
+        "description": "Only fields provided are changed",
+        "operationId": "updateWellness",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wellness"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wellness"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/wellness-bulk": {
+      "put": {
+        "tags": [
+          "Wellness"
+        ],
+        "summary": "Update an array of wellness records all for the same athlete",
+        "description": "The id of each record is the day (ISO-8601). Only fields provided are changed",
+        "operationId": "updateWellnessBulk",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Wellness"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/wellness": {
+      "put": {
+        "tags": [
+          "Wellness"
+        ],
+        "summary": "Update a wellness record, id is the day (ISO-8601)",
+        "description": "Only fields provided are changed",
+        "operationId": "updateWellness_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wellness"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wellness"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Wellness"
+        ],
+        "summary": "Upload wellness records in CSV format as multipart/form-data",
+        "operationId": "uploadWellness",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ignoreMissingFields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/wellness{ext}": {
+      "get": {
+        "tags": [
+          "Wellness"
+        ],
+        "summary": "List wellness records for date range (use .csv for CSV format)",
+        "operationId": "listWellnessRecords",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ext",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "oldest",
+            "in": "query",
+            "description": "Local date of oldest record (ISO-8601)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newest",
+            "in": "query",
+            "description": "Local date of newest record (ISO-8601), inclusive",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cols",
+            "in": "query",
+            "description": "Comma separated list of column names to include in CSV (default is all)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Comma separated list of field names to include in the returned objects (default is all), also excludes null values",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Wellness"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AthleteSearchResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "profile_medium": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "SportInfo": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "Ride",
+              "Run",
+              "Swim",
+              "WeightTraining",
+              "Hike",
+              "Walk",
+              "AlpineSki",
+              "BackcountrySki",
+              "Badminton",
+              "Canoeing",
+              "Crossfit",
+              "EBikeRide",
+              "EMountainBikeRide",
+              "Elliptical",
+              "Golf",
+              "GravelRide",
+              "TrackRide",
+              "Handcycle",
+              "HighIntensityIntervalTraining",
+              "Hockey",
+              "IceSkate",
+              "InlineSkate",
+              "Kayaking",
+              "Kitesurf",
+              "MountainBikeRide",
+              "NordicSki",
+              "OpenWaterSwim",
+              "Padel",
+              "Pilates",
+              "Pickleball",
+              "Racquetball",
+              "Rugby",
+              "RockClimbing",
+              "RollerSki",
+              "Rowing",
+              "Sail",
+              "Skateboard",
+              "Snowboard",
+              "Snowshoe",
+              "Soccer",
+              "Squash",
+              "StairStepper",
+              "StandUpPaddling",
+              "Surfing",
+              "TableTennis",
+              "Tennis",
+              "TrailRun",
+              "Transition",
+              "Velomobile",
+              "VirtualRide",
+              "VirtualRow",
+              "VirtualRun",
+              "VirtualSki",
+              "WaterSport",
+              "Wheelchair",
+              "Windsurf",
+              "Workout",
+              "Yoga",
+              "Other"
+            ]
+          },
+          "eftp": {
+            "type": "number",
+            "format": "float"
+          },
+          "wPrime": {
+            "type": "number",
+            "format": "float"
+          },
+          "pMax": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "Wellness": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ctl": {
+            "type": "number",
+            "format": "float"
+          },
+          "atl": {
+            "type": "number",
+            "format": "float"
+          },
+          "rampRate": {
+            "type": "number",
+            "format": "float"
+          },
+          "ctlLoad": {
+            "type": "number",
+            "format": "float"
+          },
+          "atlLoad": {
+            "type": "number",
+            "format": "float"
+          },
+          "sportInfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SportInfo"
+            }
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "weight": {
+            "type": "number",
+            "format": "float"
+          },
+          "restingHR": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hrv": {
+            "type": "number",
+            "format": "float"
+          },
+          "hrvSDNN": {
+            "type": "number",
+            "format": "float"
+          },
+          "menstrualPhase": {
+            "type": "string",
+            "enum": [
+              "PERIOD",
+              "FOLLICULAR",
+              "OVULATING",
+              "LUTEAL",
+              "NONE"
+            ]
+          },
+          "menstrualPhasePredicted": {
+            "type": "string",
+            "enum": [
+              "PERIOD",
+              "FOLLICULAR",
+              "OVULATING",
+              "LUTEAL",
+              "NONE"
+            ]
+          },
+          "kcalConsumed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sleepSecs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sleepScore": {
+            "type": "number",
+            "format": "float"
+          },
+          "sleepQuality": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "avgSleepingHR": {
+            "type": "number",
+            "format": "float"
+          },
+          "soreness": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fatigue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "stress": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mood": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "motivation": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "injury": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "spO2": {
+            "type": "number",
+            "format": "float"
+          },
+          "systolic": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "diastolic": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hydration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hydrationVolume": {
+            "type": "number",
+            "format": "float"
+          },
+          "readiness": {
+            "type": "number",
+            "format": "float"
+          },
+          "baevskySI": {
+            "type": "number",
+            "format": "float"
+          },
+          "bloodGlucose": {
+            "type": "number",
+            "format": "float"
+          },
+          "lactate": {
+            "type": "number",
+            "format": "float"
+          },
+          "bodyFat": {
+            "type": "number",
+            "format": "float"
+          },
+          "abdomen": {
+            "type": "number",
+            "format": "float"
+          },
+          "vo2max": {
+            "type": "number",
+            "format": "float"
+          },
+          "comments": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "respiration": {
+            "type": "number",
+            "format": "float"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "tempWeight": {
+            "type": "boolean"
+          },
+          "tempRestingHR": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NewCustomItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "athlete_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FITNESS_CHART",
+              "TRACE_CHART",
+              "INPUT_FIELD",
+              "ACTIVITY_FIELD",
+              "INTERVAL_FIELD",
+              "ACTIVITY_STREAM",
+              "ACTIVITY_CHART",
+              "ACTIVITY_HISTOGRAM",
+              "ACTIVITY_HEATMAP",
+              "ACTIVITY_MAP",
+              "ACTIVITY_PANEL",
+              "ZONES"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "FOLLOWERS",
+              "PUBLIC"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "usage_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hide_script": {
+            "type": "boolean"
+          },
+          "hidden_by_id": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "from_athlete": {
+            "$ref": "#/components/schemas/AthleteSearchResult"
+          },
+          "from_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "required_items_created": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewCustomItem"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "APIKey": {
+        "type": "http",
+        "description": "Username is API_KEY, Password is your API key found in /settings",
+        "scheme": "basic"
+      },
+      "AccessToken": {
+        "type": "http",
+        "description": "Use bearer token for an athlete from OAuth flow",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

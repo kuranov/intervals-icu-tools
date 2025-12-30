@@ -1,0 +1,4258 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Intervals.icu API",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://intervals.icu",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "APIKey": [],
+      "AccessToken": []
+    }
+  ],
+  "paths": {
+    "/api/v1/athlete/{id}/training-plan": {
+      "get": {
+        "tags": [
+          "Athletes"
+        ],
+        "summary": "Get the athlete's training plan",
+        "operationId": "getAthleteTrainingPlan",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AthleteTrainingPlan"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Athletes"
+        ],
+        "summary": "Change the athlete's training plan",
+        "operationId": "updateAthletePlan",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AthleteTrainingPlanUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AthleteTrainingPlan"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}": {
+      "get": {
+        "tags": [
+          "Athletes"
+        ],
+        "summary": "Get the athlete with sportSettings and custom_items",
+        "operationId": "getAthlete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/WithSportSettings"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Athletes"
+        ],
+        "summary": "Update an athlete",
+        "operationId": "updateAthlete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AthleteUpdateDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Athlete"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete-plans": {
+      "put": {
+        "tags": [
+          "Athletes"
+        ],
+        "summary": "Change training plans for a list of athletes",
+        "operationId": "updateAthletePlans",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AthleteTrainingPlanUpdate"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/settings/{deviceClass}": {
+      "get": {
+        "tags": [
+          "Athletes"
+        ],
+        "summary": "Get the athlete's settings for phone, tablet or desktop",
+        "operationId": "getSettings",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "deviceClass",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/profile": {
+      "get": {
+        "tags": [
+          "Athletes"
+        ],
+        "summary": "Get athlete profile info",
+        "operationId": "getAthleteProfile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AthleteProfile"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/athlete-summary{ext}": {
+      "get": {
+        "tags": [
+          "Athletes"
+        ],
+        "summary": "Summary information for followed athletes",
+        "description": "Note that when this endpoint is called with a bearer token then only the athlete the token is for is returned",
+        "operationId": "getAthleteSummary",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ext",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "Local date and optional time (ISO-8601) for oldest data to return, default is 6 days ago",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "Local date and optional time (ISO-8601) for newest data to return, default is today",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Optional list of athlete tags, only athletes with one of these tags are returned",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SummaryWithCats"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AthleteSearchResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "profile_medium": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "Workout": {
+        "type": "object"
+      },
+      "AthleteTrainingPlanUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "training_plan_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "training_plan_start_date": {
+            "type": "string"
+          },
+          "training_plan_alias": {
+            "type": "string"
+          }
+        }
+      },
+      "AthleteTrainingPlan": {
+        "type": "object",
+        "properties": {
+          "athlete_id": {
+            "type": "string"
+          },
+          "training_plan_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "training_plan_start_date": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "training_plan_last_applied": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "training_plan": {
+            "$ref": "#/components/schemas/Folder"
+          },
+          "training_plan_alias": {
+            "type": "string"
+          }
+        }
+      },
+      "Folder": {
+        "type": "object",
+        "properties": {
+          "athlete_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FOLDER",
+              "PLAN"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Workout"
+            }
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "PUBLIC"
+            ]
+          },
+          "start_date_local": {
+            "type": "string"
+          },
+          "rollout_weeks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "auto_rollout_day": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "read_only_workouts": {
+            "type": "boolean"
+          },
+          "starting_ctl": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "starting_atl": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "num_workouts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration_weeks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hours_per_week_min": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hours_per_week_max": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workout_targets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "AUTO",
+                "POWER",
+                "HR",
+                "PACE"
+              ]
+            }
+          },
+          "blurb": {
+            "type": "string"
+          },
+          "canEdit": {
+            "type": "boolean"
+          },
+          "sharedWithCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "shareToken": {
+            "type": "string"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/AthleteSearchResult"
+          }
+        }
+      },
+      "ActivityFilter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "field_id": {
+            "type": "string",
+            "enum": [
+              "type",
+              "indoor",
+              "name",
+              "notName",
+              "description",
+              "moving_time",
+              "elapsed_time",
+              "coasting_time",
+              "distance",
+              "climbing",
+              "load",
+              "source",
+              "race",
+              "average_heartrate",
+              "max_heartrate",
+              "hrrc",
+              "average_power",
+              "norm_power",
+              "pace",
+              "gap",
+              "average_speed",
+              "max_speed",
+              "variability_index",
+              "intensity",
+              "average_cadence",
+              "average_cadence_z2",
+              "average_temp",
+              "calories",
+              "work",
+              "work_above_ftp",
+              "max_wbal_depletion",
+              "efficiency",
+              "power_hr",
+              "power_hr_z2",
+              "power_hr_z2_mins",
+              "rpe",
+              "feel",
+              "session_rpe",
+              "kg_lifted",
+              "power_meter",
+              "power_meter_serial",
+              "gear_name",
+              "trimp",
+              "custom",
+              "tags",
+              "device_name",
+              "compliance",
+              "polarization_index",
+              "day_of_week",
+              "average_altitude",
+              "min_altitude",
+              "max_altitude",
+              "start_time",
+              "route_id"
+            ]
+          },
+          "code": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "string"
+          },
+          "value": {
+            "type": "object"
+          },
+          "not": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CustomItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "athlete_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FITNESS_CHART",
+              "TRACE_CHART",
+              "INPUT_FIELD",
+              "ACTIVITY_FIELD",
+              "INTERVAL_FIELD",
+              "ACTIVITY_STREAM",
+              "ACTIVITY_CHART",
+              "ACTIVITY_HISTOGRAM",
+              "ACTIVITY_HEATMAP",
+              "ACTIVITY_MAP",
+              "ACTIVITY_PANEL",
+              "ZONES"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "FOLLOWERS",
+              "PUBLIC"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "usage_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hide_script": {
+            "type": "boolean"
+          },
+          "hidden_by_id": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "from_athlete": {
+            "$ref": "#/components/schemas/AthleteSearchResult"
+          },
+          "from_id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AthleteUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "profile_medium": {
+            "type": "string"
+          },
+          "measurement_preference": {
+            "type": "string"
+          },
+          "weight_pref_lb": {
+            "type": "boolean"
+          },
+          "fahrenheit": {
+            "type": "boolean"
+          },
+          "wind_speed": {
+            "type": "string",
+            "enum": [
+              "MPS",
+              "KNOTS",
+              "KMH",
+              "MPH",
+              "BFT"
+            ]
+          },
+          "rain": {
+            "type": "string",
+            "enum": [
+              "MM",
+              "INCHES"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "format": "float"
+          },
+          "email": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "bikes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StravaGear"
+            }
+          },
+          "shoes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StravaGear"
+            }
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "locale": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "PUBLIC",
+              "HIDDEN"
+            ]
+          },
+          "icu_last_seen": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "DORMANT",
+              "ARCHIVED"
+            ]
+          },
+          "status_updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_resting_hr": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_weight": {
+            "type": "number",
+            "format": "float"
+          },
+          "icu_weight_sync": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "STRAVA"
+            ]
+          },
+          "icu_activated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_queue_pos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_admin": {
+            "type": "boolean"
+          },
+          "icu_friend_invite_token": {
+            "type": "string"
+          },
+          "icu_permission": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "READ",
+              "WRITE"
+            ]
+          },
+          "icu_effort_secs": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "icu_coach": {
+            "type": "boolean"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "icu_date_of_birth": {
+            "type": "string"
+          },
+          "icu_api_key": {
+            "type": "string"
+          },
+          "icu_type_settings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Settings"
+            }
+          },
+          "icu_form_as_percent": {
+            "type": "boolean"
+          },
+          "icu_mmp_days": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_wellness_prompt": {
+            "type": "boolean"
+          },
+          "wellness_last_prompt_date": {
+            "type": "string"
+          },
+          "icu_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "private_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "icu_track_menstrual_cycle": {
+            "type": "boolean"
+          },
+          "icu_menstrual_cycle_perm": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "READ",
+              "WRITE"
+            ]
+          },
+          "activity_rpe_prompt": {
+            "type": "boolean"
+          },
+          "coach_ticks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CoachTick"
+            }
+          },
+          "icu_garmin_health": {
+            "type": "boolean"
+          },
+          "icu_garmin_training": {
+            "type": "boolean"
+          },
+          "icu_garmin_sync_activities": {
+            "type": "boolean"
+          },
+          "garmin_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "garmin_sync_after": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_garmin_download_wellness": {
+            "type": "boolean"
+          },
+          "icu_garmin_upload_workouts": {
+            "type": "boolean"
+          },
+          "icu_garmin_outdoor_power_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "icu_garmin_hr_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "garmin_pace_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "garmin_power_target": {
+            "type": "string",
+            "enum": [
+              "POWER_LAP",
+              "POWER",
+              "POWER_3S",
+              "POWER_10S",
+              "POWER_30S"
+            ]
+          },
+          "icu_garmin_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_garmin_upload_filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityFilter"
+            }
+          },
+          "icu_garmin_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "open_step_duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "polar_scope": {
+            "type": "string"
+          },
+          "polar_sync_activities": {
+            "type": "boolean"
+          },
+          "polar_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "polar_download_wellness": {
+            "type": "boolean"
+          },
+          "polar_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "suunto_scope": {
+            "type": "string"
+          },
+          "suunto_user_id": {
+            "type": "string"
+          },
+          "suunto_sync_activities": {
+            "type": "boolean"
+          },
+          "suunto_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "suunto_upload_workouts": {
+            "type": "boolean"
+          },
+          "suunto_outdoor_power_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_hr_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_pace_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "suunto_upload_filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityFilter"
+            }
+          },
+          "suunto_download_wellness": {
+            "type": "boolean"
+          },
+          "coros_user_id": {
+            "type": "string"
+          },
+          "coros_sync_activities": {
+            "type": "boolean"
+          },
+          "coros_upload_workouts": {
+            "type": "boolean"
+          },
+          "coros_download_wellness": {
+            "type": "boolean"
+          },
+          "coros_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "concept2_user_id": {
+            "type": "string"
+          },
+          "concept2_sync_activities": {
+            "type": "boolean"
+          },
+          "zepp_user_id": {
+            "type": "string"
+          },
+          "zepp_sync_activities": {
+            "type": "boolean"
+          },
+          "zepp_upload_workouts": {
+            "type": "boolean"
+          },
+          "zepp_download_wellness": {
+            "type": "boolean"
+          },
+          "huawei_user_id": {
+            "type": "string"
+          },
+          "huawei_sync_activities": {
+            "type": "boolean"
+          },
+          "huawei_upload_workouts": {
+            "type": "boolean"
+          },
+          "huawei_download_wellness": {
+            "type": "boolean"
+          },
+          "wahoo_user_id": {
+            "type": "string"
+          },
+          "wahoo_sync_activities": {
+            "type": "boolean"
+          },
+          "wahoo_upload_workouts": {
+            "type": "boolean"
+          },
+          "zwift_user_id": {
+            "type": "string"
+          },
+          "zwift_sync_activities": {
+            "type": "boolean"
+          },
+          "zwift_upload_workouts": {
+            "type": "boolean"
+          },
+          "dropbox_scope": {
+            "type": "string"
+          },
+          "oura_scope": {
+            "type": "string"
+          },
+          "oura_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "whoop_scope": {
+            "type": "string"
+          },
+          "whoop_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "google_scope": {
+            "type": "string"
+          },
+          "google_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "icu_email_verified": {
+            "type": "boolean"
+          },
+          "icu_email_disabled": {
+            "type": "string"
+          },
+          "icu_send_achievements": {
+            "type": "boolean"
+          },
+          "icu_send_newsletter": {
+            "type": "boolean"
+          },
+          "icu_send_private_chat": {
+            "type": "boolean"
+          },
+          "icu_send_private_msg": {
+            "type": "boolean"
+          },
+          "icu_send_follow_req": {
+            "type": "boolean"
+          },
+          "icu_send_group_chat": {
+            "type": "boolean"
+          },
+          "icu_send_group_msg": {
+            "type": "boolean"
+          },
+          "icu_send_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_followed_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_coached_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_activity_msg": {
+            "type": "boolean"
+          },
+          "icu_send_coach_me_req": {
+            "type": "boolean"
+          },
+          "icu_send_gear_alerts": {
+            "type": "boolean"
+          },
+          "icu_send_plan_for_week": {
+            "type": "boolean"
+          },
+          "include_descr_in_plan_for_week": {
+            "type": "boolean"
+          },
+          "icu_send_followed_new_activity": {
+            "type": "boolean"
+          },
+          "icu_send_coached_new_activity": {
+            "type": "boolean"
+          },
+          "icu_send_coach_tick": {
+            "type": "boolean"
+          },
+          "strava_allowed": {
+            "type": "boolean"
+          },
+          "strava_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "strava_sync_activities": {
+            "type": "boolean"
+          },
+          "strava_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "strava_sync_other_activities": {
+            "type": "boolean"
+          },
+          "ignore_strava_gear": {
+            "type": "boolean"
+          },
+          "update_strava_name": {
+            "type": "boolean"
+          },
+          "add_weather_to_strava_descr": {
+            "type": "boolean"
+          },
+          "height": {
+            "type": "number",
+            "format": "float"
+          },
+          "height_units": {
+            "type": "string",
+            "enum": [
+              "CM",
+              "FEET"
+            ]
+          },
+          "plan": {
+            "type": "string",
+            "enum": [
+              "FREE",
+              "PREMIUM",
+              "SUPPORTER",
+              "WHITELABEL"
+            ]
+          },
+          "plan_expires": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "trial_end_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sponsored_by_chat_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "has_password": {
+            "type": "boolean"
+          },
+          "beta_user": {
+            "type": "boolean"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "training_plan_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "training_plan_start_date": {
+            "type": "string"
+          },
+          "recalcHrZones": {
+            "type": "boolean"
+          },
+          "applyToAll": {
+            "type": "boolean"
+          },
+          "localDate": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "strava_authorized": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CoachTick": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "Settings": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "Ride",
+              "Run",
+              "Swim",
+              "WeightTraining",
+              "Hike",
+              "Walk",
+              "AlpineSki",
+              "BackcountrySki",
+              "Badminton",
+              "Canoeing",
+              "Crossfit",
+              "EBikeRide",
+              "EMountainBikeRide",
+              "Elliptical",
+              "Golf",
+              "GravelRide",
+              "TrackRide",
+              "Handcycle",
+              "HighIntensityIntervalTraining",
+              "Hockey",
+              "IceSkate",
+              "InlineSkate",
+              "Kayaking",
+              "Kitesurf",
+              "MountainBikeRide",
+              "NordicSki",
+              "OpenWaterSwim",
+              "Padel",
+              "Pilates",
+              "Pickleball",
+              "Racquetball",
+              "Rugby",
+              "RockClimbing",
+              "RollerSki",
+              "Rowing",
+              "Sail",
+              "Skateboard",
+              "Snowboard",
+              "Snowshoe",
+              "Soccer",
+              "Squash",
+              "StairStepper",
+              "StandUpPaddling",
+              "Surfing",
+              "TableTennis",
+              "Tennis",
+              "TrailRun",
+              "Transition",
+              "Velomobile",
+              "VirtualRide",
+              "VirtualRow",
+              "VirtualRun",
+              "VirtualSki",
+              "WaterSport",
+              "Wheelchair",
+              "Windsurf",
+              "Workout",
+              "Yoga",
+              "Other"
+            ]
+          },
+          "ctlFactor": {
+            "type": "number",
+            "format": "double"
+          },
+          "atlFactor": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "StravaGear": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "distance": {
+            "type": "number",
+            "format": "float"
+          },
+          "primary": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Athlete": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "profile_medium": {
+            "type": "string"
+          },
+          "measurement_preference": {
+            "type": "string"
+          },
+          "weight_pref_lb": {
+            "type": "boolean"
+          },
+          "fahrenheit": {
+            "type": "boolean"
+          },
+          "wind_speed": {
+            "type": "string",
+            "enum": [
+              "MPS",
+              "KNOTS",
+              "KMH",
+              "MPH",
+              "BFT"
+            ]
+          },
+          "rain": {
+            "type": "string",
+            "enum": [
+              "MM",
+              "INCHES"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "format": "float"
+          },
+          "email": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "bikes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StravaGear"
+            }
+          },
+          "shoes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StravaGear"
+            }
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "locale": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "PUBLIC",
+              "HIDDEN"
+            ]
+          },
+          "icu_last_seen": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "DORMANT",
+              "ARCHIVED"
+            ]
+          },
+          "status_updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_resting_hr": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_weight": {
+            "type": "number",
+            "format": "float"
+          },
+          "icu_weight_sync": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "STRAVA"
+            ]
+          },
+          "icu_activated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_queue_pos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_admin": {
+            "type": "boolean"
+          },
+          "icu_friend_invite_token": {
+            "type": "string"
+          },
+          "icu_permission": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "READ",
+              "WRITE"
+            ]
+          },
+          "icu_effort_secs": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "icu_coach": {
+            "type": "boolean"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "icu_date_of_birth": {
+            "type": "string"
+          },
+          "icu_api_key": {
+            "type": "string"
+          },
+          "icu_type_settings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Settings"
+            }
+          },
+          "icu_form_as_percent": {
+            "type": "boolean"
+          },
+          "icu_mmp_days": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_wellness_prompt": {
+            "type": "boolean"
+          },
+          "wellness_last_prompt_date": {
+            "type": "string"
+          },
+          "icu_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "private_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "icu_track_menstrual_cycle": {
+            "type": "boolean"
+          },
+          "icu_menstrual_cycle_perm": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "READ",
+              "WRITE"
+            ]
+          },
+          "activity_rpe_prompt": {
+            "type": "boolean"
+          },
+          "coach_ticks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CoachTick"
+            }
+          },
+          "icu_garmin_health": {
+            "type": "boolean"
+          },
+          "icu_garmin_training": {
+            "type": "boolean"
+          },
+          "icu_garmin_sync_activities": {
+            "type": "boolean"
+          },
+          "garmin_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "garmin_sync_after": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_garmin_download_wellness": {
+            "type": "boolean"
+          },
+          "icu_garmin_upload_workouts": {
+            "type": "boolean"
+          },
+          "icu_garmin_outdoor_power_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "icu_garmin_hr_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "garmin_pace_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "garmin_power_target": {
+            "type": "string",
+            "enum": [
+              "POWER_LAP",
+              "POWER",
+              "POWER_3S",
+              "POWER_10S",
+              "POWER_30S"
+            ]
+          },
+          "icu_garmin_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_garmin_upload_filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityFilter"
+            }
+          },
+          "icu_garmin_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "open_step_duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "polar_scope": {
+            "type": "string"
+          },
+          "polar_sync_activities": {
+            "type": "boolean"
+          },
+          "polar_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "polar_download_wellness": {
+            "type": "boolean"
+          },
+          "polar_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "suunto_scope": {
+            "type": "string"
+          },
+          "suunto_user_id": {
+            "type": "string"
+          },
+          "suunto_sync_activities": {
+            "type": "boolean"
+          },
+          "suunto_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "suunto_upload_workouts": {
+            "type": "boolean"
+          },
+          "suunto_outdoor_power_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_hr_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_pace_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "suunto_upload_filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityFilter"
+            }
+          },
+          "suunto_download_wellness": {
+            "type": "boolean"
+          },
+          "coros_user_id": {
+            "type": "string"
+          },
+          "coros_sync_activities": {
+            "type": "boolean"
+          },
+          "coros_upload_workouts": {
+            "type": "boolean"
+          },
+          "coros_download_wellness": {
+            "type": "boolean"
+          },
+          "coros_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "concept2_user_id": {
+            "type": "string"
+          },
+          "concept2_sync_activities": {
+            "type": "boolean"
+          },
+          "zepp_user_id": {
+            "type": "string"
+          },
+          "zepp_sync_activities": {
+            "type": "boolean"
+          },
+          "zepp_upload_workouts": {
+            "type": "boolean"
+          },
+          "zepp_download_wellness": {
+            "type": "boolean"
+          },
+          "huawei_user_id": {
+            "type": "string"
+          },
+          "huawei_sync_activities": {
+            "type": "boolean"
+          },
+          "huawei_upload_workouts": {
+            "type": "boolean"
+          },
+          "huawei_download_wellness": {
+            "type": "boolean"
+          },
+          "wahoo_user_id": {
+            "type": "string"
+          },
+          "wahoo_sync_activities": {
+            "type": "boolean"
+          },
+          "wahoo_upload_workouts": {
+            "type": "boolean"
+          },
+          "zwift_user_id": {
+            "type": "string"
+          },
+          "zwift_sync_activities": {
+            "type": "boolean"
+          },
+          "zwift_upload_workouts": {
+            "type": "boolean"
+          },
+          "dropbox_scope": {
+            "type": "string"
+          },
+          "oura_scope": {
+            "type": "string"
+          },
+          "oura_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "whoop_scope": {
+            "type": "string"
+          },
+          "whoop_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "google_scope": {
+            "type": "string"
+          },
+          "google_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "icu_email_verified": {
+            "type": "boolean"
+          },
+          "icu_email_disabled": {
+            "type": "string"
+          },
+          "icu_send_achievements": {
+            "type": "boolean"
+          },
+          "icu_send_newsletter": {
+            "type": "boolean"
+          },
+          "icu_send_private_chat": {
+            "type": "boolean"
+          },
+          "icu_send_private_msg": {
+            "type": "boolean"
+          },
+          "icu_send_follow_req": {
+            "type": "boolean"
+          },
+          "icu_send_group_chat": {
+            "type": "boolean"
+          },
+          "icu_send_group_msg": {
+            "type": "boolean"
+          },
+          "icu_send_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_followed_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_coached_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_activity_msg": {
+            "type": "boolean"
+          },
+          "icu_send_coach_me_req": {
+            "type": "boolean"
+          },
+          "icu_send_gear_alerts": {
+            "type": "boolean"
+          },
+          "icu_send_plan_for_week": {
+            "type": "boolean"
+          },
+          "include_descr_in_plan_for_week": {
+            "type": "boolean"
+          },
+          "icu_send_followed_new_activity": {
+            "type": "boolean"
+          },
+          "icu_send_coached_new_activity": {
+            "type": "boolean"
+          },
+          "icu_send_coach_tick": {
+            "type": "boolean"
+          },
+          "strava_allowed": {
+            "type": "boolean"
+          },
+          "strava_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "strava_sync_activities": {
+            "type": "boolean"
+          },
+          "strava_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "strava_sync_other_activities": {
+            "type": "boolean"
+          },
+          "ignore_strava_gear": {
+            "type": "boolean"
+          },
+          "update_strava_name": {
+            "type": "boolean"
+          },
+          "add_weather_to_strava_descr": {
+            "type": "boolean"
+          },
+          "height": {
+            "type": "number",
+            "format": "float"
+          },
+          "height_units": {
+            "type": "string",
+            "enum": [
+              "CM",
+              "FEET"
+            ]
+          },
+          "plan": {
+            "type": "string",
+            "enum": [
+              "FREE",
+              "PREMIUM",
+              "SUPPORTER",
+              "WHITELABEL"
+            ]
+          },
+          "plan_expires": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "trial_end_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sponsored_by_chat_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "has_password": {
+            "type": "boolean"
+          },
+          "beta_user": {
+            "type": "boolean"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "training_plan_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "training_plan_start_date": {
+            "type": "string"
+          },
+          "strava_authorized": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ActivityCharts": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pos"
+            }
+          },
+          "power": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pos"
+            }
+          },
+          "hr": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pos"
+            }
+          },
+          "pace": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pos"
+            }
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pos"
+            }
+          }
+        }
+      },
+      "Display": {
+        "type": "object",
+        "properties": {
+          "colorScheme": {
+            "type": "string"
+          },
+          "lowIntensity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "highIntensity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lowLoad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "highLoad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "usePairedWorkoutColor": {
+            "type": "boolean"
+          },
+          "ignoreWorkoutColors": {
+            "type": "boolean"
+          },
+          "showAverageHR": {
+            "type": "boolean"
+          },
+          "showNormalizedWatts": {
+            "type": "boolean"
+          },
+          "showLoad": {
+            "type": "boolean"
+          },
+          "showWork": {
+            "type": "boolean"
+          },
+          "showWorkAboveFTP": {
+            "type": "boolean"
+          },
+          "showWeightLifted": {
+            "type": "boolean"
+          },
+          "showAveragePower": {
+            "type": "boolean"
+          },
+          "showRPE": {
+            "type": "boolean"
+          },
+          "showFeel": {
+            "type": "boolean"
+          },
+          "showPace": {
+            "type": "boolean"
+          },
+          "showGAP": {
+            "type": "boolean"
+          },
+          "showIntensity": {
+            "type": "boolean"
+          },
+          "showName": {
+            "type": "boolean"
+          },
+          "showIntervals": {
+            "type": "boolean"
+          },
+          "showSkylineChart": {
+            "type": "boolean"
+          },
+          "showPairedWorkoutChart": {
+            "type": "boolean"
+          },
+          "showDescription": {
+            "type": "boolean"
+          },
+          "showStartTime": {
+            "type": "boolean"
+          },
+          "preciseDistance": {
+            "type": "boolean"
+          },
+          "shrinkWarmup": {
+            "type": "boolean"
+          },
+          "shrinkCooldown": {
+            "type": "boolean"
+          },
+          "shrinkCommute": {
+            "type": "boolean"
+          },
+          "color": {
+            "type": "string"
+          },
+          "color2": {
+            "type": "string"
+          }
+        }
+      },
+      "Pos": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "width": {
+            "type": "string"
+          },
+          "height": {
+            "type": "string"
+          }
+        }
+      },
+      "PowerModel": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "MS_2P",
+              "MORTON_3P",
+              "FFT_CURVES",
+              "ECP"
+            ]
+          },
+          "criticalPower": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "wPrime": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pMax": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inputPointIndexes": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "ftp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SportSettings": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "athlete_id": {
+            "type": "string"
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "warmup_time": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cooldown_time": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ftp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "indoor_ftp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "w_prime": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "p_max": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "power_zones": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "sweet_spot_min": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sweet_spot_max": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "power_spike_threshold": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "power_zone_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ftp_est_min_secs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "use_laps_for_power_intervals": {
+            "type": "boolean"
+          },
+          "keep_all_laps_for_power_intervals": {
+            "type": "boolean"
+          },
+          "after_kj0": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "after_kj1": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "power_field": {
+            "type": "string"
+          },
+          "lthr": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "max_hr": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hr_zones": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "hr_zone_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hr_load_type": {
+            "type": "string",
+            "enum": [
+              "AVG_HR",
+              "HR_ZONES",
+              "HRSS"
+            ]
+          },
+          "hrrc_min_percent": {
+            "type": "number",
+            "format": "float"
+          },
+          "threshold_pace": {
+            "type": "number",
+            "format": "float"
+          },
+          "pace_units": {
+            "type": "string",
+            "enum": [
+              "SECS_100M",
+              "SECS_100Y",
+              "MINS_KM",
+              "MINS_MILE",
+              "SECS_500M",
+              "SECS_400M",
+              "SECS_250M"
+            ]
+          },
+          "pace_zones": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float"
+            }
+          },
+          "pace_zone_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pace_load_type": {
+            "type": "string",
+            "enum": [
+              "SWIM",
+              "RUN"
+            ]
+          },
+          "gap_model": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "STRAVA_RUN"
+            ]
+          },
+          "elevation_correction": {
+            "type": "string",
+            "enum": [
+              "NO",
+              "AUTO",
+              "YES"
+            ]
+          },
+          "use_gap_zone_times": {
+            "type": "boolean"
+          },
+          "best_effort_distances": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float"
+            }
+          },
+          "pace_curve_start": {
+            "type": "number",
+            "format": "float"
+          },
+          "load_order": {
+            "type": "string",
+            "enum": [
+              "POWER_HR_PACE",
+              "POWER_PACE_HR",
+              "HR_POWER_PACE",
+              "HR_PACE_POWER",
+              "PACE_POWER_HR",
+              "PACE_HR_POWER"
+            ]
+          },
+          "tiz_order": {
+            "type": "string",
+            "enum": [
+              "POWER_HR_PACE",
+              "POWER_PACE_HR",
+              "HR_POWER_PACE",
+              "HR_PACE_POWER",
+              "PACE_POWER_HR",
+              "PACE_HR_POWER"
+            ]
+          },
+          "workout_order": {
+            "type": "string",
+            "enum": [
+              "POWER_HR_PACE",
+              "POWER_PACE_HR",
+              "HR_POWER_PACE",
+              "HR_PACE_POWER",
+              "PACE_POWER_HR",
+              "PACE_HR_POWER"
+            ]
+          },
+          "interval_display": {
+            "type": "string",
+            "enum": [
+              "POWER_HR_PACE",
+              "POWER_PACE_HR",
+              "HR_POWER_PACE",
+              "HR_PACE_POWER",
+              "PACE_POWER_HR",
+              "PACE_HR_POWER"
+            ]
+          },
+          "default_gear_id": {
+            "type": "string"
+          },
+          "default_indoor_gear_id": {
+            "type": "string"
+          },
+          "extract_workouts": {
+            "type": "boolean"
+          },
+          "show_pauses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ignore_velocity": {
+            "type": "boolean"
+          },
+          "default_workout_time": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "mmp_model": {
+            "$ref": "#/components/schemas/PowerModel"
+          },
+          "display": {
+            "$ref": "#/components/schemas/Display"
+          },
+          "activity_field_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "activity_charts": {
+            "$ref": "#/components/schemas/ActivityCharts"
+          },
+          "custom_field_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "custom_field_values": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "custom_zones_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "other": {
+            "type": "boolean"
+          },
+          "iseFTPSupported": {
+            "type": "boolean"
+          },
+          "use_distance_for_intervals": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NewCustomItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "athlete_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FITNESS_CHART",
+              "TRACE_CHART",
+              "INPUT_FIELD",
+              "ACTIVITY_FIELD",
+              "INTERVAL_FIELD",
+              "ACTIVITY_STREAM",
+              "ACTIVITY_CHART",
+              "ACTIVITY_HISTOGRAM",
+              "ACTIVITY_HEATMAP",
+              "ACTIVITY_MAP",
+              "ACTIVITY_PANEL",
+              "ZONES"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "FOLLOWERS",
+              "PUBLIC"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "usage_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hide_script": {
+            "type": "boolean"
+          },
+          "hidden_by_id": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "from_athlete": {
+            "$ref": "#/components/schemas/AthleteSearchResult"
+          },
+          "from_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "required_items_created": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewCustomItem"
+            }
+          }
+        }
+      },
+      "AthleteProfile": {
+        "type": "object",
+        "properties": {
+          "athlete": {
+            "$ref": "#/components/schemas/AthleteSearchResult"
+          },
+          "sharedFolders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Folder"
+            }
+          },
+          "customItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomItem"
+            }
+          }
+        }
+      },
+      "CategorySummary": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "time": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "moving_time": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "elapsed_time": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "calories": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total_elevation_gain": {
+            "type": "number",
+            "format": "float"
+          },
+          "training_load": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "srpe": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "distance": {
+            "type": "number",
+            "format": "float"
+          },
+          "eftp": {
+            "type": "number",
+            "format": "float"
+          },
+          "eftpPerKg": {
+            "type": "number",
+            "format": "float"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Ride",
+              "Run",
+              "Swim",
+              "WeightTraining",
+              "Hike",
+              "Walk",
+              "AlpineSki",
+              "BackcountrySki",
+              "Badminton",
+              "Canoeing",
+              "Crossfit",
+              "EBikeRide",
+              "EMountainBikeRide",
+              "Elliptical",
+              "Golf",
+              "GravelRide",
+              "TrackRide",
+              "Handcycle",
+              "HighIntensityIntervalTraining",
+              "Hockey",
+              "IceSkate",
+              "InlineSkate",
+              "Kayaking",
+              "Kitesurf",
+              "MountainBikeRide",
+              "NordicSki",
+              "OpenWaterSwim",
+              "Padel",
+              "Pilates",
+              "Pickleball",
+              "Racquetball",
+              "Rugby",
+              "RockClimbing",
+              "RollerSki",
+              "Rowing",
+              "Sail",
+              "Skateboard",
+              "Snowboard",
+              "Snowshoe",
+              "Soccer",
+              "Squash",
+              "StairStepper",
+              "StandUpPaddling",
+              "Surfing",
+              "TableTennis",
+              "Tennis",
+              "TrailRun",
+              "Transition",
+              "Velomobile",
+              "VirtualRide",
+              "VirtualRow",
+              "VirtualRun",
+              "VirtualSki",
+              "WaterSport",
+              "Wheelchair",
+              "Windsurf",
+              "Workout",
+              "Yoga",
+              "Other"
+            ]
+          }
+        }
+      },
+      "SummaryWithCats": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "time": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "moving_time": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "elapsed_time": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "calories": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total_elevation_gain": {
+            "type": "number",
+            "format": "float"
+          },
+          "training_load": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "srpe": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "distance": {
+            "type": "number",
+            "format": "float"
+          },
+          "eftp": {
+            "type": "number",
+            "format": "float"
+          },
+          "eftpPerKg": {
+            "type": "number",
+            "format": "float"
+          },
+          "date": {
+            "type": "string"
+          },
+          "athlete_id": {
+            "type": "string"
+          },
+          "athlete_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "external_id": {
+            "type": "string"
+          },
+          "fitness": {
+            "type": "number",
+            "format": "float"
+          },
+          "fatigue": {
+            "type": "number",
+            "format": "float"
+          },
+          "form": {
+            "type": "number",
+            "format": "float"
+          },
+          "rampRate": {
+            "type": "number",
+            "format": "float"
+          },
+          "weight": {
+            "type": "number",
+            "format": "float"
+          },
+          "timeInZones": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "timeInZonesTot": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "byCategory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategorySummary"
+            }
+          },
+          "mostRecentWellnessId": {
+            "type": "string"
+          }
+        }
+      },
+      "WithSportSettings": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "profile_medium": {
+            "type": "string"
+          },
+          "measurement_preference": {
+            "type": "string"
+          },
+          "weight_pref_lb": {
+            "type": "boolean"
+          },
+          "fahrenheit": {
+            "type": "boolean"
+          },
+          "wind_speed": {
+            "type": "string",
+            "enum": [
+              "MPS",
+              "KNOTS",
+              "KMH",
+              "MPH",
+              "BFT"
+            ]
+          },
+          "rain": {
+            "type": "string",
+            "enum": [
+              "MM",
+              "INCHES"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "format": "float"
+          },
+          "email": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "bikes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StravaGear"
+            }
+          },
+          "shoes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StravaGear"
+            }
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "locale": {
+            "type": "string"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "PUBLIC",
+              "HIDDEN"
+            ]
+          },
+          "icu_last_seen": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "DORMANT",
+              "ARCHIVED"
+            ]
+          },
+          "status_updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_resting_hr": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_weight": {
+            "type": "number",
+            "format": "float"
+          },
+          "icu_weight_sync": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "STRAVA"
+            ]
+          },
+          "icu_activated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_queue_pos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_admin": {
+            "type": "boolean"
+          },
+          "icu_friend_invite_token": {
+            "type": "string"
+          },
+          "icu_permission": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "READ",
+              "WRITE"
+            ]
+          },
+          "icu_effort_secs": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "icu_coach": {
+            "type": "boolean"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "icu_date_of_birth": {
+            "type": "string"
+          },
+          "icu_api_key": {
+            "type": "string"
+          },
+          "icu_type_settings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Settings"
+            }
+          },
+          "icu_form_as_percent": {
+            "type": "boolean"
+          },
+          "icu_mmp_days": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "icu_wellness_prompt": {
+            "type": "boolean"
+          },
+          "wellness_last_prompt_date": {
+            "type": "string"
+          },
+          "icu_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "private_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "icu_track_menstrual_cycle": {
+            "type": "boolean"
+          },
+          "icu_menstrual_cycle_perm": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "READ",
+              "WRITE"
+            ]
+          },
+          "activity_rpe_prompt": {
+            "type": "boolean"
+          },
+          "coach_ticks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CoachTick"
+            }
+          },
+          "icu_garmin_health": {
+            "type": "boolean"
+          },
+          "icu_garmin_training": {
+            "type": "boolean"
+          },
+          "icu_garmin_sync_activities": {
+            "type": "boolean"
+          },
+          "garmin_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "garmin_sync_after": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_garmin_download_wellness": {
+            "type": "boolean"
+          },
+          "icu_garmin_upload_workouts": {
+            "type": "boolean"
+          },
+          "icu_garmin_outdoor_power_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "icu_garmin_hr_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "garmin_pace_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "garmin_power_target": {
+            "type": "string",
+            "enum": [
+              "POWER_LAP",
+              "POWER",
+              "POWER_3S",
+              "POWER_10S",
+              "POWER_30S"
+            ]
+          },
+          "icu_garmin_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "icu_garmin_upload_filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityFilter"
+            }
+          },
+          "icu_garmin_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "open_step_duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "polar_scope": {
+            "type": "string"
+          },
+          "polar_sync_activities": {
+            "type": "boolean"
+          },
+          "polar_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "polar_download_wellness": {
+            "type": "boolean"
+          },
+          "polar_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "suunto_scope": {
+            "type": "string"
+          },
+          "suunto_user_id": {
+            "type": "string"
+          },
+          "suunto_sync_activities": {
+            "type": "boolean"
+          },
+          "suunto_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "suunto_upload_workouts": {
+            "type": "boolean"
+          },
+          "suunto_outdoor_power_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_hr_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_pace_range": {
+            "type": "number",
+            "format": "float"
+          },
+          "suunto_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "suunto_upload_filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityFilter"
+            }
+          },
+          "suunto_download_wellness": {
+            "type": "boolean"
+          },
+          "coros_user_id": {
+            "type": "string"
+          },
+          "coros_sync_activities": {
+            "type": "boolean"
+          },
+          "coros_upload_workouts": {
+            "type": "boolean"
+          },
+          "coros_download_wellness": {
+            "type": "boolean"
+          },
+          "coros_last_upload": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "concept2_user_id": {
+            "type": "string"
+          },
+          "concept2_sync_activities": {
+            "type": "boolean"
+          },
+          "zepp_user_id": {
+            "type": "string"
+          },
+          "zepp_sync_activities": {
+            "type": "boolean"
+          },
+          "zepp_upload_workouts": {
+            "type": "boolean"
+          },
+          "zepp_download_wellness": {
+            "type": "boolean"
+          },
+          "huawei_user_id": {
+            "type": "string"
+          },
+          "huawei_sync_activities": {
+            "type": "boolean"
+          },
+          "huawei_upload_workouts": {
+            "type": "boolean"
+          },
+          "huawei_download_wellness": {
+            "type": "boolean"
+          },
+          "wahoo_user_id": {
+            "type": "string"
+          },
+          "wahoo_sync_activities": {
+            "type": "boolean"
+          },
+          "wahoo_upload_workouts": {
+            "type": "boolean"
+          },
+          "zwift_user_id": {
+            "type": "string"
+          },
+          "zwift_sync_activities": {
+            "type": "boolean"
+          },
+          "zwift_upload_workouts": {
+            "type": "boolean"
+          },
+          "dropbox_scope": {
+            "type": "string"
+          },
+          "oura_scope": {
+            "type": "string"
+          },
+          "oura_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "whoop_scope": {
+            "type": "string"
+          },
+          "whoop_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "google_scope": {
+            "type": "string"
+          },
+          "google_wellness_keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "icu_email_verified": {
+            "type": "boolean"
+          },
+          "icu_email_disabled": {
+            "type": "string"
+          },
+          "icu_send_achievements": {
+            "type": "boolean"
+          },
+          "icu_send_newsletter": {
+            "type": "boolean"
+          },
+          "icu_send_private_chat": {
+            "type": "boolean"
+          },
+          "icu_send_private_msg": {
+            "type": "boolean"
+          },
+          "icu_send_follow_req": {
+            "type": "boolean"
+          },
+          "icu_send_group_chat": {
+            "type": "boolean"
+          },
+          "icu_send_group_msg": {
+            "type": "boolean"
+          },
+          "icu_send_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_followed_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_coached_activity_chat": {
+            "type": "boolean"
+          },
+          "icu_send_activity_msg": {
+            "type": "boolean"
+          },
+          "icu_send_coach_me_req": {
+            "type": "boolean"
+          },
+          "icu_send_gear_alerts": {
+            "type": "boolean"
+          },
+          "icu_send_plan_for_week": {
+            "type": "boolean"
+          },
+          "include_descr_in_plan_for_week": {
+            "type": "boolean"
+          },
+          "icu_send_followed_new_activity": {
+            "type": "boolean"
+          },
+          "icu_send_coached_new_activity": {
+            "type": "boolean"
+          },
+          "icu_send_coach_tick": {
+            "type": "boolean"
+          },
+          "strava_allowed": {
+            "type": "boolean"
+          },
+          "strava_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "strava_sync_activities": {
+            "type": "boolean"
+          },
+          "strava_sync_activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "strava_sync_other_activities": {
+            "type": "boolean"
+          },
+          "ignore_strava_gear": {
+            "type": "boolean"
+          },
+          "update_strava_name": {
+            "type": "boolean"
+          },
+          "add_weather_to_strava_descr": {
+            "type": "boolean"
+          },
+          "height": {
+            "type": "number",
+            "format": "float"
+          },
+          "height_units": {
+            "type": "string",
+            "enum": [
+              "CM",
+              "FEET"
+            ]
+          },
+          "plan": {
+            "type": "string",
+            "enum": [
+              "FREE",
+              "PREMIUM",
+              "SUPPORTER",
+              "WHITELABEL"
+            ]
+          },
+          "plan_expires": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "trial_end_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sponsored_by_chat_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "has_password": {
+            "type": "boolean"
+          },
+          "beta_user": {
+            "type": "boolean"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "training_plan_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "training_plan_start_date": {
+            "type": "string"
+          },
+          "strava_authorized": {
+            "type": "boolean"
+          },
+          "sportSettings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SportSettings"
+            }
+          },
+          "custom_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomItem"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "APIKey": {
+        "type": "http",
+        "description": "Username is API_KEY, Password is your API key found in /settings",
+        "scheme": "basic"
+      },
+      "AccessToken": {
+        "type": "http",
+        "description": "Use bearer token for an athlete from OAuth flow",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

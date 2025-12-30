@@ -1,0 +1,1489 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Intervals.icu API",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://intervals.icu",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "APIKey": [],
+      "AccessToken": []
+    }
+  ],
+  "paths": {
+    "/api/v1/athlete/{id}/workouts/{workoutId}": {
+      "get": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Get a workout",
+        "operationId": "showWorkout",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "workoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workout"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Update a workout",
+        "operationId": "updateWorkout",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "workoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkoutEx"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workout"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Delete a workout (and optionally others added at the same time if the workout is on a plan)",
+        "description": "Returns the ids of the deleted workout(s)",
+        "operationId": "deleteWorkout",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "workoutId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "others",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/folders/{folderId}/workouts": {
+      "put": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Update a range of workouts on a plan. Currently only hide_from_athlete can be changed",
+        "operationId": "updatePlanWorkouts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "oldest",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "newest",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Workout"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Workout"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/folders/{folderId}/shared-with": {
+      "get": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "List athletes that the folder or plan has been shared with",
+        "operationId": "listFolderSharedWith",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SharedWith"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Add/remove athletes from the share list for the folder",
+        "operationId": "updateFolderSharedWith",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SharedWith"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SharedWith"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/folders/{folderId}": {
+      "put": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Update a workout folder or plan",
+        "operationId": "updateFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Folder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Folder"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Delete a workout folder or plan including all workouts",
+        "operationId": "deleteFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/apply-plan-changes": {
+      "put": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Apply any changes from the athlete's current plan to the athlete's calendar",
+        "description": "Only workouts from today or in the future are updated",
+        "operationId": "applyCurrentPlanChanges",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/download-workout{ext}": {
+      "post": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Convert a workout to .zwo (Zwift), .mrc, .erg or .fit",
+        "description": "The athlete to use is extracted from the bearer token and used to resolve power targets etc.. Note that the create workout endpoint can convert workouts and might be more convenient.",
+        "operationId": "downloadWorkout",
+        "parameters": [
+          {
+            "name": "ext",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Workout"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/workouts/bulk": {
+      "post": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Create multiple new workouts in a folder or plan in the athlete's workout library",
+        "operationId": "createMultipleWorkouts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WorkoutEx"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Workout"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/workouts": {
+      "get": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "List all the workouts in the athlete's library",
+        "operationId": "listWorkouts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Workout"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Create a new workout in a folder or plan in the athlete's workout library",
+        "description": "This endpoint accepts workouts in native Intervals.icu format ('description' field) as well as zwo, mrc, erg and fit files (use 'file_contents' or 'file_contents_base64')",
+        "operationId": "createWorkout",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkoutEx"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workout"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/folders/{folderId}/import-workout": {
+      "post": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Create new workout from .zwo, .mrc, .erg or .fit file in a folder",
+        "operationId": "importWorkoutFile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "folderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "athleteId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workout"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/folders": {
+      "get": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "List all the athlete's folders, plans and workouts",
+        "operationId": "listFolders",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Folder"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Create a new workout folder or plan",
+        "operationId": "createFolder",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFolderDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Folder"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/duplicate-workouts": {
+      "post": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Duplicate workouts on a plan",
+        "operationId": "duplicateWorkouts",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DuplicateWorkoutsDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Workout"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/download-workout{ext}": {
+      "post": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "Convert a workout to .zwo (Zwift), .mrc, .erg or .fit.",
+        "description": "The athlete's settings are used to resolve power targets etc.. Note that the create workout endpoint can convert workouts and might be more convenient.",
+        "operationId": "downloadWorkoutForAthlete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ext",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Workout"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/{id}/workout-tags": {
+      "get": {
+        "tags": [
+          "Library"
+        ],
+        "summary": "List all tags that have been applied to workouts in the athlete's library",
+        "operationId": "listTags",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AthleteSearchResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "profile_medium": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "WorkoutEx": {
+        "type": "object"
+      },
+      "Workout": {
+        "type": "object"
+      },
+      "Folder": {
+        "type": "object",
+        "properties": {
+          "athlete_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FOLDER",
+              "PLAN"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Workout"
+            }
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "PUBLIC"
+            ]
+          },
+          "start_date_local": {
+            "type": "string"
+          },
+          "rollout_weeks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "auto_rollout_day": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "read_only_workouts": {
+            "type": "boolean"
+          },
+          "starting_ctl": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "starting_atl": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "num_workouts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration_weeks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hours_per_week_min": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hours_per_week_max": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workout_targets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "AUTO",
+                "POWER",
+                "HR",
+                "PACE"
+              ]
+            }
+          },
+          "blurb": {
+            "type": "string"
+          },
+          "canEdit": {
+            "type": "boolean"
+          },
+          "sharedWithCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "shareToken": {
+            "type": "string"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/AthleteSearchResult"
+          }
+        }
+      },
+      "SharedWith": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "profile_medium": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "canEdit": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateFolderDTO": {
+        "type": "object",
+        "properties": {
+          "athlete_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FOLDER",
+              "PLAN"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Workout"
+            }
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "PUBLIC"
+            ]
+          },
+          "start_date_local": {
+            "type": "string"
+          },
+          "rollout_weeks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "auto_rollout_day": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "read_only_workouts": {
+            "type": "boolean"
+          },
+          "starting_ctl": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "starting_atl": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activity_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Ride",
+                "Run",
+                "Swim",
+                "WeightTraining",
+                "Hike",
+                "Walk",
+                "AlpineSki",
+                "BackcountrySki",
+                "Badminton",
+                "Canoeing",
+                "Crossfit",
+                "EBikeRide",
+                "EMountainBikeRide",
+                "Elliptical",
+                "Golf",
+                "GravelRide",
+                "TrackRide",
+                "Handcycle",
+                "HighIntensityIntervalTraining",
+                "Hockey",
+                "IceSkate",
+                "InlineSkate",
+                "Kayaking",
+                "Kitesurf",
+                "MountainBikeRide",
+                "NordicSki",
+                "OpenWaterSwim",
+                "Padel",
+                "Pilates",
+                "Pickleball",
+                "Racquetball",
+                "Rugby",
+                "RockClimbing",
+                "RollerSki",
+                "Rowing",
+                "Sail",
+                "Skateboard",
+                "Snowboard",
+                "Snowshoe",
+                "Soccer",
+                "Squash",
+                "StairStepper",
+                "StandUpPaddling",
+                "Surfing",
+                "TableTennis",
+                "Tennis",
+                "TrailRun",
+                "Transition",
+                "Velomobile",
+                "VirtualRide",
+                "VirtualRow",
+                "VirtualRun",
+                "VirtualSki",
+                "WaterSport",
+                "Wheelchair",
+                "Windsurf",
+                "Workout",
+                "Yoga",
+                "Other"
+              ]
+            }
+          },
+          "num_workouts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration_weeks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hours_per_week_min": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hours_per_week_max": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workout_targets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "AUTO",
+                "POWER",
+                "HR",
+                "PACE"
+              ]
+            }
+          },
+          "blurb": {
+            "type": "string"
+          },
+          "canEdit": {
+            "type": "boolean"
+          },
+          "sharedWithCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "shareToken": {
+            "type": "string"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/AthleteSearchResult"
+          },
+          "copy_folder_id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "DuplicateWorkoutsDTO": {
+        "type": "object",
+        "properties": {
+          "numCopies": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weeksBetween": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workoutIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "NewCustomItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "athlete_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FITNESS_CHART",
+              "TRACE_CHART",
+              "INPUT_FIELD",
+              "ACTIVITY_FIELD",
+              "INTERVAL_FIELD",
+              "ACTIVITY_STREAM",
+              "ACTIVITY_CHART",
+              "ACTIVITY_HISTOGRAM",
+              "ACTIVITY_HEATMAP",
+              "ACTIVITY_MAP",
+              "ACTIVITY_PANEL",
+              "ZONES"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "FOLLOWERS",
+              "PUBLIC"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "usage_count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hide_script": {
+            "type": "boolean"
+          },
+          "hidden_by_id": {
+            "type": "string"
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "from_athlete": {
+            "$ref": "#/components/schemas/AthleteSearchResult"
+          },
+          "from_id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "required_items_created": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewCustomItem"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "APIKey": {
+        "type": "http",
+        "description": "Username is API_KEY, Password is your API key found in /settings",
+        "scheme": "basic"
+      },
+      "AccessToken": {
+        "type": "http",
+        "description": "Use bearer token for an athlete from OAuth flow",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
