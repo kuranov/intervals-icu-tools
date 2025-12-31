@@ -76,7 +76,6 @@ For **each operationId** we implement:
 - Confirm error shapes are consistent (especially schema issues).
 - Add explicit tests for rate limit retry behavior (429 with and without `Retry-After`).
 - Decide resource method naming conventions and parameter shaping.
-
 - **Public surface audit**
 - Ensure exports are stable and minimal (avoid leaking internals).
 - Establish naming conventions and resource/module layout.
@@ -170,4 +169,3 @@ For **each operationId** we implement:
 ## Phase 5 — Add remaining entities
 
 - **Wellness** (from `intervals-wellness.json`): `listWellnessRecords`, `getRecord`, `updateWellness`, `updateWellnessBulk`, `uploadWellness`.
-- **Library** (from `intervals-library.json`): workouts + folders CRUD and import; tag listing.
