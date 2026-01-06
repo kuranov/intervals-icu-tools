@@ -19,7 +19,12 @@ const client = new IntervalsClient({
   auth: { type: 'apiKey', apiKey: process.env.INTERVALS_API_KEY! },
 });
 
-const activities = await client.activities.list(0);
+// List activities
+const activities = await client.activities.list(0, {
+  oldest: '2024-01-01',
+  limit: 10,
+});
+
 if (!activities.ok) {
   console.error(activities.error);
   process.exitCode = 1;
@@ -37,8 +42,34 @@ const client = new IntervalsClient({
   auth: { type: 'accessToken', accessToken: process.env.INTERVALS_ACCESS_TOKEN! },
 });
 
-const activities = await client.activities.list(0);
-if (activities.ok) console.log(activities.value);
+// Get a single activity
+const activity = await client.activities.get(123456);
+if (activity.ok) console.log(activity.value);
+```
+
+### Working with activities
+
+```ts
+// Update an activity
+const updated = await client.activities.update(123456, {
+  name: 'Morning Run',
+  description: 'Easy recovery run',
+});
+
+// Delete an activity
+const deleted = await client.activities.delete(123456);
+
+// Get intervals for an activity
+const intervals = await client.activities.getIntervals(123456);
+
+// Update intervals
+const updatedIntervals = await client.activities.updateIntervals(123456, [
+  { type: 'ACTIVE', start: 0, end: 300, average_watts: 250 },
+  { type: 'REST', start: 300, end: 420, average_watts: 100 },
+]);
+
+// Split an interval at a specific point
+const split = await client.activities.splitInterval(123456, 150);
 ```
 
 ## Error handling

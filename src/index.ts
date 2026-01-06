@@ -16,4 +16,10 @@ export type { Result } from "./result";
 export { err, ok } from "./result";
 
 // Data types
-export type { Activity, Activities } from "./schemas/activity";
+export type {
+  Activity,
+  Activities,
+  Interval,
+  IntervalsDTO,
+  ActivityId,
+} from "./schemas/activity";
