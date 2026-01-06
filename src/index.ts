@@ -33,3 +33,14 @@ export type {
   DeleteEventsResponse,
   EventTags,
 } from "./schemas/event";
+
+// Data types - Athletes
+export type {
+  Athlete,
+  AthleteUpdateDTO,
+  WithSportSettings,
+  AthleteSettings,
+  AthleteProfile,
+  SummaryWithCats,
+  AthleteSummary,
+} from "./schemas/athlete";

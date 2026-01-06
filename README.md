@@ -125,6 +125,49 @@ const updatedRange = await client.events.updateMultiple(
 const tags = await client.events.listTags(0);
 ```
 
+### Working with athletes
+
+```ts
+// Get athlete with sport settings
+const athlete = await client.athletes.get(0);
+if (athlete.ok) {
+  console.log(athlete.value.name);
+  console.log(athlete.value.sportSettings);
+}
+
+// Update athlete
+const updated = await client.athletes.update(123, {
+  name: 'Updated Name',
+  weight: 72,
+  timezone: 'America/New_York',
+});
+
+// Get athlete settings for a device
+const desktopSettings = await client.athletes.getSettings(0, 'desktop');
+const phoneSettings = await client.athletes.getSettings(0, 'phone');
+const tabletSettings = await client.athletes.getSettings(0, 'tablet');
+
+// Get athlete profile (includes FTP, thresholds, etc.)
+const profile = await client.athletes.getProfile(0);
+if (profile.ok) {
+  console.log(`FTP: ${profile.value.ftp}`);
+  console.log(`Max HR: ${profile.value.max_heartrate}`);
+  console.log(`Threshold Power: ${profile.value.threshold_power}`);
+}
+
+// Get athlete summary (CTL, ATL, TSB, etc.)
+const summary = await client.athletes.getSummary(0, {
+  start: '2024-01-01',
+  end: '2024-01-31',
+  tags: ['cycling', 'running'],
+});
+if (summary.ok) {
+  summary.value.forEach((s) => {
+    console.log(`${s.start_date_local}: CTL=${s.ctl}, ATL=${s.atl}, TSB=${s.tsb}`);
+  });
+}
+```
+
 ## Error handling
 
 All API calls return a `Result<T, ApiError>`:
