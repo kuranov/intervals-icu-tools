@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { http, HttpResponse } from "msw";
 
-import { DEFAULT_BASE_URL, IntervalsClient } from "../index";
+import { IntervalsClient } from "../index";
 import { server } from "./mswServer";
+
+const baseUrl = "https://intervals.icu/api/v1";
 
 describe("429 retry behavior", () => {
   afterEach(() => {
@@ -15,7 +17,7 @@ describe("429 retry behavior", () => {
 
     let hits = 0;
     server.use(
-      http.get(`${DEFAULT_BASE_URL}/athlete/0/activities`, () => {
+      http.get(`${baseUrl}/athlete/0/activities`, () => {
         hits++;
         if (hits < 3) {
           return new HttpResponse(null, {
@@ -54,7 +56,7 @@ describe("429 retry behavior", () => {
 
     let hits = 0;
     server.use(
-      http.get(`${DEFAULT_BASE_URL}/athlete/0/activities`, () => {
+      http.get(`${baseUrl}/athlete/0/activities`, () => {
         hits++;
         if (hits < 3) {
           return new HttpResponse(null, { status: 429 });

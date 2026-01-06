@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { http, HttpResponse } from 'msw';
 
-import { IntervalsClient, buildAuthorizationHeader } from '../index';
+import { IntervalsClient } from '../index';
 import { server } from './mswServer';
 
 const baseUrl = 'https://intervals.icu/api/v1';
@@ -10,9 +10,9 @@ describe('ActivitiesResource', () => {
   test('happy path: returns ok + parsed activities', async () => {
     server.use(
       http.get(`${baseUrl}/athlete/0/activities`, ({ request }) => {
-        expect(request.headers.get('authorization')).toBe(
-          buildAuthorizationHeader({ type: 'apiKey', apiKey: 'test' }),
-        );
+        // Verify Basic auth with API_KEY username
+        const expectedAuth = `Basic ${Buffer.from('API_KEY:test', 'utf8').toString('base64')}`;
+        expect(request.headers.get('authorization')).toBe(expectedAuth);
         return HttpResponse.json([{ id: 123, name: 'Test Ride' }]);
       }),
     );
@@ -40,7 +40,9 @@ describe('ActivitiesResource', () => {
     if (!result.ok) {
       expect(result.error.kind).toBe('Schema');
       // Contract: schema errors surface validation issues when available.
-      expect(result.error.issues).toBeDefined();
+      if (result.error.kind === 'Schema') {
+        expect(result.error.issues).toBeDefined();
+      }
     }
   });
 
@@ -57,7 +59,9 @@ describe('ActivitiesResource', () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.error.kind).toBe('Unauthorized');
-      expect(result.error.status).toBe(401);
+      if (result.error.kind === 'Unauthorized') {
+        expect(result.error.status).toBe(401);
+      }
     }
   });
 });

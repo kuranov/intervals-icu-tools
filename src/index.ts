@@ -1,18 +1,19 @@
+// Main client
 export { IntervalsClient } from "./client";
+
+// Configuration types
 export type {
   IntervalsClientConfig,
   IntervalsAuth,
   RetryConfig,
 } from "./config";
-export { DEFAULT_BASE_URL, buildAuthorizationHeader } from "./config";
+
+// Error types
 export type { ApiError } from "./errors";
-export { networkError, timeoutError, unknownError } from "./errors";
+
+// Result type and helpers
 export type { Result } from "./result";
 export { err, ok } from "./result";
-export {
-  ActivitySchema,
-  ActivitiesSchema,
-  decodeActivities,
-  type Activity,
-  type Activities,
-} from "./schemas/activity";
+
+// Data types
+export type { Activity, Activities } from "./schemas/activity";
