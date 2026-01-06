@@ -14,9 +14,7 @@ export const ActivitiesSchema = v.array(ActivitySchema);
 export type Activities = v.InferOutput<typeof ActivitiesSchema>;
 
 export function decodeActivities(data: unknown): Activities {
-  const parsed = v.safeParse(ActivitiesSchema, data);
-  if (parsed.success) return parsed.output;
-  const e = new Error("Invalid activities response");
-  (e as { issues?: unknown }).issues = parsed.issues;
-  throw e;
+  // `valibot.parse` throws an error that carries `issues`, which the HTTP layer
+  // surfaces consistently as an `ApiError(kind="Schema")`.
+  return v.parse(ActivitiesSchema, data);
 }

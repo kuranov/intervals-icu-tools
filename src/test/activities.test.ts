@@ -39,6 +39,8 @@ describe('ActivitiesResource', () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.error.kind).toBe('Schema');
+      // Contract: schema errors surface validation issues when available.
+      expect(result.error.issues).toBeDefined();
     }
   });
 

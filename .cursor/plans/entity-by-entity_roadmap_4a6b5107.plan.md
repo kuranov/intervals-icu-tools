@@ -167,5 +167,3 @@ For **each operationId** we implement:
 - Hooks for logging/metrics.
 
 ## Phase 5 — Add remaining entities
-
-- **Wellness** (from `intervals-wellness.json`): `listWellnessRecords`, `getRecord`, `updateWellness`, `updateWellnessBulk`, `uploadWellness`.

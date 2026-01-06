@@ -44,6 +44,26 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function normalizePath(path: string): string {
+  return path.startsWith("/") ? path.slice(1) : path;
+}
+
+function toKyOptions(options: RequestOptions): KyOptions {
+  const reqOptions: KyOptions = {};
+  if (options.method) reqOptions.method = options.method;
+  if (options.headers) reqOptions.headers = options.headers;
+  if (options.searchParams) reqOptions.searchParams = options.searchParams;
+  if (options.json !== undefined) reqOptions.json = options.json;
+  if (options.body !== undefined) reqOptions.body = options.body;
+  return reqOptions;
+}
+
+function extractIssues(e: unknown): unknown | undefined {
+  return typeof e === "object" && e !== null && "issues" in e
+    ? (e as { issues?: unknown }).issues
+    : undefined;
+}
+
 async function readBodyBestEffort(res: Response): Promise<unknown | undefined> {
   const contentType = res.headers.get("content-type") ?? "";
   if (contentType.includes("application/json")) {
@@ -104,31 +124,28 @@ export class IntervalsHttpClient {
               "authorization",
               buildAuthorizationHeader(this.cfg.auth)
             );
-            req.headers.set("accept", "application/json");
+            // Default to JSON, but allow per-request overrides (text/binary endpoints).
+            if (!req.headers.has("accept")) {
+              req.headers.set("accept", "application/json");
+            }
           },
         ],
       },
     });
   }
 
-  async requestJson<T>(
+  private async requestWithRetry(
     path: string,
-    options: RequestOptions = {},
-    decode?: Decoder<T>
-  ): Promise<Result<T, ApiError>> {
+    options: RequestOptions,
+    readOk: (res: Response) => Promise<unknown>
+  ): Promise<Result<unknown, ApiError>> {
     const attempts = 1 + this.cfg.retry.limit;
+    const normalizedPath = normalizePath(path);
+    const kyOptions = toKyOptions(options);
 
     for (let attempt = 1; attempt <= attempts; attempt++) {
       try {
-        const reqOptions: KyOptions = {};
-        if (options.method) reqOptions.method = options.method;
-        if (options.headers) reqOptions.headers = options.headers;
-        if (options.searchParams)
-          reqOptions.searchParams = options.searchParams;
-        if (options.json !== undefined) reqOptions.json = options.json;
-        if (options.body !== undefined) reqOptions.body = options.body;
-
-        const res = await this.client(path, reqOptions);
+        const res = await this.client(normalizedPath, kyOptions);
 
         if (res.status === 429 && attempt < attempts) {
           const retryAfterSeconds = parseRetryAfterSeconds(
@@ -139,7 +156,7 @@ export class IntervalsHttpClient {
             this.cfg.retry.maxDelayMs
           );
           await sleep(
-            retryAfterSeconds !== undefined && retryAfterSeconds > 0
+            retryAfterSeconds !== undefined
               ? retryAfterSeconds * 1000
               : fallbackDelay
           );
@@ -162,24 +179,7 @@ export class IntervalsHttpClient {
           return err(base);
         }
 
-        const data = (await readBodyBestEffort(res)) as unknown;
-        if (decode) {
-          try {
-            return ok(decode(data));
-          } catch (e) {
-            const issues =
-              typeof e === "object" && e !== null && "issues" in e
-                ? (e as { issues?: unknown }).issues
-                : undefined;
-            return err({
-              kind: "Schema",
-              message: "Response validation failed",
-              issues,
-              cause: e,
-            });
-          }
-        }
-        return ok(data as T);
+        return ok(await readOk(res));
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : "Request failed";
         if (e instanceof Error && e.name === "TimeoutError")
@@ -190,5 +190,66 @@ export class IntervalsHttpClient {
     }
 
     return err(unknownError("Request failed after retries"));
+  }
+
+  async requestJson<T>(
+    path: string,
+    options: RequestOptions = {},
+    decode?: Decoder<T>
+  ): Promise<Result<T, ApiError>> {
+    const result = await this.requestWithRetry(path, options, async (res) => {
+      return (await readBodyBestEffort(res)) as unknown;
+    });
+    if (!result.ok) return result;
+
+    const data = result.value as unknown;
+    if (!decode) return ok(data as T);
+
+    try {
+      return ok(decode(data));
+    } catch (e) {
+      return err({
+        kind: "Schema",
+        message: "Response validation failed",
+        issues: extractIssues(e),
+        cause: e,
+      });
+    }
+  }
+
+  async requestText<T = string>(
+    path: string,
+    options: RequestOptions = {},
+    decode?: (text: string) => T
+  ): Promise<Result<T, ApiError>> {
+    const result = await this.requestWithRetry(path, options, (res) =>
+      res.text()
+    );
+    if (!result.ok) return result;
+
+    const text = String(result.value);
+    if (!decode) return ok(text as T);
+
+    try {
+      return ok(decode(text));
+    } catch (e) {
+      return err({
+        kind: "Schema",
+        message: "Response validation failed",
+        issues: extractIssues(e),
+        cause: e,
+      });
+    }
+  }
+
+  async requestArrayBuffer(
+    path: string,
+    options: RequestOptions = {}
+  ): Promise<Result<ArrayBuffer, ApiError>> {
+    const result = await this.requestWithRetry(path, options, (res) =>
+      res.arrayBuffer()
+    );
+    if (!result.ok) return result;
+    return ok(result.value as ArrayBuffer);
   }
 }
