@@ -72,6 +72,59 @@ const updatedIntervals = await client.activities.updateIntervals(123456, [
 const split = await client.activities.splitInterval(123456, 150);
 ```
 
+### Working with events
+
+```ts
+// List events (planned workouts, notes, etc.)
+const events = await client.events.list(0, {
+  oldest: '2024-01-01',
+  newest: '2024-01-31',
+  category: ['WORKOUT', 'NOTES'],
+});
+
+// Get a single event
+const event = await client.events.get(0, 789);
+
+// Create an event
+const newEvent = await client.events.create(0, {
+  name: 'Morning Workout',
+  category: 'WORKOUT',
+  start_date_local: '2024-01-15',
+  description: '5x5min @ FTP',
+});
+
+// Update an event
+const updated = await client.events.update(0, 789, {
+  name: 'Updated Workout Name',
+});
+
+// Delete an event
+const deleted = await client.events.delete(0, 789);
+
+// Bulk create events
+const bulkEvents = await client.events.createMultiple(0, [
+  { name: 'Workout 1', start_date_local: '2024-01-15', category: 'WORKOUT' },
+  { name: 'Workout 2', start_date_local: '2024-01-16', category: 'WORKOUT' },
+]);
+
+// Bulk delete events
+const bulkDeleted = await client.events.deleteBulk(0, [
+  { id: 100 },
+  { id: 101 },
+  { external_id: 'external-123' },
+]);
+
+// Update multiple events in a date range
+const updatedRange = await client.events.updateMultiple(
+  0,
+  { hide_from_athlete: true },
+  { oldest: '2024-01-01', newest: '2024-01-31' }
+);
+
+// List event tags
+const tags = await client.events.listTags(0);
+```
+
 ## Error handling
 
 All API calls return a `Result<T, ApiError>`:

@@ -15,7 +15,7 @@ export type { ApiError } from "./errors";
 export type { Result } from "./result";
 export { err, ok } from "./result";
 
-// Data types
+// Data types - Activities
 export type {
   Activity,
   Activities,
@@ -23,3 +23,13 @@ export type {
   IntervalsDTO,
   ActivityId,
 } from "./schemas/activity";
+
+// Data types - Events
+export type {
+  Event,
+  Events,
+  EventEx,
+  DoomedEvent,
+  DeleteEventsResponse,
+  EventTags,
+} from "./schemas/event";
