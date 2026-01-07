@@ -26,7 +26,6 @@ type NormalizedConfig = Required<
   auth: IntervalsClientConfig["auth"];
   retry: Required<NonNullable<IntervalsClientConfig["retry"]>>;
   hooks: IntervalsClientConfig["hooks"];
-  concurrency: Required<NonNullable<IntervalsClientConfig["concurrency"]>>;
 };
 
 function normalizeConfig(config: IntervalsClientConfig): NormalizedConfig {
@@ -42,9 +41,6 @@ function normalizeConfig(config: IntervalsClientConfig): NormalizedConfig {
       jitterFactor: config.retry?.jitterFactor ?? 0.2,
     },
     hooks: config.hooks,
-    concurrency: {
-      maxConcurrent: config.concurrency?.maxConcurrent ?? 0,
-    },
   };
 }
 
@@ -127,68 +123,12 @@ function httpErrorFromStatus(
   return { kind: "Http", status, message, body };
 }
 
-/**
- * Request queue for concurrency control.
- * Limits the number of concurrent requests to prevent overwhelming the API.
- */
-class RequestQueue {
-  private queue: Array<() => void> = [];
-  private activeCount = 0;
-
-  constructor(private readonly maxConcurrent: number) {}
-
-  async enqueue<T>(fn: () => Promise<T>): Promise<T> {
-    // If no limit or under limit, execute immediately
-    if (this.maxConcurrent === 0 || this.activeCount < this.maxConcurrent) {
-      this.activeCount++;
-      try {
-        return await fn();
-      } finally {
-        this.activeCount--;
-        this.processQueue();
-      }
-    }
-
-    // Otherwise, queue it
-    return new Promise<T>((resolve, reject) => {
-      this.queue.push(async () => {
-        this.activeCount++;
-        try {
-          const result = await fn();
-          resolve(result);
-        } catch (error) {
-          reject(error);
-        } finally {
-          this.activeCount--;
-          this.processQueue();
-        }
-      });
-    });
-  }
-
-  private processQueue(): void {
-    if (
-      this.queue.length === 0 ||
-      (this.maxConcurrent > 0 && this.activeCount >= this.maxConcurrent)
-    ) {
-      return;
-    }
-
-    const next = this.queue.shift();
-    if (next) {
-      next();
-    }
-  }
-}
-
 export class IntervalsHttpClient {
   private readonly cfg: NormalizedConfig;
   private readonly client: KyInstance;
-  private readonly requestQueue: RequestQueue;
 
   constructor(config: IntervalsClientConfig) {
     this.cfg = normalizeConfig(config);
-    this.requestQueue = new RequestQueue(this.cfg.concurrency.maxConcurrent);
     this.client = ky.create({
       prefixUrl: this.cfg.baseUrl,
       timeout: this.cfg.timeoutMs,
@@ -215,132 +155,130 @@ export class IntervalsHttpClient {
     options: RequestOptions,
     readOk: (res: Response) => Promise<unknown>
   ): Promise<Result<unknown, ApiError>> {
-    return this.requestQueue.enqueue(async () => {
-      const attempts = 1 + this.cfg.retry.limit;
-      const normalizedPath = normalizePath(path);
-      const kyOptions = toKyOptions(options);
-      const method = options.method ?? "GET";
-      const startTime = Date.now();
+    const attempts = 1 + this.cfg.retry.limit;
+    const normalizedPath = normalizePath(path);
+    const kyOptions = toKyOptions(options);
+    const method = options.method ?? "GET";
+    const startTime = Date.now();
 
-      // Call onRequest hook
-      if (this.cfg.hooks?.onRequest) {
-        const hookInfo: { method: string; path: string; options?: Record<string, unknown> } = {
-          method,
-          path: normalizedPath,
-        };
-        if (options.searchParams) {
-          hookInfo.options = { searchParams: options.searchParams as unknown };
-        }
-        await this.cfg.hooks.onRequest(hookInfo);
+    // Call onRequest hook
+    if (this.cfg.hooks?.onRequest) {
+      const hookInfo: { method: string; path: string; options?: Record<string, unknown> } = {
+        method,
+        path: normalizedPath,
+      };
+      if (options.searchParams) {
+        hookInfo.options = { searchParams: options.searchParams as unknown };
       }
+      await this.cfg.hooks.onRequest(hookInfo);
+    }
 
-      for (let attempt = 1; attempt <= attempts; attempt++) {
-        try {
-          const res = await this.client(normalizedPath, kyOptions);
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      try {
+        const res = await this.client(normalizedPath, kyOptions);
 
-          if (res.status === 429 && attempt < attempts) {
-            const retryAfterSeconds = parseRetryAfterSeconds(
-              res.headers.get("retry-after")
+        if (res.status === 429 && attempt < attempts) {
+          const retryAfterSeconds = parseRetryAfterSeconds(
+            res.headers.get("retry-after")
+          );
+
+          let delayMs: number;
+          if (retryAfterSeconds !== undefined) {
+            // Respect Retry-After header exactly (don't apply jitter)
+            delayMs = retryAfterSeconds * 1000;
+          } else {
+            // Use exponential backoff with optional jitter
+            const fallbackDelay = Math.min(
+              this.cfg.retry.initialDelayMs * 2 ** (attempt - 1),
+              this.cfg.retry.maxDelayMs
             );
-
-            let delayMs: number;
-            if (retryAfterSeconds !== undefined) {
-              // Respect Retry-After header exactly (don't apply jitter)
-              delayMs = retryAfterSeconds * 1000;
-            } else {
-              // Use exponential backoff with optional jitter
-              const fallbackDelay = Math.min(
-                this.cfg.retry.initialDelayMs * 2 ** (attempt - 1),
-                this.cfg.retry.maxDelayMs
-              );
-              delayMs = this.cfg.retry.jitter
-                ? applyJitter(fallbackDelay, this.cfg.retry.jitterFactor)
-                : fallbackDelay;
-            }
-
-            // Call onRetry hook
-            await this.cfg.hooks?.onRetry?.({
-              method,
-              path: normalizedPath,
-              attempt,
-              maxAttempts: attempts,
-              delayMs,
-              reason: "Rate limit (429)",
-            });
-
-            await sleep(delayMs);
-            continue;
+            delayMs = this.cfg.retry.jitter
+              ? applyJitter(fallbackDelay, this.cfg.retry.jitterFactor)
+              : fallbackDelay;
           }
 
-          if (!res.ok) {
-            const body = await readBodyBestEffort(res);
-            const message = `HTTP ${res.status} ${res.statusText}`.trim();
-            const base = httpErrorFromStatus(res.status, message, body);
-            const durationMs = Date.now() - startTime;
-
-            // Call onError hook
-            await this.cfg.hooks?.onError?.({
-              method,
-              path: normalizedPath,
-              error: new Error(message),
-              durationMs,
-            });
-
-            if (base.kind === "RateLimit") {
-              const retryAfterSeconds = parseRetryAfterSeconds(
-                res.headers.get("retry-after")
-              );
-              return err({
-                ...base,
-                ...(retryAfterSeconds !== undefined ? { retryAfterSeconds } : {}),
-              });
-            }
-            return err(base);
-          }
-
-          const durationMs = Date.now() - startTime;
-
-          // Call onResponse hook
-          await this.cfg.hooks?.onResponse?.({
+          // Call onRetry hook
+          await this.cfg.hooks?.onRetry?.({
             method,
             path: normalizedPath,
-            status: res.status,
-            durationMs,
+            attempt,
+            maxAttempts: attempts,
+            delayMs,
+            reason: "Rate limit (429)",
           });
 
-          return ok(await readOk(res));
-        } catch (e: unknown) {
-          const msg = e instanceof Error ? e.message : "Request failed";
+          await sleep(delayMs);
+          continue;
+        }
+
+        if (!res.ok) {
+          const body = await readBodyBestEffort(res);
+          const message = `HTTP ${res.status} ${res.statusText}`.trim();
+          const base = httpErrorFromStatus(res.status, message, body);
           const durationMs = Date.now() - startTime;
 
           // Call onError hook
           await this.cfg.hooks?.onError?.({
             method,
             path: normalizedPath,
-            error: e,
+            error: new Error(message),
             durationMs,
           });
 
-          if (e instanceof Error && e.name === "TimeoutError")
-            return err(timeoutError(msg, e));
-          if (e instanceof Error) return err(networkError(msg, e));
-          return err(unknownError(msg, e));
+          if (base.kind === "RateLimit") {
+            const retryAfterSeconds = parseRetryAfterSeconds(
+              res.headers.get("retry-after")
+            );
+            return err({
+              ...base,
+              ...(retryAfterSeconds !== undefined ? { retryAfterSeconds } : {}),
+            });
+          }
+          return err(base);
         }
+
+        const durationMs = Date.now() - startTime;
+
+        // Call onResponse hook
+        await this.cfg.hooks?.onResponse?.({
+          method,
+          path: normalizedPath,
+          status: res.status,
+          durationMs,
+        });
+
+        return ok(await readOk(res));
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "Request failed";
+        const durationMs = Date.now() - startTime;
+
+        // Call onError hook
+        await this.cfg.hooks?.onError?.({
+          method,
+          path: normalizedPath,
+          error: e,
+          durationMs,
+        });
+
+        if (e instanceof Error && e.name === "TimeoutError")
+          return err(timeoutError(msg, e));
+        if (e instanceof Error) return err(networkError(msg, e));
+        return err(unknownError(msg, e));
       }
+    }
 
-      const durationMs = Date.now() - startTime;
-      const error = unknownError("Request failed after retries");
+    const durationMs = Date.now() - startTime;
+    const error = unknownError("Request failed after retries");
 
-      // Call onError hook for final failure
-      await this.cfg.hooks?.onError?.({
-        method,
-        path: normalizedPath,
-        error: new Error(error.message),
-        durationMs,
-      });
-
-      return err(error);
+    // Call onError hook for final failure
+    await this.cfg.hooks?.onError?.({
+      method,
+      path: normalizedPath,
+      error: new Error(error.message),
+      durationMs,
     });
+
+    return err(error);
   }
 
   async requestJson<T>(

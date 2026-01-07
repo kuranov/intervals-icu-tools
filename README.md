@@ -94,24 +94,6 @@ const client = new IntervalsClient({
 
 All hooks support both sync and async functions.
 
-#### Concurrency limiting
-
-Limit concurrent requests to avoid overwhelming the API during bulk operations:
-
-```ts
-const client = new IntervalsClient({
-  auth: { type: 'apiKey', apiKey: process.env.INTERVALS_API_KEY! },
-  concurrency: {
-    maxConcurrent: 5, // Max 5 requests in flight (default: 0 = unlimited)
-  },
-});
-
-// Only 5 requests will run concurrently, others queue
-await Promise.all(
-  athleteIds.map(id => client.athletes.get(id))
-);
-```
-
 ### Working with activities
 
 ```ts

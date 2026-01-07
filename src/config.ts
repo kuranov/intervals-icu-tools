@@ -85,15 +85,6 @@ export type RequestHooks = {
   }) => void | Promise<void>;
 };
 
-export type ConcurrencyConfig = {
-  /**
-   * Maximum number of concurrent requests.
-   * Useful for bulk operations to avoid overwhelming the API.
-   * Default: unlimited (0)
-   */
-  maxConcurrent?: number;
-};
-
 export type IntervalsClientConfig = {
   auth: IntervalsAuth;
   /**
@@ -113,10 +104,6 @@ export type IntervalsClientConfig = {
    * Hooks for logging, metrics, and observability.
    */
   hooks?: RequestHooks;
-  /**
-   * Concurrency control for bulk operations.
-   */
-  concurrency?: ConcurrencyConfig;
 };
 
 export const DEFAULT_BASE_URL = 'https://intervals.icu/api/v1';
