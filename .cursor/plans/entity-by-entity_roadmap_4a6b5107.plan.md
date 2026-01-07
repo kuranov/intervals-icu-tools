@@ -165,5 +165,3 @@ For **each operationId** we implement:
 - Optional concurrency limiter / request queue for bulk sync.
 - Better retry (jitter, per-endpoint overrides).
 - Hooks for logging/metrics.
-
-## Phase 5 — Add remaining entities
