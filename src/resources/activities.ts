@@ -59,7 +59,11 @@ export class ActivitiesResource {
 
     return this.http.requestJson(
       `athlete/${athleteId}/activities`,
-      { searchParams: Object.keys(searchParams).length ? searchParams : undefined },
+      {
+        searchParams: Object.keys(searchParams).length
+          ? searchParams
+          : undefined,
+      },
       decodeActivities
     );
   }
@@ -78,7 +82,11 @@ export class ActivitiesResource {
 
     return this.http.requestJson(
       `activity/${id}`,
-      { searchParams: Object.keys(searchParams).length ? searchParams : undefined },
+      {
+        searchParams: Object.keys(searchParams).length
+          ? searchParams
+          : undefined,
+      },
       decodeActivity
     );
   }
@@ -138,7 +146,9 @@ export class ActivitiesResource {
       {
         method: "PUT",
         json: intervals,
-        searchParams: Object.keys(searchParams).length ? searchParams : undefined,
+        searchParams: Object.keys(searchParams).length
+          ? searchParams
+          : undefined,
       },
       decodeIntervalsDTO
     );
