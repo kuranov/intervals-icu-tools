@@ -114,8 +114,6 @@ For **each operationId** we implement:
 - Uploads / multipart: `uploadActivity`, `uploadActivityStreamsCSV` (Phase “binary/uploads”).
 - Streams/CSV, downloads (fit/gpx/original), power/pace/hr curves endpoints (Phase “advanced data”).
 
-
-
 ### Phase 2B — Events (second)
 
 **Goal**: calendar CRUD and the most common bulk flows.**From `intervals-events.json`** (selected MVP operations):
@@ -136,8 +134,6 @@ For **each operationId** we implement:
 
 - Workout download/apply/duplicate flows: `downloadWorkouts`, `downloadWorkout_1`, `applyPlan`, `duplicateEvents`.
 
-
-
 ### Phase 2C — Athletes (third)
 
 **Goal**: support fetching/updating current athlete and key settings/profile.**From `intervals-athletes.json`** (selected MVP operations):
@@ -152,15 +148,70 @@ For **each operationId** we implement:
 
 - Training plan endpoints: `getAthleteTrainingPlan`, `updateAthletePlan`, `updateAthletePlans`.
 
-
-
 ## Phase 3 — Schema maturity + fixtures
 
 - Expand schemas per endpoint, prioritize fields that consumers actually use.
 - Add payload fixtures for regression tests.
 - Document strict-vs-loose validation posture per endpoint.
 
-## Phase 4 — Robustness & ergonomics
+## Phase 4 — Robustness & ergonomics (DONE)
 
-- Optional concurrency limiter / request queue for bulk sync.
-- Better retry (jitter, per-endpoint overrides).
+- ✅ Retry with jitter (prevent thundering herd)
+- ✅ Request hooks for observability (onRequest, onResponse, onError, onRetry)
+- ❌ Concurrency control (removed - keep library thin)
+
+## Phase 5 — Wellness + Library resources
+
+### Phase 5A — Wellness (first)
+
+**Goal**: Daily wellness tracking (weight, HR, HRV, sleep, soreness, etc.)
+
+**From `intervals-wellness.json`** (selected MVP operations):
+
+- `getRecord` (GET `/api/v1/athlete/{id}/wellness/{date}`) — Get wellness for specific date
+- `updateWellness` (PUT `/api/v1/athlete/{id}/wellness/{date}`) — Update wellness for date
+- `updateWellnessBulk` (PUT `/api/v1/athlete/{id}/wellness-bulk`) — Update multiple records
+- `listWellnessRecords` (GET `/api/v1/athlete/{id}/wellness`) — List records for date range (JSON)
+
+**Deferred (post-v0.1)**:
+
+- `uploadWellness` (POST with CSV) — Multipart upload
+- CSV export (`.csv` extension on list endpoint)
+
+### Phase 5B — Library (second)
+
+**Goal**: Workout library management (folders, workouts, plans)
+
+**From `intervals-library.json`** (selected MVP operations):
+
+**Workouts (core CRUD):**
+
+- `listWorkouts` (GET `/api/v1/athlete/{id}/workouts`) — List all workouts
+- `showWorkout` (GET `/api/v1/athlete/{id}/workouts/{workoutId}`) — Get single workout
+- `createWorkout` (POST `/api/v1/athlete/{id}/workouts`) — Create workout
+- `updateWorkout` (PUT `/api/v1/athlete/{id}/workouts/{workoutId}`) — Update workout
+- `deleteWorkout` (DELETE `/api/v1/athlete/{id}/workouts/{workoutId}`) — Delete workout
+- `createMultipleWorkouts` (POST `/api/v1/athlete/{id}/workouts/bulk`) — Bulk create
+
+**Folders (organize workouts):**
+
+- `listFolders` (GET `/api/v1/athlete/{id}/folders`) — List folders/plans with workouts
+- `createFolder` (POST `/api/v1/athlete/{id}/folders`) — Create folder or plan
+- `updateFolder` (PUT `/api/v1/athlete/{id}/folders/{folderId}`) — Update folder/plan
+- `deleteFolder` (DELETE `/api/v1/athlete/{id}/folders/{folderId}`) — Delete folder/plan
+
+**Tags:**
+
+- `listTags` (GET `/api/v1/athlete/{id}/workout-tags`) — List all workout tags
+
+**Deferred (post-v0.1)**:
+
+- File operations: `importWorkoutFile`, `downloadWorkout`, `downloadWorkoutForAthlete`
+- Sharing: `listFolderSharedWith`, `updateFolderSharedWith`
+- Plan operations: `updatePlanWorkouts`, `duplicateWorkouts`, `applyCurrentPlanChanges`
+
+## Phase 6 — Release preparation
+
+- Changesets for changelog generation
+- CI/CD pipeline (tests, typecheck, build)
+- NPM publish workflow
