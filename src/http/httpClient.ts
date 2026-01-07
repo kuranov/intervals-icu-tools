@@ -25,6 +25,8 @@ type NormalizedConfig = Required<
 > & {
   auth: IntervalsClientConfig["auth"];
   retry: Required<NonNullable<IntervalsClientConfig["retry"]>>;
+  hooks: IntervalsClientConfig["hooks"];
+  concurrency: Required<NonNullable<IntervalsClientConfig["concurrency"]>>;
 };
 
 function normalizeConfig(config: IntervalsClientConfig): NormalizedConfig {
@@ -36,12 +38,30 @@ function normalizeConfig(config: IntervalsClientConfig): NormalizedConfig {
       limit: config.retry?.limit ?? 3,
       initialDelayMs: config.retry?.initialDelayMs ?? 1_000,
       maxDelayMs: config.retry?.maxDelayMs ?? 8_000,
+      jitter: config.retry?.jitter ?? true,
+      jitterFactor: config.retry?.jitterFactor ?? 0.2,
+    },
+    hooks: config.hooks,
+    concurrency: {
+      maxConcurrent: config.concurrency?.maxConcurrent ?? 0,
     },
   };
 }
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Applies jitter to a delay value to prevent thundering herd problem.
+ * @param delayMs Base delay in milliseconds
+ * @param jitterFactor Factor between 0-1 determining variation amount (default 0.2 = ±20%)
+ * @returns Delay with random jitter applied
+ */
+function applyJitter(delayMs: number, jitterFactor: number): number {
+  const variation = delayMs * jitterFactor;
+  const jitter = Math.random() * variation * 2 - variation; // Random value between -variation and +variation
+  return Math.max(0, Math.round(delayMs + jitter));
 }
 
 function normalizePath(path: string): string {
@@ -107,12 +127,68 @@ function httpErrorFromStatus(
   return { kind: "Http", status, message, body };
 }
 
+/**
+ * Request queue for concurrency control.
+ * Limits the number of concurrent requests to prevent overwhelming the API.
+ */
+class RequestQueue {
+  private queue: Array<() => void> = [];
+  private activeCount = 0;
+
+  constructor(private readonly maxConcurrent: number) {}
+
+  async enqueue<T>(fn: () => Promise<T>): Promise<T> {
+    // If no limit or under limit, execute immediately
+    if (this.maxConcurrent === 0 || this.activeCount < this.maxConcurrent) {
+      this.activeCount++;
+      try {
+        return await fn();
+      } finally {
+        this.activeCount--;
+        this.processQueue();
+      }
+    }
+
+    // Otherwise, queue it
+    return new Promise<T>((resolve, reject) => {
+      this.queue.push(async () => {
+        this.activeCount++;
+        try {
+          const result = await fn();
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        } finally {
+          this.activeCount--;
+          this.processQueue();
+        }
+      });
+    });
+  }
+
+  private processQueue(): void {
+    if (
+      this.queue.length === 0 ||
+      (this.maxConcurrent > 0 && this.activeCount >= this.maxConcurrent)
+    ) {
+      return;
+    }
+
+    const next = this.queue.shift();
+    if (next) {
+      next();
+    }
+  }
+}
+
 export class IntervalsHttpClient {
   private readonly cfg: NormalizedConfig;
   private readonly client: KyInstance;
+  private readonly requestQueue: RequestQueue;
 
   constructor(config: IntervalsClientConfig) {
     this.cfg = normalizeConfig(config);
+    this.requestQueue = new RequestQueue(this.cfg.concurrency.maxConcurrent);
     this.client = ky.create({
       prefixUrl: this.cfg.baseUrl,
       timeout: this.cfg.timeoutMs,
@@ -139,57 +215,132 @@ export class IntervalsHttpClient {
     options: RequestOptions,
     readOk: (res: Response) => Promise<unknown>
   ): Promise<Result<unknown, ApiError>> {
-    const attempts = 1 + this.cfg.retry.limit;
-    const normalizedPath = normalizePath(path);
-    const kyOptions = toKyOptions(options);
+    return this.requestQueue.enqueue(async () => {
+      const attempts = 1 + this.cfg.retry.limit;
+      const normalizedPath = normalizePath(path);
+      const kyOptions = toKyOptions(options);
+      const method = options.method ?? "GET";
+      const startTime = Date.now();
 
-    for (let attempt = 1; attempt <= attempts; attempt++) {
-      try {
-        const res = await this.client(normalizedPath, kyOptions);
-
-        if (res.status === 429 && attempt < attempts) {
-          const retryAfterSeconds = parseRetryAfterSeconds(
-            res.headers.get("retry-after")
-          );
-          const fallbackDelay = Math.min(
-            this.cfg.retry.initialDelayMs * 2 ** (attempt - 1),
-            this.cfg.retry.maxDelayMs
-          );
-          await sleep(
-            retryAfterSeconds !== undefined
-              ? retryAfterSeconds * 1000
-              : fallbackDelay
-          );
-          continue;
+      // Call onRequest hook
+      if (this.cfg.hooks?.onRequest) {
+        const hookInfo: { method: string; path: string; options?: Record<string, unknown> } = {
+          method,
+          path: normalizedPath,
+        };
+        if (options.searchParams) {
+          hookInfo.options = { searchParams: options.searchParams as unknown };
         }
+        await this.cfg.hooks.onRequest(hookInfo);
+      }
 
-        if (!res.ok) {
-          const body = await readBodyBestEffort(res);
-          const message = `HTTP ${res.status} ${res.statusText}`.trim();
-          const base = httpErrorFromStatus(res.status, message, body);
-          if (base.kind === "RateLimit") {
+      for (let attempt = 1; attempt <= attempts; attempt++) {
+        try {
+          const res = await this.client(normalizedPath, kyOptions);
+
+          if (res.status === 429 && attempt < attempts) {
             const retryAfterSeconds = parseRetryAfterSeconds(
               res.headers.get("retry-after")
             );
-            return err({
-              ...base,
-              ...(retryAfterSeconds !== undefined ? { retryAfterSeconds } : {}),
+
+            let delayMs: number;
+            if (retryAfterSeconds !== undefined) {
+              // Respect Retry-After header exactly (don't apply jitter)
+              delayMs = retryAfterSeconds * 1000;
+            } else {
+              // Use exponential backoff with optional jitter
+              const fallbackDelay = Math.min(
+                this.cfg.retry.initialDelayMs * 2 ** (attempt - 1),
+                this.cfg.retry.maxDelayMs
+              );
+              delayMs = this.cfg.retry.jitter
+                ? applyJitter(fallbackDelay, this.cfg.retry.jitterFactor)
+                : fallbackDelay;
+            }
+
+            // Call onRetry hook
+            await this.cfg.hooks?.onRetry?.({
+              method,
+              path: normalizedPath,
+              attempt,
+              maxAttempts: attempts,
+              delayMs,
+              reason: "Rate limit (429)",
             });
+
+            await sleep(delayMs);
+            continue;
           }
-          return err(base);
+
+          if (!res.ok) {
+            const body = await readBodyBestEffort(res);
+            const message = `HTTP ${res.status} ${res.statusText}`.trim();
+            const base = httpErrorFromStatus(res.status, message, body);
+            const durationMs = Date.now() - startTime;
+
+            // Call onError hook
+            await this.cfg.hooks?.onError?.({
+              method,
+              path: normalizedPath,
+              error: new Error(message),
+              durationMs,
+            });
+
+            if (base.kind === "RateLimit") {
+              const retryAfterSeconds = parseRetryAfterSeconds(
+                res.headers.get("retry-after")
+              );
+              return err({
+                ...base,
+                ...(retryAfterSeconds !== undefined ? { retryAfterSeconds } : {}),
+              });
+            }
+            return err(base);
+          }
+
+          const durationMs = Date.now() - startTime;
+
+          // Call onResponse hook
+          await this.cfg.hooks?.onResponse?.({
+            method,
+            path: normalizedPath,
+            status: res.status,
+            durationMs,
+          });
+
+          return ok(await readOk(res));
+        } catch (e: unknown) {
+          const msg = e instanceof Error ? e.message : "Request failed";
+          const durationMs = Date.now() - startTime;
+
+          // Call onError hook
+          await this.cfg.hooks?.onError?.({
+            method,
+            path: normalizedPath,
+            error: e,
+            durationMs,
+          });
+
+          if (e instanceof Error && e.name === "TimeoutError")
+            return err(timeoutError(msg, e));
+          if (e instanceof Error) return err(networkError(msg, e));
+          return err(unknownError(msg, e));
         }
-
-        return ok(await readOk(res));
-      } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : "Request failed";
-        if (e instanceof Error && e.name === "TimeoutError")
-          return err(timeoutError(msg, e));
-        if (e instanceof Error) return err(networkError(msg, e));
-        return err(unknownError(msg, e));
       }
-    }
 
-    return err(unknownError("Request failed after retries"));
+      const durationMs = Date.now() - startTime;
+      const error = unknownError("Request failed after retries");
+
+      // Call onError hook for final failure
+      await this.cfg.hooks?.onError?.({
+        method,
+        path: normalizedPath,
+        error: new Error(error.message),
+        durationMs,
+      });
+
+      return err(error);
+    });
   }
 
   async requestJson<T>(

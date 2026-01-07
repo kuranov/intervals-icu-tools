@@ -47,6 +47,71 @@ const activity = await client.activities.get(123456);
 if (activity.ok) console.log(activity.value);
 ```
 
+### Advanced configuration
+
+#### Retry with jitter
+
+Automatically retries rate-limited requests (429) with exponential backoff and optional jitter:
+
+```ts
+const client = new IntervalsClient({
+  auth: { type: 'apiKey', apiKey: process.env.INTERVALS_API_KEY! },
+  retry: {
+    limit: 3,              // Max retries (default: 3)
+    initialDelayMs: 1000,  // Base delay (default: 1000ms)
+    maxDelayMs: 8000,      // Max delay cap (default: 8000ms)
+    jitter: true,          // Add randomness (default: true)
+    jitterFactor: 0.2,     // ±20% variation (default: 0.2)
+  },
+});
+```
+
+Jitter prevents "thundering herd" when many clients retry simultaneously.
+
+#### Hooks for observability
+
+Add logging, metrics, or monitoring with lifecycle hooks:
+
+```ts
+const client = new IntervalsClient({
+  auth: { type: 'apiKey', apiKey: process.env.INTERVALS_API_KEY! },
+  hooks: {
+    onRequest: ({ method, path }) => {
+      console.log(`→ ${method} ${path}`);
+    },
+    onResponse: ({ method, path, status, durationMs }) => {
+      console.log(`← ${method} ${path} ${status} (${durationMs}ms)`);
+    },
+    onError: ({ method, path, error, durationMs }) => {
+      console.error(`✗ ${method} ${path} failed after ${durationMs}ms:`, error);
+    },
+    onRetry: ({ method, path, attempt, maxAttempts, delayMs, reason }) => {
+      console.log(`⟳ ${method} ${path} retry ${attempt}/${maxAttempts} after ${delayMs}ms (${reason})`);
+    },
+  },
+});
+```
+
+All hooks support both sync and async functions.
+
+#### Concurrency limiting
+
+Limit concurrent requests to avoid overwhelming the API during bulk operations:
+
+```ts
+const client = new IntervalsClient({
+  auth: { type: 'apiKey', apiKey: process.env.INTERVALS_API_KEY! },
+  concurrency: {
+    maxConcurrent: 5, // Max 5 requests in flight (default: 0 = unlimited)
+  },
+});
+
+// Only 5 requests will run concurrently, others queue
+await Promise.all(
+  athleteIds.map(id => client.athletes.get(id))
+);
+```
+
 ### Working with activities
 
 ```ts

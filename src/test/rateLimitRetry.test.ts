@@ -67,7 +67,7 @@ describe("429 retry behavior", () => {
 
     const client = new IntervalsClient({
       auth: { type: "apiKey", apiKey: "test" },
-      retry: { limit: 2, initialDelayMs: 100, maxDelayMs: 10_000 },
+      retry: { limit: 2, initialDelayMs: 100, maxDelayMs: 10_000, jitter: false },
     });
 
     const p = client.activities.list(0);
