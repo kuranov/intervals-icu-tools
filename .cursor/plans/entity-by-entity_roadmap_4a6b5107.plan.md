@@ -164,9 +164,7 @@ For **each operationId** we implement:
 
 ### Phase 5A — Wellness (first)
 
-**Goal**: Daily wellness tracking (weight, HR, HRV, sleep, soreness, etc.)
-
-**From `intervals-wellness.json`** (selected MVP operations):
+**Goal**: Daily wellness tracking (weight, HR, HRV, sleep, soreness, etc.)**From `intervals-wellness.json`** (selected MVP operations):
 
 - `getRecord` (GET `/api/v1/athlete/{id}/wellness/{date}`) — Get wellness for specific date
 - `updateWellness` (PUT `/api/v1/athlete/{id}/wellness/{date}`) — Update wellness for date
@@ -180,11 +178,7 @@ For **each operationId** we implement:
 
 ### Phase 5B — Library (second)
 
-**Goal**: Workout library management (folders, workouts, plans)
-
-**From `intervals-library.json`** (selected MVP operations):
-
-**Workouts (core CRUD):**
+**Goal**: Workout library management (folders, workouts, plans)**From `intervals-library.json`** (selected MVP operations):**Workouts (core CRUD):**
 
 - `listWorkouts` (GET `/api/v1/athlete/{id}/workouts`) — List all workouts
 - `showWorkout` (GET `/api/v1/athlete/{id}/workouts/{workoutId}`) — Get single workout
@@ -214,4 +208,3 @@ For **each operationId** we implement:
 
 - Changesets for changelog generation
 - CI/CD pipeline (tests, typecheck, build)
-- NPM publish workflow
