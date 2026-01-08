@@ -215,6 +215,134 @@ if (summary.ok) {
 }
 ```
 
+### Working with wellness
+
+```ts
+// List wellness records for a date range
+const records = await client.wellness.list(0, {
+  oldest: '2024-01-01',
+  newest: '2024-01-31',
+});
+if (records.ok) {
+  records.value.forEach((w) => {
+    console.log(`${w.id}: weight=${w.weight}kg, HR=${w.restingHR}`);
+  });
+}
+
+// Get wellness for a specific date
+const wellness = await client.wellness.get(0, '2024-01-15');
+if (wellness.ok) {
+  console.log(`Weight: ${wellness.value.weight}kg`);
+  console.log(`Resting HR: ${wellness.value.restingHR}bpm`);
+  console.log(`HRV: ${wellness.value.hrv}`);
+  console.log(`Sleep: ${wellness.value.sleepSecs}s`);
+}
+
+// Update wellness for a date
+const updated = await client.wellness.update(0, '2024-01-15', {
+  weight: 71.5,
+  sleepSecs: 28800, // 8 hours
+  soreness: 3,
+  fatigue: 2,
+  mood: 8,
+  comments: 'Feeling good today',
+});
+
+// Bulk update multiple wellness records
+const bulkUpdate = await client.wellness.updateBulk(0, [
+  { id: '2024-01-15', weight: 70.5, restingHR: 55 },
+  { id: '2024-01-16', weight: 70.3, restingHR: 54 },
+  { id: '2024-01-17', weight: 70.1, restingHR: 53 },
+]);
+```
+
+### Working with workout library
+
+```ts
+// List all workouts in your library
+const workouts = await client.library.listWorkouts(0);
+if (workouts.ok) {
+  workouts.value.forEach((w) => {
+    console.log(`${w.name} (${w.activity_type})`);
+  });
+}
+
+// Get a specific workout
+const workout = await client.library.getWorkout(0, 123);
+if (workout.ok) {
+  console.log(`Workout: ${workout.value.name}`);
+  console.log(`Description: ${workout.value.description}`);
+}
+
+// Create a new workout
+const newWorkout = await client.library.createWorkout(0, {
+  name: '5x5min @ FTP',
+  description: '5 x 5min @ FTP with 3min recovery',
+  folder_id: 10,
+  activity_type: 'Ride',
+  tags: ['intervals', 'ftp'],
+});
+
+// Update a workout
+const updated = await client.library.updateWorkout(0, 123, {
+  name: 'Updated Workout Name',
+  description: 'New description',
+});
+
+// Delete a workout
+const deleted = await client.library.deleteWorkout(0, 123);
+
+// Create multiple workouts at once
+const bulkWorkouts = await client.library.createMultipleWorkouts(0, [
+  { name: 'Workout 1', folder_id: 10, activity_type: 'Ride' },
+  { name: 'Workout 2', folder_id: 10, activity_type: 'Ride' },
+]);
+
+// List folders and plans
+const folders = await client.library.listFolders(0);
+if (folders.ok) {
+  folders.value.forEach((f) => {
+    console.log(`${f.name} (${f.type})`);
+    console.log(`  Workouts: ${f.children?.length || 0}`);
+  });
+}
+
+// Create a folder
+const newFolder = await client.library.createFolder(0, {
+  type: 'FOLDER',
+  name: 'Cycling Workouts',
+  description: 'My cycling library',
+  visibility: 'PRIVATE',
+});
+
+// Create a training plan
+const newPlan = await client.library.createFolder(0, {
+  type: 'PLAN',
+  name: 'Base Building Plan',
+  description: '12-week aerobic base',
+  visibility: 'PUBLIC',
+  rollout_weeks: 12,
+  auto_rollout_day: 1, // Monday
+  starting_ctl: 50,
+  starting_atl: 40,
+});
+
+// Update a folder
+const updatedFolder = await client.library.updateFolder(0, 10, {
+  name: 'Updated Folder Name',
+  description: 'New description',
+});
+
+// Delete a folder
+const deletedFolder = await client.library.deleteFolder(0, 10);
+
+// List all workout tags
+const tags = await client.library.listTags(0);
+if (tags.ok) {
+  console.log('Tags:', tags.value.join(', '));
+}
+```
+
 ## Error handling
 
 All API calls return a `Result<T, ApiError>`:

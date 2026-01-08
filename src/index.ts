@@ -44,3 +44,19 @@ export type {
   SummaryWithCats,
   AthleteSummary,
 } from "./schemas/athlete";
+
+// Data types - Wellness
+export type {
+  Wellness,
+  WellnessList,
+  SportInfo,
+} from "./schemas/wellness";
+
+// Data types - Library
+export type {
+  Workout,
+  Workouts,
+  Folder,
+  Folders,
+  WorkoutTags,
+} from "./schemas/library";

@@ -8,3 +8,5 @@
 export * from './activity.fixture';
 export * from './event.fixture';
 export * from './athlete.fixture';
+export * from './wellness.fixture';
+export * from './library.fixture';
