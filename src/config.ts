@@ -1,13 +1,13 @@
 export type IntervalsAuth =
   | {
-      type: 'apiKey';
+      type: "apiKey";
       /**
        * Intervals.icu API key (used as Basic auth password with username "API_KEY")
        */
       apiKey: string;
     }
   | {
-      type: 'accessToken';
+      type: "accessToken";
       /**
        * OAuth access token (used as Bearer token)
        */
@@ -106,15 +106,12 @@ export type IntervalsClientConfig = {
   hooks?: RequestHooks;
 };
 
-export const DEFAULT_BASE_URL = 'https://intervals.icu/api/v1';
+export const DEFAULT_BASE_URL = "https://intervals.icu/api/v1";
 
 export function buildAuthorizationHeader(auth: IntervalsAuth): string {
-  if (auth.type === 'apiKey') {
-    const token = Buffer.from(`API_KEY:${auth.apiKey}`, 'utf8').toString('base64');
+  if (auth.type === "apiKey") {
+    const token = btoa(`API_KEY:${auth.apiKey}`);
     return `Basic ${token}`;
   }
   return `Bearer ${auth.accessToken}`;
 }
-
-
-
