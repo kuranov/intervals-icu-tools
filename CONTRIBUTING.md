@@ -42,7 +42,7 @@
 **Dev Dependencies:**
 - `vitest` - Fast test runner
 - `msw` - API mocking for tests
-- `tsup` - Zero-config bundler
+- `tsdown` - Fast bundler powered by rolldown
 - TypeScript 5.7+
 
 **What We DON'T Use:**

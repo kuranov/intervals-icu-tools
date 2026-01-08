@@ -171,7 +171,7 @@ this.http.requestArrayBuffer(path, options)
 **Dev Dependencies:**
 - `vitest` - Test runner
 - `msw` - API mocking for tests
-- `tsup` - Zero-config bundler
+- `tsdown` - Fast bundler powered by rolldown
 - TypeScript 5.7+
 
 **Build Output:**
