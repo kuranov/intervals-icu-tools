@@ -6,11 +6,11 @@
   "author": "Anton Kuranov <ya.kuranov@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kuranov/intervals-client.git"
+    "url": "git+https://github.com/kuranov/intervals-icu-tools.git"
   },
-  "homepage": "https://github.com/kuranov/intervals-client#readme",
+  "homepage": "https://github.com/kuranov/intervals-icu-tools#readme",
   "bugs": {
-    "url": "https://github.com/kuranov/intervals-client/issues"
+    "url": "https://github.com/kuranov/intervals-icu-tools/issues"
   },
   "type": "module",
   "sideEffects": false,
