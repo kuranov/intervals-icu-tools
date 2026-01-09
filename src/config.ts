@@ -48,6 +48,9 @@ export type RetryConfig = {
 export type RequestHooks = {
   /**
    * Called before each request is sent.
+   *
+   * **Important:** If this hook throws an error, the entire request will fail.
+   * This allows you to implement request validation or cancellation logic.
    */
   onRequest?: (info: {
     method: string;
@@ -56,6 +59,8 @@ export type RequestHooks = {
   }) => void | Promise<void>;
   /**
    * Called after a successful response.
+   *
+   * **Important:** If this hook throws an error, the entire request will fail.
    */
   onResponse?: (info: {
     method: string;
@@ -65,6 +70,9 @@ export type RequestHooks = {
   }) => void | Promise<void>;
   /**
    * Called when an error occurs (HTTP error, network error, timeout, etc.).
+   *
+   * **Important:** If this hook throws an error, it will be swallowed to prevent
+   * masking the original error. Use this hook for logging and observability.
    */
   onError?: (info: {
     method: string;
@@ -74,6 +82,9 @@ export type RequestHooks = {
   }) => void | Promise<void>;
   /**
    * Called when a retry is about to happen.
+   *
+   * **Important:** If this hook throws an error, the retry will be cancelled
+   * and the request will fail.
    */
   onRetry?: (info: {
     method: string;

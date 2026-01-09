@@ -2,7 +2,10 @@ import * as v from "valibot";
 
 // Base Athlete schema
 export const AthleteSchema = v.looseObject({
-  id: v.optional(v.union([v.string(), v.number()])),
+  // Required fields (API always returns these)
+  id: v.union([v.string(), v.number()]),
+
+  // Optional fields
   athlete_id: v.optional(v.union([v.string(), v.number()])),
   ext_athlete_id: v.optional(v.union([v.string(), v.number()])),
 

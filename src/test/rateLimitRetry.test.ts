@@ -25,7 +25,7 @@ describe("429 retry behavior", () => {
             headers: { "Retry-After": "2" },
           });
         }
-        return HttpResponse.json([{ id: 123, name: "ok" }]);
+        return HttpResponse.json([{ id: 123, name: "ok", type: "Ride", start_date_local: "2024-01-15T10:00:00" }]);
       })
     );
 
@@ -61,7 +61,7 @@ describe("429 retry behavior", () => {
         if (hits < 3) {
           return new HttpResponse(null, { status: 429 });
         }
-        return HttpResponse.json([{ id: 123, name: "ok" }]);
+        return HttpResponse.json([{ id: 123, name: "ok", type: "Ride", start_date_local: "2024-01-15T10:00:00" }]);
       })
     );
 

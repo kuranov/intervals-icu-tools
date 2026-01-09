@@ -150,6 +150,7 @@ describe('Schema Regression Tests', () => {
         id: 99999,
         name: 'Minimal Activity',
         type: 'Run',
+        start_date_local: '2024-01-15T10:00:00',
       };
       expect(() => decodeActivity(minimalActivity)).not.toThrow();
       const result = decodeActivity(minimalActivity);

@@ -60,3 +60,7 @@ export type {
   Folders,
   WorkoutTags,
 } from "./schemas/library";
+
+// Common schemas
+export { ActivityTypeSchema } from "./schemas/common";
+export type { ActivityType } from "./schemas/common";

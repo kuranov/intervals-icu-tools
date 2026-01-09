@@ -1,4 +1,5 @@
 import * as v from "valibot";
+import { ActivityTypeSchema } from "./common";
 
 /**
  * Folder/Plan type enum
@@ -11,83 +12,19 @@ export const FolderTypeSchema = v.picklist(["FOLDER", "PLAN"]);
 export const VisibilitySchema = v.picklist(["PRIVATE", "PUBLIC"]);
 
 /**
- * Activity types supported by Intervals.icu
- */
-export const ActivityTypeSchema = v.optional(
-  v.picklist([
-    "Ride",
-    "Run",
-    "Swim",
-    "WeightTraining",
-    "Hike",
-    "Walk",
-    "AlpineSki",
-    "BackcountrySki",
-    "Badminton",
-    "Canoeing",
-    "Crossfit",
-    "EBikeRide",
-    "EMountainBikeRide",
-    "Elliptical",
-    "Golf",
-    "GravelRide",
-    "TrackRide",
-    "Handcycle",
-    "HighIntensityIntervalTraining",
-    "Hockey",
-    "IceSkate",
-    "InlineSkate",
-    "Kayaking",
-    "Kitesurf",
-    "MountainBikeRide",
-    "NordicSki",
-    "OpenWaterSwim",
-    "Padel",
-    "Pilates",
-    "Pickleball",
-    "Racquetball",
-    "Rugby",
-    "RockClimbing",
-    "RollerSki",
-    "Rowing",
-    "Sail",
-    "Skateboard",
-    "Snowboard",
-    "Snowshoe",
-    "Soccer",
-    "Squash",
-    "StairStepper",
-    "StandUpPaddling",
-    "Surfing",
-    "TableTennis",
-    "Tennis",
-    "TrailRun",
-    "Transition",
-    "Velomobile",
-    "VirtualRide",
-    "VirtualRow",
-    "VirtualRun",
-    "VirtualSki",
-    "WaterSport",
-    "Wheelchair",
-    "Windsurf",
-    "Workout",
-    "Yoga",
-    "Other",
-  ])
-);
-
-/**
  * Workout schema (minimal fields, allows extra via looseObject)
  * The API doesn't fully document all workout fields in the OpenAPI spec,
  * so we use looseObject to accept whatever the API returns.
  */
 export const WorkoutSchema = v.looseObject({
-  id: v.optional(v.number()),
-  name: v.optional(v.string()),
+  // Required fields (API always returns these for existing workouts)
+  id: v.number(),
+  name: v.string(),
+
+  // Optional fields
   description: v.optional(v.string()),
   folder_id: v.optional(v.number()),
-  activity_type: ActivityTypeSchema,
+  activity_type: v.optional(ActivityTypeSchema),
   file_contents: v.optional(v.string()),
   file_contents_base64: v.optional(v.string()),
   tags: v.optional(v.array(v.string())),
@@ -105,10 +42,13 @@ export type Workouts = v.InferOutput<typeof WorkoutsSchema>;
  * Folder schema for organizing workouts
  */
 export const FolderSchema = v.looseObject({
+  // Required fields (API always returns these)
+  id: v.number(),
+  type: FolderTypeSchema,
+  name: v.string(),
+
+  // Optional fields
   athlete_id: v.optional(v.string()),
-  id: v.optional(v.number()),
-  type: v.optional(FolderTypeSchema),
-  name: v.optional(v.string()),
   description: v.optional(v.string()),
   children: v.optional(v.array(WorkoutSchema)),
   visibility: v.optional(VisibilitySchema),
@@ -118,7 +58,7 @@ export const FolderSchema = v.looseObject({
   read_only_workouts: v.optional(v.boolean()),
   starting_ctl: v.optional(v.number()),
   starting_atl: v.optional(v.number()),
-  activity_types: v.optional(v.array(ActivityTypeSchema)),
+  activity_types: v.optional(v.array(v.optional(ActivityTypeSchema))),
 });
 
 export type Folder = v.InferOutput<typeof FolderSchema>;

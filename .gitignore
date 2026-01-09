@@ -6,3 +6,6 @@ coverage
 .env
 .env.*
 .pnpm-store
+
+# Internal context for AI/development (not for public repo)
+.context/

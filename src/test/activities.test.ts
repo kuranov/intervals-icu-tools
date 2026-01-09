@@ -12,9 +12,9 @@ describe('ActivitiesResource', () => {
       server.use(
         http.get(`${baseUrl}/athlete/0/activities`, ({ request }) => {
           // Verify Basic auth with API_KEY username
-          const expectedAuth = `Basic ${Buffer.from('API_KEY:test', 'utf8').toString('base64')}`;
+          const expectedAuth = `Basic ${btoa('API_KEY:test')}`;
           expect(request.headers.get('authorization')).toBe(expectedAuth);
-          return HttpResponse.json([{ id: 123, name: 'Test Ride' }]);
+          return HttpResponse.json([{ id: 123, name: 'Test Ride', type: 'Ride', start_date_local: '2024-01-15T10:00:00' }]);
         }),
       );
 
@@ -33,7 +33,7 @@ describe('ActivitiesResource', () => {
           const url = new URL(request.url);
           expect(url.searchParams.get('oldest')).toBe('2024-01-01');
           expect(url.searchParams.get('limit')).toBe('10');
-          return HttpResponse.json([{ id: 456, name: 'Morning Run' }]);
+          return HttpResponse.json([{ id: 456, name: 'Morning Run', type: 'Run', start_date_local: '2024-01-15T06:00:00' }]);
         }),
       );
 
@@ -86,7 +86,7 @@ describe('ActivitiesResource', () => {
     test('happy path: returns ok + parsed activity', async () => {
       server.use(
         http.get(`${baseUrl}/activity/123`, () => {
-          return HttpResponse.json({ id: 123, name: 'Test Ride', type: 'Ride' });
+          return HttpResponse.json({ id: 123, name: 'Test Ride', type: 'Ride', start_date_local: '2024-01-15T10:00:00' });
         }),
       );
 
@@ -123,7 +123,7 @@ describe('ActivitiesResource', () => {
         http.put(`${baseUrl}/activity/123`, async ({ request }) => {
           const body = (await request.json()) as { name: string };
           expect(body.name).toBe('Updated Name');
-          return HttpResponse.json({ id: 123, name: 'Updated Name' });
+          return HttpResponse.json({ id: 123, name: 'Updated Name', type: 'Ride', start_date_local: '2024-01-15T10:00:00' });
         }),
       );
 

@@ -1,9 +1,17 @@
 {
-  "name": "intervals-icu-client",
-  "version": "0.0.0",
+  "name": "@kuranov/intervals-client",
+  "version": "1.0.0",
   "description": "Type-safe TypeScript client for the Intervals.icu API",
   "license": "MIT",
-  "author": "",
+  "author": "Anton Kuranov <ya.kuranov@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuranov/intervals-client.git"
+  },
+  "homepage": "https://github.com/kuranov/intervals-client#readme",
+  "bugs": {
+    "url": "https://github.com/kuranov/intervals-client/issues"
+  },
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -25,9 +33,21 @@
     "build": "tsdown",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepublishOnly": "pnpm run typecheck && pnpm run test && pnpm run build"
   },
-  "keywords": [],
+  "keywords": [
+    "intervals",
+    "intervals.icu",
+    "cycling",
+    "training",
+    "fitness",
+    "typescript",
+    "api-client",
+    "strava",
+    "workout",
+    "athlete"
+  ],
   "engines": {
     "node": ">=18"
   },

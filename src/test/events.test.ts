@@ -12,8 +12,8 @@ describe('EventsResource', () => {
       server.use(
         http.get(`${baseUrl}/athlete/0/events`, () => {
           return HttpResponse.json([
-            { id: 1, name: 'Morning Workout', category: 'WORKOUT' },
-            { id: 2, name: 'Recovery Run', category: 'WORKOUT' },
+            { id: 1, name: 'Morning Workout', category: 'WORKOUT', start_date_local: '2024-01-15' },
+            { id: 2, name: 'Recovery Run', category: 'WORKOUT', start_date_local: '2024-01-16' },
           ]);
         }),
       );
@@ -36,7 +36,7 @@ describe('EventsResource', () => {
           expect(url.searchParams.get('newest')).toBe('2024-01-31');
           expect(url.searchParams.get('category')).toBe('WORKOUT,NOTES');
           expect(url.searchParams.get('limit')).toBe('10');
-          return HttpResponse.json([{ id: 3, name: 'Test Event' }]);
+          return HttpResponse.json([{ id: 3, name: 'Test Event', start_date_local: '2024-01-15' }]);
         }),
       );
 
@@ -80,6 +80,7 @@ describe('EventsResource', () => {
             name: 'Morning Workout',
             category: 'WORKOUT',
             description: '5x5min @ FTP',
+            start_date_local: '2024-01-15',
           });
         }),
       );
@@ -121,6 +122,7 @@ describe('EventsResource', () => {
             id: 456,
             name: 'New Workout',
             category: 'WORKOUT',
+            start_date_local: '2024-01-15',
           });
         }),
       );
@@ -144,7 +146,7 @@ describe('EventsResource', () => {
         http.post(`${baseUrl}/athlete/0/events`, ({ request }) => {
           const url = new URL(request.url);
           expect(url.searchParams.get('upsertOnUid')).toBe('true');
-          return HttpResponse.json({ id: 789, name: 'Upserted Event' });
+          return HttpResponse.json({ id: 789, name: 'Upserted Event', start_date_local: '2024-01-15' });
         }),
       );
 
@@ -165,7 +167,7 @@ describe('EventsResource', () => {
         http.put(`${baseUrl}/athlete/0/events/123`, async ({ request }) => {
           const body = (await request.json()) as { name: string };
           expect(body.name).toBe('Updated Name');
-          return HttpResponse.json({ id: 123, name: 'Updated Name' });
+          return HttpResponse.json({ id: 123, name: 'Updated Name', start_date_local: '2024-01-15' });
         }),
       );
 
@@ -221,8 +223,8 @@ describe('EventsResource', () => {
           expect(body).toHaveLength(2);
           expect(body[0]?.name).toBe('Event 1');
           return HttpResponse.json([
-            { id: 100, name: 'Event 1' },
-            { id: 101, name: 'Event 2' },
+            { id: 100, name: 'Event 1', start_date_local: '2024-01-01' },
+            { id: 101, name: 'Event 2', start_date_local: '2024-01-02' },
           ]);
         }),
       );
@@ -246,7 +248,7 @@ describe('EventsResource', () => {
           const url = new URL(request.url);
           expect(url.searchParams.get('upsert')).toBe('true');
           expect(url.searchParams.get('updatePlanApplied')).toBe('true');
-          return HttpResponse.json([{ id: 200, name: 'Bulk Event' }]);
+          return HttpResponse.json([{ id: 200, name: 'Bulk Event', start_date_local: '2024-01-15' }]);
         }),
       );
 
@@ -310,8 +312,8 @@ describe('EventsResource', () => {
           const body = (await request.json()) as { hide_from_athlete?: boolean };
           expect(body.hide_from_athlete).toBe(true);
           return HttpResponse.json([
-            { id: 1, hide_from_athlete: true },
-            { id: 2, hide_from_athlete: true },
+            { id: 1, hide_from_athlete: true, start_date_local: '2024-01-01' },
+            { id: 2, hide_from_athlete: true, start_date_local: '2024-01-02' },
           ]);
         }),
       );

@@ -2,10 +2,13 @@ import * as v from "valibot";
 
 // Base Event schema with commonly used fields
 export const EventSchema = v.looseObject({
-  id: v.optional(v.number()),
+  // Required fields (API always returns these)
+  id: v.number(),
+  start_date_local: v.string(), // Events always have a date
+
+  // Optional fields
   athlete_id: v.optional(v.union([v.string(), v.number()])),
   category: v.optional(v.string()),
-  start_date_local: v.optional(v.string()),
   end_date_local: v.optional(v.string()),
   name: v.optional(v.string()),
   description: v.optional(v.string()),

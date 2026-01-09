@@ -1,55 +1,128 @@
-# intervals-icu-client
+# @kuranov/intervals-client
 
-Type-safe TypeScript client for the Intervals.icu API (Node.js 18+).
+Modern, type-safe TypeScript client for the [Intervals.icu](https://intervals.icu) API.
+
+## Why This Library?
+
+- **🛡️ Runtime Validation** - Catches API changes before they break your app (powered by [Valibot](https://valibot.dev))
+- **🌍 Universal** - Works in Node.js 18+, Bun, Deno, browsers, and edge runtimes
+- **🪶 Lightweight** - Zero heavy dependencies (~8KB gzipped)
+- **🔐 Auth Ready** - Supports both API key and OAuth2 authentication
+- **⚡ Smart Rate Limiting** - Automatic retry with exponential backoff
+- **📦 Complete Coverage** - All API resources: Activities, Athletes, Events, Wellness, Library
+- **🎯 Type Safe** - Full TypeScript support with strict types
+- **🧪 Well Tested** - 116 tests covering all operations
 
 ## Install
 
 ```bash
-pnpm add intervals-icu-client
+npm install @kuranov/intervals-client
+# or
+pnpm add @kuranov/intervals-client
+# or
+yarn add @kuranov/intervals-client
 ```
 
-## Usage
+## Quick Start
 
-### Basic auth (personal API key)
+### API Key Authentication (Personal Scripts)
+
+Perfect for personal automation scripts and server-side integrations.
 
 ```ts
-import { IntervalsClient } from 'intervals-icu-client';
+import { IntervalsClient } from '@kuranov/intervals-client';
 
 const client = new IntervalsClient({
   auth: { type: 'apiKey', apiKey: process.env.INTERVALS_API_KEY! },
 });
 
-// List activities
-const activities = await client.activities.list(0, {
+// List recent activities
+const result = await client.activities.list(0, {
   oldest: '2024-01-01',
   limit: 10,
 });
 
-if (!activities.ok) {
-  console.error(activities.error);
+if (!result.ok) {
+  console.error('Error:', result.error.kind);
   process.exitCode = 1;
 } else {
-  console.log(activities.value);
+  console.log(`Found ${result.value.length} activities`);
+  result.value.forEach(activity => {
+    console.log(`${activity.start_date_local}: ${activity.name}`);
+  });
 }
 ```
 
-### OAuth (Bearer access token)
+### OAuth2 Authentication (Public Apps)
+
+Required for applications serving multiple users. The library handles token management and refresh.
 
 ```ts
-import { IntervalsClient } from 'intervals-icu-client';
+import { IntervalsClient } from '@kuranov/intervals-client';
 
 const client = new IntervalsClient({
-  auth: { type: 'accessToken', accessToken: process.env.INTERVALS_ACCESS_TOKEN! },
+  auth: {
+    type: 'accessToken',
+    accessToken: user.intervalsAccessToken,
+  },
 });
 
-// Get a single activity
-const activity = await client.activities.get(123456);
-if (activity.ok) console.log(activity.value);
+// Get athlete profile
+const athlete = await client.athletes.get('me');
+if (athlete.ok) {
+  console.log(`Athlete: ${athlete.value.name}`);
+  console.log(`FTP: ${athlete.value.ftp || 'Not set'}`);
+}
 ```
 
-### Advanced configuration
+> **Note:** OAuth2 flow requires separate handling of authorization URL generation and token exchange. See the [OAuth Guide](#oauth2-flow) below for complete implementation.
 
-#### Retry with jitter
+## API Coverage
+
+The library provides complete coverage of the Intervals.icu API v1:
+
+### Resources
+
+- **Activities** - List, get, update, delete activities and intervals
+- **Athletes** - Get athlete profiles, settings, and summaries
+- **Events** - Manage calendar events (workouts, races, notes)
+- **Wellness** - Track daily wellness metrics (HRV, sleep, mood, etc.)
+- **Library** - Manage workout library folders and plans
+
+### Quick Reference
+
+```ts
+// Activities
+await client.activities.list(athleteId, { oldest: '2024-01-01' });
+await client.activities.get(activityId);
+await client.activities.update(activityId, { name: 'Morning Ride' });
+await client.activities.delete(activityId);
+
+// Events (Calendar)
+await client.events.list(athleteId, { oldest: '2024-01-01' });
+await client.events.create(athleteId, { name: 'Workout', start_date_local: '2024-01-15' });
+await client.events.update(athleteId, eventId, { description: 'Updated' });
+
+// Wellness
+await client.wellness.list(athleteId, { oldest: '2024-01-01' });
+await client.wellness.update(athleteId, '2024-01-15', { weight: 72, restingHR: 45 });
+
+// Athletes
+await client.athletes.get(athleteId);
+await client.athletes.update(athleteId, { name: 'New Name' });
+await client.athletes.getSettings(athleteId);
+
+// Library
+await client.library.listWorkouts(athleteId);
+await client.library.listFolders(athleteId);
+await client.library.createFolder(athleteId, { type: 'FOLDER', name: 'My Workouts' });
+```
+
+See [Examples](#examples) below for complete usage patterns.
+
+## Configuration
+
+### Retry with jitter
 
 Automatically retries rate-limited requests (429) with exponential backoff and optional jitter:
 
@@ -66,9 +139,9 @@ const client = new IntervalsClient({
 });
 ```
 
-Jitter prevents "thundering herd" when many clients retry simultaneously.
+Jitter prevents "thundering herd" when many clients retry simultaneously. The library automatically respects `Retry-After` headers when present.
 
-#### Hooks for observability
+### Hooks for observability
 
 Add logging, metrics, or monitoring with lifecycle hooks:
 
@@ -92,7 +165,9 @@ const client = new IntervalsClient({
 });
 ```
 
-All hooks support both sync and async functions.
+All hooks support both sync and async functions. **Note:** If a hook throws an error, it will fail the request (except `onError`, which is swallowed to avoid masking the original error).
+
+## Examples
 
 ### Working with activities
 
@@ -256,6 +331,64 @@ const bulkUpdate = await client.wellness.updateBulk(0, [
 ]);
 ```
 
+### OAuth2 Flow
+
+For public applications serving multiple users, implement the full OAuth2 authorization code flow:
+
+```ts
+// Step 1: Redirect user to authorization URL
+const authUrl = new URL('https://intervals.icu/oauth/authorize');
+authUrl.searchParams.set('client_id', YOUR_CLIENT_ID);
+authUrl.searchParams.set('redirect_uri', YOUR_REDIRECT_URI);
+authUrl.searchParams.set('response_type', 'code');
+authUrl.searchParams.set('scope', 'ACTIVITY:READ ACTIVITY:WRITE WELLNESS:READ');
+authUrl.searchParams.set('state', generateRandomState()); // CSRF protection
+
+// Redirect user to: authUrl.toString()
+
+// Step 2: Handle callback and exchange code for token
+const tokenResponse = await fetch('https://intervals.icu/api/v1/oauth/token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    grant_type: 'authorization_code',
+    code: codeFromCallback,
+    client_id: YOUR_CLIENT_ID,
+    client_secret: YOUR_CLIENT_SECRET,
+    redirect_uri: YOUR_REDIRECT_URI,
+  }),
+});
+
+const tokens = await tokenResponse.json();
+// { access_token, refresh_token, expires_in, token_type, scope }
+
+// Step 3: Use the access token
+const client = new IntervalsClient({
+  auth: { type: 'accessToken', accessToken: tokens.access_token },
+});
+
+// Step 4: Refresh when expired (tokens expire after 8 hours)
+const refreshResponse = await fetch('https://intervals.icu/api/v1/oauth/token', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    grant_type: 'refresh_token',
+    refresh_token: tokens.refresh_token,
+    client_id: YOUR_CLIENT_ID,
+    client_secret: YOUR_CLIENT_SECRET,
+  }),
+});
+
+const newTokens = await refreshResponse.json();
+// Update stored tokens and recreate client with new access_token
+```
+
+**Available OAuth scopes:**
+- `ACTIVITY:READ`, `ACTIVITY:WRITE`
+- `WELLNESS:READ`, `WELLNESS:WRITE`
+- `CALENDAR:READ`, `CALENDAR:WRITE`
+- `SETTINGS:READ`
+
 ### Working with workout library
 
 ```ts
@@ -343,21 +476,185 @@ if (tags.ok) {
 }
 ```
 
-## Error handling
+## Error Handling
 
-All API calls return a `Result<T, ApiError>`:
+All API calls return a `Result<T, ApiError>` - no exceptions are thrown.
 
-- `{ ok: true, value }` on success
-- `{ ok: false, error }` on failure (HTTP, auth, schema validation, network, etc.)
+### Result Pattern
+
+```ts
+const result = await client.activities.get(123);
+
+if (!result.ok) {
+  // Error handling
+  switch (result.error.kind) {
+    case 'Unauthorized':
+      console.error('Invalid credentials');
+      break;
+    case 'NotFound':
+      console.error('Activity not found');
+      break;
+    case 'Schema':
+      console.error('Validation failed:', result.error.issues);
+      break;
+    case 'RateLimit':
+      console.error('Rate limited, retry after:', result.error.retryAfter);
+      break;
+    default:
+      console.error('Unknown error:', result.error);
+  }
+} else {
+  // Success - use result.value
+  console.log(result.value.name);
+}
+```
+
+### Error Types
+
+- `Unauthorized` (401) - Invalid API key or expired token
+- `Forbidden` (403) - Insufficient permissions
+- `NotFound` (404) - Resource doesn't exist
+- `RateLimit` (429) - Too many requests (includes `retryAfter` hint)
+- `Schema` - Response validation failed (API changed or malformed data)
+- `Network` - Connection error, timeout, or DNS failure
+- `Unknown` - Other HTTP errors
+
+## Type Safety & Validation
+
+This library uses [Valibot](https://valibot.dev/) for runtime schema validation and TypeScript type generation.
+
+### Validation Philosophy
+
+The library uses a **"loose object"** validation strategy that balances type safety with API flexibility:
+
+```typescript
+// Schema example (simplified)
+export const ActivitySchema = v.looseObject({
+  // Required fields - API always returns these
+  id: v.union([v.string(), v.number()]),
+  type: v.string(),
+  start_date_local: v.string(),
+
+  // Optional fields - may or may not be present
+  name: v.optional(v.string()),
+  distance: v.optional(v.number()),
+  // ... 100+ more optional fields
+});
+```
+
+#### Why `looseObject`?
+
+**Reason 1: API Evolution**
+The Intervals.icu API can return extra fields not documented in the OpenAPI spec. Using `looseObject` allows the library to accept these fields without breaking.
+
+**Reason 2: Incomplete Documentation**
+Some API endpoints return fields that aren't in the official spec. Strict validation would reject valid API responses.
+
+**Reason 3: Future Compatibility**
+When Intervals.icu adds new fields, your code continues working without requiring a library update.
+
+#### What Gets Validated?
+
+✅ **Required fields are enforced:**
+```typescript
+// TypeScript knows these are always present
+activity.id         // number | string (never undefined)
+activity.type       // string (never undefined)
+activity.start_date_local  // string (never undefined)
+```
+
+✅ **Optional fields are typed correctly:**
+```typescript
+// TypeScript knows these might be undefined
+activity.name       // string | undefined
+activity.distance   // number | undefined
+```
+
+✅ **Invalid data is caught at runtime:**
+```typescript
+const result = await client.activities.get(123);
+
+if (!result.ok && result.error.kind === 'Schema') {
+  // API returned data that doesn't match the schema
+  console.error('Validation failed:', result.error.issues);
+}
+```
+
+❌ **Extra fields are allowed (not validated):**
+```typescript
+// If API returns a new field "future_field", it passes validation
+// and is available on the object (but TypeScript doesn't know about it)
+```
+
+#### Trade-offs
+
+**Benefits:**
+- ✅ Forward compatible with API changes
+- ✅ Works with undocumented API fields
+- ✅ No false-positive validation errors
+- ✅ Simple, consistent pattern across all schemas
+
+**Limitations:**
+- ⚠️ Extra fields aren't typed in TypeScript (use type assertions if needed)
+- ⚠️ Can't catch typos in field names at runtime (TypeScript catches them at compile time)
+
+#### When Validation Fails
+
+If the API returns data that doesn't match the schema (e.g., missing required field, wrong type), you'll get a `Schema` error:
+
+```typescript
+const result = await client.activities.get(123);
+
+if (!result.ok) {
+  if (result.error.kind === 'Schema') {
+    // Valibot validation failed
+    console.error('Schema validation error:');
+    result.error.issues.forEach(issue => {
+      console.error(`  ${issue.path}: ${issue.message}`);
+    });
+  }
+}
+```
+
+This is rare but can happen if:
+- The Intervals.icu API changes in a breaking way
+- There's a bug in the API
+- Network corruption (very rare)
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Open an issue to discuss the change
+2. Fork the repository
+3. Create a feature branch
+4. Add tests for new functionality
+5. Ensure all tests pass (`pnpm test`)
+6. Submit a pull request
 
 ## Development
 
 ```bash
+# Install dependencies
 pnpm install
+
+# Type check
 pnpm run typecheck
+
+# Run tests
 pnpm test
+
+# Build
 pnpm run build
 ```
+
+## License
+
+MIT © [Anton Kuranov](https://github.com/kuranov)
+
+## Acknowledgments
+
+Built for the [Intervals.icu](https://intervals.icu) community. Special thanks to David Tinker for creating and maintaining the platform and its open API.
 
 
 

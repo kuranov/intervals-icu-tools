@@ -2,12 +2,15 @@ import * as v from "valibot";
 
 // Base Activity schema with commonly used fields
 export const ActivitySchema = v.looseObject({
+  // Required fields (API always returns these)
   id: v.union([v.string(), v.number()]),
+  type: v.string(), // Activity type is always present
+  start_date_local: v.string(), // Activities always have a date
+
+  // Optional fields
   athlete_id: v.optional(v.union([v.string(), v.number()])),
   name: v.optional(v.string()),
   description: v.optional(v.string()),
-  type: v.optional(v.string()),
-  start_date_local: v.optional(v.string()),
   start_date: v.optional(v.string()),
   created: v.optional(v.string()),
   timezone: v.optional(v.string()),
