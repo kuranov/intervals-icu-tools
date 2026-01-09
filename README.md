@@ -2,6 +2,36 @@
 
 Modern, type-safe TypeScript client for the [Intervals.icu](https://intervals.icu) API.
 
+## Table of Contents
+
+- [Why This Library?](#why-this-library)
+- [Install](#install)
+- [Quick Start](#quick-start)
+  - [API Key Authentication](#api-key-authentication-personal-scripts)
+  - [OAuth2 Authentication](#oauth2-authentication-public-apps)
+- [API Coverage](#api-coverage)
+  - [Resources](#resources)
+  - [Quick Reference](#quick-reference)
+- [Configuration](#configuration)
+  - [Retry with jitter](#retry-with-jitter)
+  - [Hooks for observability](#hooks-for-observability)
+- [Examples](#examples)
+  - [Working with activities](#working-with-activities)
+  - [Working with events](#working-with-events)
+  - [Working with athletes](#working-with-athletes)
+  - [Working with wellness](#working-with-wellness)
+  - [OAuth2 Flow](#oauth2-flow)
+  - [Working with workout library](#working-with-workout-library)
+- [Error Handling](#error-handling)
+  - [Result Pattern](#result-pattern)
+  - [Error Types](#error-types)
+- [Type Safety & Validation](#type-safety--validation)
+  - [Validation Philosophy](#validation-philosophy)
+- [Contributing](#contributing)
+- [Development](#development)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Why This Library?
 
 - **🛡️ Runtime Validation** - Catches API changes before they break your app (powered by [Valibot](https://valibot.dev))
