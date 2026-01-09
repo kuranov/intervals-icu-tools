@@ -9,3 +9,8 @@ coverage
 
 # Internal context for AI/development (not for public repo)
 .context/
+
+# IDE
+.cursor/
+.vscode/
+.idea/
