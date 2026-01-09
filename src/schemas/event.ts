@@ -1,7 +1,8 @@
 import * as v from "valibot";
+import { transformKeys } from "../utils/transform";
 
-// Base Event schema with commonly used fields
-export const EventSchema = v.looseObject({
+// Base Event schema with commonly used fields (raw snake_case from API)
+const EventSchemaRaw = v.looseObject({
   // Required fields (API always returns these)
   id: v.number(),
   start_date_local: v.string(), // Events always have a date
@@ -94,13 +95,16 @@ export const EventSchema = v.looseObject({
   sub_type: v.optional(v.string()),
 });
 
+// Export the transformed schema (converts snake_case to camelCase)
+export const EventSchema = v.pipe(EventSchemaRaw, v.transform(transformKeys));
+
 export type Event = v.InferOutput<typeof EventSchema>;
 
 export const EventsSchema = v.array(EventSchema);
 export type Events = v.InferOutput<typeof EventsSchema>;
 
-// EventEx schema (for create/update - includes file upload fields)
-export const EventExSchema = v.looseObject({
+// EventEx schema (for create/update - includes file upload fields, raw)
+const EventExSchemaRaw = v.looseObject({
   // Base event fields
   category: v.optional(v.string()),
   start_date_local: v.optional(v.string()),
@@ -125,21 +129,24 @@ export const EventExSchema = v.looseObject({
   file_contents_base64: v.optional(v.string()),
 });
 
+export const EventExSchema = v.pipe(EventExSchemaRaw, v.transform(transformKeys));
 export type EventEx = v.InferOutput<typeof EventExSchema>;
 
-// DoomedEvent schema (for bulk delete)
-export const DoomedEventSchema = v.looseObject({
+// DoomedEvent schema (for bulk delete, raw)
+const DoomedEventSchemaRaw = v.looseObject({
   id: v.optional(v.number()),
   external_id: v.optional(v.string()),
 });
 
+export const DoomedEventSchema = v.pipe(DoomedEventSchemaRaw, v.transform(transformKeys));
 export type DoomedEvent = v.InferOutput<typeof DoomedEventSchema>;
 
-// DeleteEventsResponse schema
-export const DeleteEventsResponseSchema = v.looseObject({
+// DeleteEventsResponse schema (raw)
+const DeleteEventsResponseSchemaRaw = v.looseObject({
   eventsDeleted: v.optional(v.number()),
 });
 
+export const DeleteEventsResponseSchema = v.pipe(DeleteEventsResponseSchemaRaw, v.transform(transformKeys));
 export type DeleteEventsResponse = v.InferOutput<
   typeof DeleteEventsResponseSchema
 >;

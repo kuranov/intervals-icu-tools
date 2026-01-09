@@ -30,7 +30,7 @@ describe('AthletesResource', () => {
         expect(result.value.id).toBe(123);
         expect(result.value.name).toBe('Test Athlete');
         expect(result.value.sportSettings).toBeDefined();
-        expect(result.value.custom_items).toBeDefined();
+        expect(result.value.customItems).toBeDefined();
       }
     });
 
@@ -187,7 +187,7 @@ describe('AthletesResource', () => {
         expect(result.value.name).toBe('Test Athlete');
         expect(result.value.weight).toBe(70);
         expect(result.value.ftp).toBe(250);
-        expect(result.value.max_heartrate).toBe(190);
+        expect(result.value.maxHeartrate).toBe(190);
       }
     });
 
@@ -237,7 +237,7 @@ describe('AthletesResource', () => {
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(1);
-        expect(result.value[0]?.athlete_name).toBe('Test Athlete');
+        expect(result.value[0]?.athleteName).toBe('Test Athlete');
         expect(result.value[0]?.ctl).toBe(85);
         expect(result.value[0]?.atl).toBe(92);
       }

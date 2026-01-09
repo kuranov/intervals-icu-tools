@@ -7,6 +7,7 @@ import {
   type Wellness,
   type WellnessList,
 } from "../schemas/wellness";
+import { transformKeysToSnake } from "../utils/transform";
 
 export type ListWellnessOptions = {
   /** Local date of oldest record (ISO-8601) */
@@ -69,7 +70,7 @@ export class WellnessResource {
   ): Promise<Result<Wellness, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/wellness/${date}`,
-      { method: "PUT", json: data },
+      { method: "PUT", json: transformKeysToSnake(data) },
       decodeWellness
     );
   }
@@ -85,7 +86,7 @@ export class WellnessResource {
   ): Promise<Result<void, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/wellness-bulk`,
-      { method: "PUT", json: records },
+      { method: "PUT", json: transformKeysToSnake(records) },
       () => undefined
     );
   }

@@ -6,16 +6,16 @@ import type { Athlete, WithSportSettings, AthleteProfile, SummaryWithCats } from
  */
 export const basicAthlete: Athlete = {
   id: 1001,
-  athlete_id: 1001,
-  ext_athlete_id: 'ext-athlete-12345',
+  athleteId: 1001,
+  extAthleteId: 'ext-athlete-12345',
 
   // Profile information
   name: 'John Cyclist',
   firstname: 'John',
   lastname: 'Cyclist',
   email: 'john.cyclist@example.com',
-  avatar_url: 'https://example.com/avatars/john.jpg',
-  profile_medium: 'https://example.com/avatars/john-medium.jpg',
+  avatarUrl: 'https://example.com/avatars/john.jpg',
+  profileMedium: 'https://example.com/avatars/john-medium.jpg',
   bio: 'Cyclist and triathlete training for my first Ironman',
   website: 'https://johncyclist.com',
   visibility: 'PUBLIC',
@@ -25,11 +25,11 @@ export const basicAthlete: Athlete = {
   sex: 'M',
   weight: 72,
   height: 180,
-  height_units: 'cm',
-  weight_pref_lb: false,
-  date_of_birth: '1985-05-15',
-  icu_date_of_birth: '1985-05-15',
-  icu_resting_hr: 45,
+  heightUnits: 'cm',
+  weightPrefLb: false,
+  dateOfBirth: '1985-05-15',
+  icuDateOfBirth: '1985-05-15',
+  icuRestingHr: 45,
 
   // Location & settings
   city: 'Boulder',
@@ -37,37 +37,37 @@ export const basicAthlete: Athlete = {
   country: 'USA',
   timezone: 'America/Denver',
   locale: 'en',
-  measurement_preference: 'METRIC',
+  measurementPreference: 'METRIC',
   fahrenheit: false,
 
   // Account & permissions
-  icu_permission: 'USER',
-  icu_activated: true,
-  icu_admin: false,
-  icu_coach: false,
-  icu_email_verified: true,
-  has_password: true,
+  icuPermission: 'USER',
+  icuActivated: true,
+  icuAdmin: false,
+  icuCoach: false,
+  icuEmailVerified: true,
+  hasPassword: true,
   status: 'ACTIVE',
-  status_updated: '2024-01-01T00:00:00Z',
+  statusUpdated: '2024-01-01T00:00:00Z',
 
   // Training plan information
   plan: 'Base Building 12-Week',
-  plan_expires: '2024-04-15',
-  training_plan_id: 567,
-  training_plan_start_date: '2024-01-08',
+  planExpires: '2024-04-15',
+  trainingPlanId: 567,
+  trainingPlanStartDate: '2024-01-08',
 
   // Timestamps
   created: '2022-06-15T10:30:00Z',
   updated: '2024-01-15T14:22:00Z',
-  icu_last_seen: '2024-01-18T08:45:00Z',
+  icuLastSeen: '2024-01-18T08:45:00Z',
 
   // Trial & pricing
-  trial_end_date: '2022-07-15',
-  beta_user: false,
+  trialEndDate: '2022-07-15',
+  betaUser: false,
 
   // Preferences
   currency: 'USD',
-  icu_wellness_keys: ['weight', 'sleep', 'hrv', 'rhr'],
+  icuWellnessKeys: ['weight', 'sleep', 'hrv', 'rhr'],
 };
 
 /**
@@ -79,23 +79,23 @@ export const athleteWithSettings: WithSportSettings = {
     bike: {
       ftp: 265,
       cp: 275,
-      w_prime: 20000,
-      max_hr: 190,
+      wPrime: 20000,
+      maxHr: 190,
       lthr: 165,
-      resting_hr: 45,
-      cycling_weight: 72,
+      restingHr: 45,
+      cyclingWeight: 72,
     },
     run: {
-      threshold_pace: 240, // seconds per km (4:00/km)
-      critical_swim_pace: 95, // seconds per 100m
-      d_prime: 200,
-      max_hr: 190,
+      thresholdPace: 240, // seconds per km (4:00/km)
+      criticalSwimPace: 95, // seconds per 100m
+      dPrime: 200,
+      maxHr: 190,
       lthr: 165,
     },
   },
-  custom_items: {
-    preferred_sport: 'cycling',
-    coach_name: 'Jane Coach',
+  customItems: {
+    preferredSport: 'cycling',
+    coachName: 'Jane Coach',
     goals: '2024 Ironman Boulder',
   },
 };
@@ -105,51 +105,51 @@ export const athleteWithSettings: WithSportSettings = {
  */
 export const athleteProfile: AthleteProfile = {
   id: 1001,
-  athlete_id: 1001,
+  athleteId: 1001,
   name: 'John Cyclist',
-  avatar_url: 'https://example.com/avatars/john.jpg',
+  avatarUrl: 'https://example.com/avatars/john.jpg',
   weight: 72,
-  max_heartrate: 190,
-  resting_heartrate: 45,
+  maxHeartrate: 190,
+  restingHeartrate: 45,
   lthr: 165,
-  threshold_power: 265,
+  thresholdPower: 265,
   ftp: 265,
-  critical_power: 275,
-  w_prime: 20000,
-  threshold_pace: 240,
-  critical_swim_pace: 95,
-  d_prime: 200,
+  criticalPower: 275,
+  wPrime: 20000,
+  thresholdPace: 240,
+  criticalSwimPace: 95,
+  dPrime: 200,
 };
 
 /**
  * Athlete summary fixture with training metrics.
  */
 export const athleteSummary: SummaryWithCats = {
-  athlete_id: 1001,
-  athlete_name: 'John Cyclist',
-  start_date_local: '2024-01-15',
+  athleteId: 1001,
+  athleteName: 'John Cyclist',
+  startDateLocal: '2024-01-15',
   ctl: 95,
   atl: 102,
   tsb: -7,
   load: 450,
-  training_volume: 12.5, // hours
-  avg_watts: 235,
-  avg_hr: 152,
-  avg_pace: 255, // seconds per km
+  trainingVolume: 12.5, // hours
+  avgWatts: 235,
+  avgHr: 152,
+  avgPace: 255, // seconds per km
   calories: 5250,
   activities: 6,
-  moving_time: 45000, // seconds
-  elapsed_time: 46800,
+  movingTime: 45000, // seconds
+  elapsedTime: 46800,
   categories: {
     Ride: {
       count: 4,
       load: 380,
-      moving_time: 32400,
+      movingTime: 32400,
     },
     Run: {
       count: 2,
       load: 70,
-      moving_time: 10800,
+      movingTime: 10800,
     },
   },
 };
@@ -160,13 +160,13 @@ export const athleteSummary: SummaryWithCats = {
 export const coachAthlete: Athlete = {
   ...basicAthlete,
   id: 2001,
-  athlete_id: 2001,
+  athleteId: 2001,
   name: 'Jane Coach',
   firstname: 'Jane',
   lastname: 'Coach',
   email: 'jane.coach@example.com',
-  icu_permission: 'COACH',
-  icu_coach: true,
+  icuPermission: 'COACH',
+  icuCoach: true,
   status: 'ACTIVE',
 };
 

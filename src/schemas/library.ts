@@ -1,5 +1,6 @@
 import * as v from "valibot";
 import { ActivityTypeSchema } from "./common";
+import { transformKeys } from "../utils/transform";
 
 /**
  * Folder/Plan type enum
@@ -12,11 +13,11 @@ export const FolderTypeSchema = v.picklist(["FOLDER", "PLAN"]);
 export const VisibilitySchema = v.picklist(["PRIVATE", "PUBLIC"]);
 
 /**
- * Workout schema (minimal fields, allows extra via looseObject)
+ * Workout schema (minimal fields, allows extra via looseObject, raw)
  * The API doesn't fully document all workout fields in the OpenAPI spec,
  * so we use looseObject to accept whatever the API returns.
  */
-export const WorkoutSchema = v.looseObject({
+const WorkoutSchemaRaw = v.looseObject({
   // Required fields (API always returns these for existing workouts)
   id: v.number(),
   name: v.string(),
@@ -30,6 +31,7 @@ export const WorkoutSchema = v.looseObject({
   tags: v.optional(v.array(v.string())),
 });
 
+export const WorkoutSchema = v.pipe(WorkoutSchemaRaw, v.transform(transformKeys));
 export type Workout = v.InferOutput<typeof WorkoutSchema>;
 
 /**
@@ -39,9 +41,9 @@ export const WorkoutsSchema = v.array(WorkoutSchema);
 export type Workouts = v.InferOutput<typeof WorkoutsSchema>;
 
 /**
- * Folder schema for organizing workouts
+ * Folder schema for organizing workouts (raw)
  */
-export const FolderSchema = v.looseObject({
+const FolderSchemaRaw = v.looseObject({
   // Required fields (API always returns these)
   id: v.number(),
   type: FolderTypeSchema,
@@ -61,6 +63,7 @@ export const FolderSchema = v.looseObject({
   activity_types: v.optional(v.array(v.optional(ActivityTypeSchema))),
 });
 
+export const FolderSchema = v.pipe(FolderSchemaRaw, v.transform(transformKeys));
 export type Folder = v.InferOutput<typeof FolderSchema>;
 
 /**

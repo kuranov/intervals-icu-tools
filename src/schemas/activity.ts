@@ -1,7 +1,8 @@
 import * as v from "valibot";
+import { transformKeys } from "../utils/transform";
 
-// Base Activity schema with commonly used fields
-export const ActivitySchema = v.looseObject({
+// Base Activity schema with commonly used fields (raw snake_case from API)
+const ActivitySchemaRaw = v.looseObject({
   // Required fields (API always returns these)
   id: v.union([v.string(), v.number()]),
   type: v.string(), // Activity type is always present
@@ -116,13 +117,16 @@ export const ActivitySchema = v.looseObject({
   coasting_time: v.optional(v.number()),
 });
 
+// Export the transformed schema (converts snake_case to camelCase)
+export const ActivitySchema = v.pipe(ActivitySchemaRaw, v.transform(transformKeys));
+
 export type Activity = v.InferOutput<typeof ActivitySchema>;
 
 export const ActivitiesSchema = v.array(ActivitySchema);
 export type Activities = v.InferOutput<typeof ActivitiesSchema>;
 
-// Interval schema
-export const IntervalSchema = v.looseObject({
+// Interval schema (raw snake_case from API)
+const IntervalSchemaRaw = v.looseObject({
   id: v.optional(v.number()),
   type: v.optional(v.string()),
   start: v.optional(v.number()),
@@ -136,20 +140,25 @@ export const IntervalSchema = v.looseObject({
   icu_training_load: v.optional(v.number()),
 });
 
+// Export the transformed schema (converts snake_case to camelCase)
+export const IntervalSchema = v.pipe(IntervalSchemaRaw, v.transform(transformKeys));
+
 export type Interval = v.InferOutput<typeof IntervalSchema>;
 
-// IntervalsDTO schema (response from intervals endpoints)
-export const IntervalsDTOSchema = v.looseObject({
+// IntervalsDTO schema (response from intervals endpoints, raw)
+const IntervalsDTOSchemaRaw = v.looseObject({
   intervals: v.optional(v.array(IntervalSchema)),
 });
 
+export const IntervalsDTOSchema = v.pipe(IntervalsDTOSchemaRaw, v.transform(transformKeys));
 export type IntervalsDTO = v.InferOutput<typeof IntervalsDTOSchema>;
 
-// ActivityId schema (response from delete endpoint)
-export const ActivityIdSchema = v.looseObject({
+// ActivityId schema (response from delete endpoint, raw)
+const ActivityIdSchemaRaw = v.looseObject({
   id: v.union([v.string(), v.number()]),
 });
 
+export const ActivityIdSchema = v.pipe(ActivityIdSchemaRaw, v.transform(transformKeys));
 export type ActivityId = v.InferOutput<typeof ActivityIdSchema>;
 
 // Decoder functions (internal use)

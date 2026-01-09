@@ -13,6 +13,7 @@ import {
   type Folders,
   type WorkoutTags,
 } from "../schemas/library";
+import { transformKeysToSnake } from "../utils/transform";
 
 /**
  * Library resource for managing workout library (workouts, folders, plans)
@@ -60,7 +61,7 @@ export class LibraryResource {
   ): Promise<Result<Workout, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/workouts`,
-      { method: "POST", json: workout },
+      { method: "POST", json: transformKeysToSnake(workout) },
       decodeWorkout
     );
   }
@@ -75,7 +76,7 @@ export class LibraryResource {
   ): Promise<Result<Workout, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/workouts/${workoutId}`,
-      { method: "PUT", json: workout },
+      { method: "PUT", json: transformKeysToSnake(workout) },
       decodeWorkout
     );
   }
@@ -103,7 +104,7 @@ export class LibraryResource {
   ): Promise<Result<Workouts, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/workouts/bulk`,
-      { method: "POST", json: workouts },
+      { method: "POST", json: transformKeysToSnake(workouts) },
       decodeWorkouts
     );
   }
@@ -132,7 +133,7 @@ export class LibraryResource {
   ): Promise<Result<Folder, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/folders`,
-      { method: "POST", json: folder },
+      { method: "POST", json: transformKeysToSnake(folder) },
       decodeFolder
     );
   }
@@ -147,7 +148,7 @@ export class LibraryResource {
   ): Promise<Result<Folder, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/folders/${folderId}`,
-      { method: "PUT", json: folder },
+      { method: "PUT", json: transformKeysToSnake(folder) },
       decodeFolder
     );
   }

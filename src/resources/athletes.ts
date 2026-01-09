@@ -15,6 +15,7 @@ import {
   type AthleteProfile,
   type AthleteSummary,
 } from "../schemas/athlete";
+import { transformKeysToSnake } from "../utils/transform";
 
 export type GetAthleteSummaryOptions = {
   /** Local date and optional time (ISO-8601) for oldest data to return (default: 6 days ago) */
@@ -48,7 +49,7 @@ export class AthletesResource {
   ): Promise<Result<Athlete, ApiError>> {
     return this.http.requestJson(
       `athlete/${id}`,
-      { method: "PUT", json: data },
+      { method: "PUT", json: transformKeysToSnake(data) },
       decodeAthlete
     );
   }

@@ -1,4 +1,5 @@
 import * as v from "valibot";
+import { transformKeys } from "../utils/transform";
 
 /**
  * Menstrual phase enum
@@ -8,22 +9,23 @@ export const MenstrualPhaseSchema = v.optional(
 );
 
 /**
- * SportInfo for per-sport fitness data
+ * SportInfo for per-sport fitness data (raw)
  */
-export const SportInfoSchema = v.looseObject({
+const SportInfoSchemaRaw = v.looseObject({
   type: v.optional(v.string()),
   eftp: v.optional(v.number()),
   wPrime: v.optional(v.number()),
   pMax: v.optional(v.number()),
 });
 
+export const SportInfoSchema = v.pipe(SportInfoSchemaRaw, v.transform(transformKeys));
 export type SportInfo = v.InferOutput<typeof SportInfoSchema>;
 
 /**
- * Wellness record schema
+ * Wellness record schema (raw)
  * Uses looseObject to allow extra fields from the API
  */
-export const WellnessSchema = v.looseObject({
+const WellnessSchemaRaw = v.looseObject({
   id: v.string(), // ISO-8601 date (e.g., "2024-01-15")
 
   // Fitness metrics
@@ -88,6 +90,7 @@ export const WellnessSchema = v.looseObject({
   tempWeight: v.optional(v.boolean()),
 });
 
+export const WellnessSchema = v.pipe(WellnessSchemaRaw, v.transform(transformKeys));
 export type Wellness = v.InferOutput<typeof WellnessSchema>;
 
 /**

@@ -48,7 +48,7 @@ if (!result.ok) {
 } else {
   console.log(`Found ${result.value.length} activities`);
   result.value.forEach(activity => {
-    console.log(`${activity.start_date_local}: ${activity.name}`);
+    console.log(`${activity.startDateLocal}: ${activity.name}`);
   });
 }
 ```
@@ -186,8 +186,8 @@ const intervals = await client.activities.getIntervals(123456);
 
 // Update intervals
 const updatedIntervals = await client.activities.updateIntervals(123456, [
-  { type: 'ACTIVE', start: 0, end: 300, average_watts: 250 },
-  { type: 'REST', start: 300, end: 420, average_watts: 100 },
+  { type: 'ACTIVE', start: 0, end: 300, averageWatts: 250 },
+  { type: 'REST', start: 300, end: 420, averageWatts: 100 },
 ]);
 
 // Split an interval at a specific point
@@ -273,8 +273,8 @@ const tabletSettings = await client.athletes.getSettings(0, 'tablet');
 const profile = await client.athletes.getProfile(0);
 if (profile.ok) {
   console.log(`FTP: ${profile.value.ftp}`);
-  console.log(`Max HR: ${profile.value.max_heartrate}`);
-  console.log(`Threshold Power: ${profile.value.threshold_power}`);
+  console.log(`Max HR: ${profile.value.maxHeartrate}`);
+  console.log(`Threshold Power: ${profile.value.thresholdPower}`);
 }
 
 // Get athlete summary (CTL, ATL, TSB, etc.)
@@ -285,7 +285,7 @@ const summary = await client.athletes.getSummary(0, {
 });
 if (summary.ok) {
   summary.value.forEach((s) => {
-    console.log(`${s.start_date_local}: CTL=${s.ctl}, ATL=${s.atl}, TSB=${s.tsb}`);
+    console.log(`${s.startDateLocal}: CTL=${s.ctl}, ATL=${s.atl}, TSB=${s.tsb}`);
   });
 }
 ```
@@ -396,7 +396,7 @@ const newTokens = await refreshResponse.json();
 const workouts = await client.library.listWorkouts(0);
 if (workouts.ok) {
   workouts.value.forEach((w) => {
-    console.log(`${w.name} (${w.activity_type})`);
+    console.log(`${w.name} (${w.activityType})`);
   });
 }
 
@@ -533,7 +533,7 @@ export const ActivitySchema = v.looseObject({
   // Required fields - API always returns these
   id: v.union([v.string(), v.number()]),
   type: v.string(),
-  start_date_local: v.string(),
+  startDateLocal: v.string(),
 
   // Optional fields - may or may not be present
   name: v.optional(v.string()),
@@ -560,7 +560,7 @@ When Intervals.icu adds new fields, your code continues working without requirin
 // TypeScript knows these are always present
 activity.id         // number | string (never undefined)
 activity.type       // string (never undefined)
-activity.start_date_local  // string (never undefined)
+activity.startDateLocal  // string (never undefined)
 ```
 
 ✅ **Optional fields are typed correctly:**

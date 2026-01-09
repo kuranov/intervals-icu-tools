@@ -328,7 +328,7 @@ describe('EventsResource', () => {
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(2);
-        expect(result.value[0]?.hide_from_athlete).toBe(true);
+        expect(result.value[0]?.hideFromAthlete).toBe(true);
       }
     });
   });

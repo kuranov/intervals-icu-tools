@@ -13,6 +13,7 @@ import {
   type ActivityId,
   type Interval,
 } from "../schemas/activity";
+import { transformKeysToSnake } from "../utils/transform";
 
 export type ListActivitiesOptions = {
   /** Local ISO-8601 date or date and time (e.g., 2019-07-22T16:18:49 or 2019-07-22) */
@@ -101,7 +102,7 @@ export class ActivitiesResource {
   ): Promise<Result<Activity, ApiError>> {
     return this.http.requestJson(
       `activity/${id}`,
-      { method: "PUT", json: data },
+      { method: "PUT", json: transformKeysToSnake(data) },
       decodeActivity
     );
   }
@@ -145,7 +146,7 @@ export class ActivitiesResource {
       `activity/${id}/intervals`,
       {
         method: "PUT",
-        json: intervals,
+        json: transformKeysToSnake(intervals),
         searchParams: Object.keys(searchParams).length
           ? searchParams
           : undefined,
@@ -163,7 +164,7 @@ export class ActivitiesResource {
   ): Promise<Result<IntervalsDTO, ApiError>> {
     return this.http.requestJson(
       `activity/${id}/delete-intervals`,
-      { method: "PUT", json: intervals },
+      { method: "PUT", json: transformKeysToSnake(intervals) },
       decodeIntervalsDTO
     );
   }
@@ -178,7 +179,7 @@ export class ActivitiesResource {
   ): Promise<Result<IntervalsDTO, ApiError>> {
     return this.http.requestJson(
       `activity/${id}/intervals/${intervalId}`,
-      { method: "PUT", json: interval },
+      { method: "PUT", json: transformKeysToSnake(interval) },
       decodeIntervalsDTO
     );
   }

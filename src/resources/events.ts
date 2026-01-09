@@ -14,6 +14,7 @@ import {
   type DeleteEventsResponse,
   type EventTags,
 } from "../schemas/event";
+import { transformKeysToSnake } from "../utils/transform";
 
 export type ListEventsOptions = {
   /** Local date (ISO-8601) for oldest event to return */
@@ -141,7 +142,7 @@ export class EventsResource {
       `athlete/${athleteId}/events`,
       {
         method: "POST",
-        json: event,
+        json: transformKeysToSnake(event),
         searchParams: Object.keys(searchParams).length
           ? searchParams
           : undefined,
@@ -160,7 +161,7 @@ export class EventsResource {
   ): Promise<Result<Event, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/events/${eventId}`,
-      { method: "PUT", json: event },
+      { method: "PUT", json: transformKeysToSnake(event) },
       decodeEvent
     );
   }
@@ -207,7 +208,7 @@ export class EventsResource {
       `athlete/${athleteId}/events/bulk`,
       {
         method: "POST",
-        json: events,
+        json: transformKeysToSnake(events),
         searchParams: Object.keys(searchParams).length
           ? searchParams
           : undefined,
@@ -227,7 +228,7 @@ export class EventsResource {
   ): Promise<Result<DeleteEventsResponse, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/events/bulk-delete`,
-      { method: "PUT", json: events },
+      { method: "PUT", json: transformKeysToSnake(events) },
       decodeDeleteEventsResponse
     );
   }
@@ -250,7 +251,7 @@ export class EventsResource {
       `athlete/${athleteId}/events`,
       {
         method: "PUT",
-        json: event,
+        json: transformKeysToSnake(event),
         searchParams,
       },
       decodeEvents

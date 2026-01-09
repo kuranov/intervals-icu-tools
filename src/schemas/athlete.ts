@@ -1,7 +1,8 @@
 import * as v from "valibot";
+import { transformKeys } from "../utils/transform";
 
-// Base Athlete schema
-export const AthleteSchema = v.looseObject({
+// Base Athlete schema (raw snake_case from API)
+const AthleteSchemaRaw = v.looseObject({
   // Required fields (API always returns these)
   id: v.union([v.string(), v.number()]),
 
@@ -70,10 +71,11 @@ export const AthleteSchema = v.looseObject({
   icu_wellness_keys: v.optional(v.array(v.string())),
 });
 
+export const AthleteSchema = v.pipe(AthleteSchemaRaw, v.transform(transformKeys));
 export type Athlete = v.InferOutput<typeof AthleteSchema>;
 
-// AthleteUpdateDTO schema
-export const AthleteUpdateDTOSchema = v.looseObject({
+// AthleteUpdateDTO schema (raw)
+const AthleteUpdateDTOSchemaRaw = v.looseObject({
   name: v.optional(v.string()),
   email: v.optional(v.string()),
   avatar_url: v.optional(v.string()),
@@ -85,10 +87,11 @@ export const AthleteUpdateDTOSchema = v.looseObject({
   timezone: v.optional(v.string()),
 });
 
+export const AthleteUpdateDTOSchema = v.pipe(AthleteUpdateDTOSchemaRaw, v.transform(transformKeys));
 export type AthleteUpdateDTO = v.InferOutput<typeof AthleteUpdateDTOSchema>;
 
-// WithSportSettings schema (athlete with sport settings)
-export const WithSportSettingsSchema = v.looseObject({
+// WithSportSettings schema (athlete with sport settings, raw)
+const WithSportSettingsSchemaRaw = v.looseObject({
   id: v.optional(v.union([v.string(), v.number()])),
   name: v.optional(v.string()),
   email: v.optional(v.string()),
@@ -107,15 +110,17 @@ export const WithSportSettingsSchema = v.looseObject({
   custom_items: v.optional(v.any()),
 });
 
+export const WithSportSettingsSchema = v.pipe(WithSportSettingsSchemaRaw, v.transform(transformKeys));
 export type WithSportSettings = v.InferOutput<typeof WithSportSettingsSchema>;
 
-// AthleteSettings schema (dynamic key-value for device settings)
-export const AthleteSettingsSchema = v.looseObject({});
+// AthleteSettings schema (dynamic key-value for device settings, raw)
+const AthleteSettingsSchemaRaw = v.looseObject({});
 
+export const AthleteSettingsSchema = v.pipe(AthleteSettingsSchemaRaw, v.transform(transformKeys));
 export type AthleteSettings = v.InferOutput<typeof AthleteSettingsSchema>;
 
-// AthleteProfile schema
-export const AthleteProfileSchema = v.looseObject({
+// AthleteProfile schema (raw)
+const AthleteProfileSchemaRaw = v.looseObject({
   id: v.optional(v.union([v.string(), v.number()])),
   athlete_id: v.optional(v.union([v.string(), v.number()])),
   name: v.optional(v.string()),
@@ -133,10 +138,11 @@ export const AthleteProfileSchema = v.looseObject({
   d_prime: v.optional(v.number()),
 });
 
+export const AthleteProfileSchema = v.pipe(AthleteProfileSchemaRaw, v.transform(transformKeys));
 export type AthleteProfile = v.InferOutput<typeof AthleteProfileSchema>;
 
-// SummaryWithCats schema (summary for followed athletes)
-export const SummaryWithCatsSchema = v.looseObject({
+// SummaryWithCats schema (summary for followed athletes, raw)
+const SummaryWithCatsSchemaRaw = v.looseObject({
   athlete_id: v.optional(v.union([v.string(), v.number()])),
   athlete_name: v.optional(v.string()),
   start_date_local: v.optional(v.string()),
@@ -155,6 +161,7 @@ export const SummaryWithCatsSchema = v.looseObject({
   categories: v.optional(v.any()),
 });
 
+export const SummaryWithCatsSchema = v.pipe(SummaryWithCatsSchemaRaw, v.transform(transformKeys));
 export type SummaryWithCats = v.InferOutput<typeof SummaryWithCatsSchema>;
 
 export const AthleteSummarySchema = v.array(SummaryWithCatsSchema);

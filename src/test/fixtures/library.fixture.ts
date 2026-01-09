@@ -7,8 +7,8 @@ export const basicWorkout: Workout = {
   id: 1,
   name: '5x5min @ FTP',
   description: '5 x 5min @ FTP, 3min recovery between intervals',
-  folder_id: 10,
-  activity_type: 'Ride',
+  folderId: 10,
+  activityType: 'Ride',
   tags: ['intervals', 'ftp', 'cycling'],
 };
 
@@ -19,8 +19,8 @@ export const runningWorkout: Workout = {
   id: 2,
   name: 'Tempo Run',
   description: '10min warmup, 20min @ threshold, 10min cooldown',
-  folder_id: 11,
-  activity_type: 'Run',
+  folderId: 11,
+  activityType: 'Run',
   tags: ['threshold', 'running'],
 };
 
@@ -31,8 +31,8 @@ export const swimmingWorkout: Workout = {
   id: 3,
   name: 'Endurance Swim',
   description: '3000m continuous at aerobic pace',
-  folder_id: 12,
-  activity_type: 'Swim',
+  folderId: 12,
+  activityType: 'Swim',
   tags: ['endurance', 'swimming'],
 };
 
@@ -43,10 +43,10 @@ export const structuredWorkout: Workout = {
   id: 4,
   name: 'Sweet Spot Intervals',
   description: '4 x 10min @ 88-94% FTP',
-  folder_id: 10,
-  activity_type: 'Ride',
+  folderId: 10,
+  activityType: 'Ride',
   tags: ['sweet-spot', 'cycling'],
-  file_contents: '<workout_tc><name>Sweet Spot Intervals</name>...</workout_tc>',
+  fileContents: '<workout_tc><name>Sweet Spot Intervals</name>...</workout_tc>',
 };
 
 /**
@@ -70,25 +70,25 @@ export const trainingPlan: Folder = {
   name: 'Base Building Plan',
   description: '12-week aerobic base building plan',
   visibility: 'PUBLIC',
-  start_date_local: '2024-01-01',
-  rollout_weeks: 12,
-  auto_rollout_day: 1, // Monday
-  read_only_workouts: true,
-  starting_ctl: 50,
-  starting_atl: 40,
-  activity_types: ['Ride', 'Run'],
+  startDateLocal: '2024-01-01',
+  rolloutWeeks: 12,
+  autoRolloutDay: 1, // Monday
+  readOnlyWorkouts: true,
+  startingCtl: 50,
+  startingAtl: 40,
+  activityTypes: ['Ride', 'Run'],
   children: [
     {
       id: 100,
       name: 'Week 1 - Easy Ride',
       description: '60min Z2',
-      activity_type: 'Ride',
+      activityType: 'Ride',
     },
     {
       id: 101,
       name: 'Week 1 - Recovery Run',
       description: '30min easy',
-      activity_type: 'Run',
+      activityType: 'Run',
     },
   ],
 };
