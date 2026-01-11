@@ -13,8 +13,11 @@ import {
   type DoomedEvent,
   type DeleteEventsResponse,
   type EventTags,
+  type ApplyPlanDTO,
+  type DuplicateEventsDTO,
 } from "../schemas/event";
 import { transformKeysToSnake } from "../utils/transform";
+import { decodeActivity, type Activity } from "../schemas/activity";
 
 export type ListEventsOptions = {
   /** Local date (ISO-8601) for oldest event to return */
@@ -268,6 +271,155 @@ export class EventsResource {
       `athlete/${athleteId}/event-tags`,
       {},
       decodeEventTags
+    );
+  }
+
+  /**
+   * Download workouts as a ZIP file containing workout files.
+   */
+  downloadWorkoutsZip(
+    athleteId: string | number = 0,
+    options?: {
+      oldest?: string;
+      newest?: string;
+      ext?: "zwo" | "mrc" | "erg" | "fit";
+    }
+  ): Promise<Result<ArrayBuffer, ApiError>> {
+    const searchParams: Record<string, string> = {};
+    if (options?.oldest) searchParams.oldest = options.oldest;
+    if (options?.newest) searchParams.newest = options.newest;
+    if (options?.ext) searchParams.ext = options.ext;
+
+    return this.http.requestArrayBuffer(
+      `athlete/${athleteId}/workouts.zip`,
+      {
+        searchParams: Object.keys(searchParams).length
+          ? searchParams
+          : undefined,
+      }
+    );
+  }
+
+  /**
+   * Download a single workout in the specified format.
+   */
+  downloadWorkout(
+    athleteId: string | number,
+    eventId: number,
+    ext: "zwo" | "mrc" | "erg" | "fit"
+  ): Promise<Result<ArrayBuffer, ApiError>> {
+    return this.http.requestArrayBuffer(
+      `athlete/${athleteId}/events/${eventId}/download.${ext}`,
+      {}
+    );
+  }
+
+  /**
+   * Apply a workout plan from a folder to the athlete's calendar.
+   */
+  applyPlan(
+    athleteId: string | number,
+    data: ApplyPlanDTO
+  ): Promise<Result<Events, ApiError>> {
+    return this.http.requestJson(
+      `athlete/${athleteId}/events/apply-plan`,
+      { method: "POST", json: transformKeysToSnake(data) },
+      decodeEvents
+    );
+  }
+
+  /**
+   * Duplicate events by shifting them by a number of days.
+   */
+  duplicateEvents(
+    athleteId: string | number,
+    data: DuplicateEventsDTO
+  ): Promise<Result<Events, ApiError>> {
+    return this.http.requestJson(
+      `athlete/${athleteId}/duplicate-events`,
+      { method: "POST", json: transformKeysToSnake(data) },
+      decodeEvents
+    );
+  }
+
+  /**
+   * List events that influence the fitness model within a date range.
+   */
+  listFitnessModelEvents(
+    athleteId: string | number = 0,
+    options?: { oldest?: string; newest?: string }
+  ): Promise<Result<Events, ApiError>> {
+    const searchParams: Record<string, string> = {};
+    if (options?.oldest) searchParams.oldest = options.oldest;
+    if (options?.newest) searchParams.newest = options.newest;
+
+    return this.http.requestJson(
+      `athlete/${athleteId}/fitness-model-events`,
+      {
+        searchParams: Object.keys(searchParams).length
+          ? searchParams
+          : undefined,
+      },
+      decodeEvents
+    );
+  }
+
+  /**
+   * Delete all events within a date range.
+   */
+  deleteRange(
+    athleteId: string | number,
+    oldest: string,
+    newest: string
+  ): Promise<Result<DeleteEventsResponse, ApiError>> {
+    const searchParams: Record<string, string> = {
+      oldest,
+      newest,
+    };
+
+    return this.http.requestJson(
+      `athlete/${athleteId}/events`,
+      { method: "DELETE", searchParams },
+      decodeDeleteEventsResponse
+    );
+  }
+
+  /**
+   * List events as CSV format.
+   */
+  listCsv(
+    athleteId: string | number = 0,
+    options?: ListEventsOptions
+  ): Promise<Result<string, ApiError>> {
+    const searchParams: Record<string, string> = {};
+    if (options?.oldest) searchParams.oldest = options.oldest;
+    if (options?.newest) searchParams.newest = options.newest;
+    if (options?.category)
+      searchParams.category = options.category.join(",");
+    if (options?.limit !== undefined)
+      searchParams.limit = String(options.limit);
+
+    return this.http.requestText(
+      `athlete/${athleteId}/events.csv`,
+      {
+        searchParams: Object.keys(searchParams).length
+          ? searchParams
+          : undefined,
+      }
+    );
+  }
+
+  /**
+   * Mark an event as done by creating an activity from it.
+   */
+  markDone(
+    athleteId: string | number,
+    eventId: number
+  ): Promise<Result<Activity, ApiError>> {
+    return this.http.requestJson(
+      `athlete/${athleteId}/events/${eventId}/mark-done`,
+      { method: "POST" },
+      decodeActivity
     );
   }
 }

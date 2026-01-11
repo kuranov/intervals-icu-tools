@@ -22,6 +22,13 @@ export type {
   Interval,
   IntervalsDTO,
   ActivityId,
+  ActivityStream,
+  ActivityStreams,
+  Anomaly,
+  UpdateStreamsResult,
+  PowerCurve,
+  PaceCurve,
+  HRCurve,
 } from "./schemas/activity";
 
 // Data types - Events
@@ -32,6 +39,8 @@ export type {
   DoomedEvent,
   DeleteEventsResponse,
   EventTags,
+  ApplyPlanDTO,
+  DuplicateEventsDTO,
 } from "./schemas/event";
 
 // Data types - Athletes
@@ -60,6 +69,15 @@ export type {
   Folders,
   WorkoutTags,
 } from "./schemas/library";
+
+// Data types - Chats
+export type {
+  Chat,
+  Chats,
+  Message,
+  Messages,
+  NewMessageDTO,
+} from "./schemas/chat";
 
 // Common schemas
 export { ActivityTypeSchema } from "./schemas/common";

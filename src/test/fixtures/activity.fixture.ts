@@ -1,4 +1,4 @@
-import type { Activity } from '../../schemas/activity';
+import type { Activity, ActivityStreams, UpdateStreamsResult } from '../../schemas/activity';
 
 /**
  * Realistic activity fixture representing a cycling workout with power data.
@@ -217,8 +217,75 @@ export const trainerActivity: Activity = {
   icuVariabilityIndex: 1.06,
 };
 
+/**
+ * Activity streams fixture with sample power, heartrate, and cadence data.
+ */
+export const activityStreams: ActivityStreams = [
+  {
+    type: 'watts',
+    name: 'Power',
+    data: {
+      '0': 210,
+      '1': 215,
+      '2': 220,
+      '3': 225,
+      '4': 230,
+      '5': 235,
+      '10': 240,
+      '20': 245,
+    },
+    valueTypeIsArray: false,
+    custom: false,
+    allNull: false,
+  },
+  {
+    type: 'heartrate',
+    name: 'Heart Rate',
+    data: {
+      '0': 145,
+      '1': 148,
+      '2': 152,
+      '3': 155,
+      '4': 158,
+      '5': 160,
+      '10': 162,
+      '20': 165,
+    },
+    valueTypeIsArray: false,
+    custom: false,
+    allNull: false,
+  },
+  {
+    type: 'cadence',
+    name: 'Cadence',
+    data: {
+      '0': 85,
+      '1': 87,
+      '2': 88,
+      '3': 89,
+      '4': 90,
+      '5': 90,
+      '10': 91,
+      '20': 92,
+    },
+    valueTypeIsArray: false,
+    custom: false,
+    allNull: false,
+  },
+];
+
+/**
+ * Update streams result fixture showing updated and deleted streams.
+ */
+export const updateStreamsResult: UpdateStreamsResult = {
+  updated: ['watts', 'heartrate', 'cadence'],
+  deleted: ['old_stream'],
+};
+
 export const activityFixtures = {
   cyclingWorkout: cyclingWorkoutActivity,
   running: runningActivity,
   trainer: trainerActivity,
+  streams: activityStreams,
+  updateResult: updateStreamsResult,
 };

@@ -155,6 +155,28 @@ export type DeleteEventsResponse = v.InferOutput<
 export const EventTagsSchema = v.array(v.string());
 export type EventTags = v.InferOutput<typeof EventTagsSchema>;
 
+// ApplyPlanDTO schema (for applying a plan to calendar, raw)
+const ApplyPlanDTOSchemaRaw = v.looseObject({
+  folder_id: v.number(),
+  oldest: v.string(),
+  newest: v.string(),
+  delete_existing: v.optional(v.boolean()),
+  update_plan_applied: v.optional(v.boolean()),
+});
+
+export const ApplyPlanDTOSchema = v.pipe(ApplyPlanDTOSchemaRaw, v.transform(transformKeys));
+export type ApplyPlanDTO = v.InferOutput<typeof ApplyPlanDTOSchema>;
+
+// DuplicateEventsDTO schema (for duplicating events, raw)
+const DuplicateEventsDTOSchemaRaw = v.looseObject({
+  event_ids: v.array(v.number()),
+  offset_days: v.number(),
+  copy_to_athlete_id: v.optional(v.union([v.string(), v.number()])),
+});
+
+export const DuplicateEventsDTOSchema = v.pipe(DuplicateEventsDTOSchemaRaw, v.transform(transformKeys));
+export type DuplicateEventsDTO = v.InferOutput<typeof DuplicateEventsDTOSchema>;
+
 // Decoder functions (internal use)
 export function decodeEvents(data: unknown): Events {
   return v.parse(EventsSchema, data);

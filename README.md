@@ -36,12 +36,12 @@ Modern, type-safe TypeScript client for the [Intervals.icu](https://intervals.ic
 
 - **🛡️ Runtime Validation** - Catches API changes before they break your app (powered by [Valibot](https://valibot.dev))
 - **🌍 Universal** - Works in Node.js 18+, Bun, Deno, browsers, and edge runtimes
-- **🪶 Lightweight** - Zero heavy dependencies (~8KB gzipped)
+- **🪶 Lightweight** - Zero heavy dependencies (~12KB gzipped)
 - **🔐 Auth Ready** - Supports both API key and OAuth2 authentication
 - **⚡ Smart Rate Limiting** - Automatic retry with exponential backoff
-- **📦 Complete Coverage** - All API resources: Activities, Athletes, Events, Wellness, Library
+- **📦 Extensive Coverage** - 64/146 API endpoints (44%): Activities, Events, Athletes, Wellness, Library, Chats
 - **🎯 Type Safe** - Full TypeScript support with strict types
-- **🧪 Well Tested** - 116 tests covering all operations
+- **🧪 Well Tested** - 125 tests covering all operations
 
 ## Install
 
@@ -109,29 +109,44 @@ if (athlete.ok) {
 
 ## API Coverage
 
-The library provides complete coverage of the Intervals.icu API v1:
+v1.1.0 provides **44% coverage** (64/146 endpoints) of the Intervals.icu API with complete support for core resources:
 
 ### Resources
 
-- **Activities** - List, get, update, delete activities and intervals
-- **Athletes** - Get athlete profiles, settings, and summaries
-- **Events** - Manage calendar events (workouts, races, notes)
-- **Wellness** - Track daily wellness metrics (HRV, sleep, mood, etc.)
-- **Library** - Manage workout library folders and plans
+- **Activities** (39/39 endpoints, 100%) - List, get, update, delete activities, intervals, streams, power curves, search
+- **Events** (17/17 endpoints, 100%) - Manage calendar events, workouts, plans, downloads
+- **Chats** (8/8 endpoints, 100%) - Messages, activity comments, notifications
+- **Athletes** (~10 endpoints) - Get athlete profiles, settings, and summaries
+- **Wellness** (~6 endpoints) - Track daily wellness metrics (HRV, sleep, mood, etc.)
+- **Library** (~10 endpoints) - Manage workout library folders and plans
 
 ### Quick Reference
 
 ```ts
-// Activities
+// Activities - Basic operations
 await client.activities.list(athleteId, { oldest: '2024-01-01' });
 await client.activities.get(activityId);
 await client.activities.update(activityId, { name: 'Morning Ride' });
 await client.activities.delete(activityId);
 
+// Activities - Streams & analysis (NEW in v1.1.0)
+await client.activities.getStreams(activityId, { types: ['watts', 'heartrate'] });
+await client.activities.getPowerCurve(activityId);
+await client.activities.search(athleteId, 'race');
+await client.activities.downloadFitFile(activityId);
+
 // Events (Calendar)
 await client.events.list(athleteId, { oldest: '2024-01-01' });
-await client.events.create(athleteId, { name: 'Workout', start_date_local: '2024-01-15' });
+await client.events.create(athleteId, { name: 'Workout', startDateLocal: '2024-01-15' });
 await client.events.update(athleteId, eventId, { description: 'Updated' });
+await client.events.downloadWorkout(athleteId, eventId, 'fit'); // NEW
+await client.events.applyPlan(athleteId, { folderId: 123, oldest: '2024-01-01', newest: '2024-12-31' }); // NEW
+
+// Chats - Messages & comments (NEW in v1.1.0)
+await client.chats.list(athleteId);
+await client.chats.sendMessage({ chatId: 123, text: 'Great workout!' });
+await client.chats.listActivityMessages(activityId);
+await client.chats.addActivityMessage(activityId, 'Nice effort!');
 
 // Wellness
 await client.wellness.list(athleteId, { oldest: '2024-01-01' });

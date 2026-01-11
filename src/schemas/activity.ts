@@ -161,6 +161,135 @@ const ActivityIdSchemaRaw = v.looseObject({
 export const ActivityIdSchema = v.pipe(ActivityIdSchemaRaw, v.transform(transformKeys));
 export type ActivityId = v.InferOutput<typeof ActivityIdSchema>;
 
+// Anomaly schema (stream anomalies, raw)
+const AnomalySchemaRaw = v.looseObject({
+  start_index: v.optional(v.number()),
+  end_index: v.optional(v.number()),
+  value: v.optional(v.number()),
+  valueEnd: v.optional(v.number()),
+});
+
+export const AnomalySchema = v.pipe(AnomalySchemaRaw, v.transform(transformKeys));
+export type Anomaly = v.InferOutput<typeof AnomalySchema>;
+
+// ActivityStream schema (individual stream, raw)
+const ActivityStreamSchemaRaw = v.looseObject({
+  type: v.optional(v.string()),
+  name: v.optional(v.string()),
+  data: v.optional(v.any()), // Object with index -> value mapping
+  data2: v.optional(v.any()), // Secondary data object
+  valueTypeIsArray: v.optional(v.boolean()),
+  anomalies: v.optional(v.array(AnomalySchema)),
+  custom: v.optional(v.boolean()),
+  allNull: v.optional(v.boolean()),
+});
+
+export const ActivityStreamSchema = v.pipe(ActivityStreamSchemaRaw, v.transform(transformKeys));
+export type ActivityStream = v.InferOutput<typeof ActivityStreamSchema>;
+
+// ActivityStreams schema (array of streams)
+export const ActivityStreamsSchema = v.array(ActivityStreamSchema);
+export type ActivityStreams = v.InferOutput<typeof ActivityStreamsSchema>;
+
+// UpdateStreamsResult schema (response from PUT streams, raw)
+const UpdateStreamsResultSchemaRaw = v.looseObject({
+  updated: v.optional(v.array(v.string())),
+  deleted: v.optional(v.array(v.string())),
+});
+
+export const UpdateStreamsResultSchema = v.pipe(UpdateStreamsResultSchemaRaw, v.transform(transformKeys));
+export type UpdateStreamsResult = v.InferOutput<typeof UpdateStreamsResultSchema>;
+
+// PowerCurve schema (raw)
+const PowerCurveSchemaRaw = v.looseObject({
+  id: v.optional(v.string()),
+  after_kj: v.optional(v.number()),
+  filters: v.optional(v.array(v.any())),
+  label: v.optional(v.string()),
+  filter_label: v.optional(v.string()),
+  percentile: v.optional(v.number()),
+  start_date_local: v.optional(v.string()),
+  end_date_local: v.optional(v.string()),
+  days: v.optional(v.number()),
+  moving_time: v.optional(v.number()),
+  training_load: v.optional(v.number()),
+  weight: v.optional(v.number()),
+  secs: v.optional(v.array(v.number())),
+  values: v.optional(v.array(v.number())),
+  submax_values: v.optional(v.array(v.array(v.number()))),
+  submax_activity_id: v.optional(v.array(v.array(v.string()))),
+  start_index: v.optional(v.array(v.number())),
+  end_index: v.optional(v.array(v.number())),
+  activity_id: v.optional(v.array(v.string())),
+  watts_per_kg: v.optional(v.array(v.number())),
+  wkg_activity_id: v.optional(v.array(v.string())),
+  submax_watts_per_kg: v.optional(v.array(v.array(v.number()))),
+  submax_wkg_activity_id: v.optional(v.array(v.array(v.string()))),
+  powerModels: v.optional(v.array(v.any())),
+  ranks: v.optional(v.any()),
+  mapPlot: v.optional(v.any()),
+  stream_type: v.optional(v.string()),
+  stream_name: v.optional(v.string()),
+  watts: v.optional(v.array(v.number())),
+  vo2max_5m: v.optional(v.number()),
+  compound_score_5m: v.optional(v.number()),
+});
+
+export const PowerCurveSchema = v.pipe(PowerCurveSchemaRaw, v.transform(transformKeys));
+export type PowerCurve = v.InferOutput<typeof PowerCurveSchema>;
+
+// PaceCurve schema (raw)
+const PaceCurveSchemaRaw = v.looseObject({
+  id: v.optional(v.string()),
+  filters: v.optional(v.array(v.any())),
+  label: v.optional(v.string()),
+  filter_label: v.optional(v.string()),
+  percentile: v.optional(v.number()),
+  start_date_local: v.optional(v.string()),
+  end_date_local: v.optional(v.string()),
+  days: v.optional(v.number()),
+  moving_time: v.optional(v.number()),
+  training_load: v.optional(v.number()),
+  weight: v.optional(v.number()),
+  distance: v.optional(v.array(v.number())),
+  values: v.optional(v.array(v.number())),
+  submax_values: v.optional(v.array(v.array(v.number()))),
+  submax_activity_id: v.optional(v.array(v.array(v.string()))),
+  start_index: v.optional(v.array(v.number())),
+  end_index: v.optional(v.array(v.number())),
+  activity_id: v.optional(v.array(v.string())),
+  type: v.optional(v.picklist(["POWER", "HR", "PACE", "GAP"])),
+  paceModels: v.optional(v.array(v.any())),
+});
+
+export const PaceCurveSchema = v.pipe(PaceCurveSchemaRaw, v.transform(transformKeys));
+export type PaceCurve = v.InferOutput<typeof PaceCurveSchema>;
+
+// HRCurve schema (raw)
+const HRCurveSchemaRaw = v.looseObject({
+  id: v.optional(v.string()),
+  filters: v.optional(v.array(v.any())),
+  label: v.optional(v.string()),
+  filter_label: v.optional(v.string()),
+  percentile: v.optional(v.number()),
+  start_date_local: v.optional(v.string()),
+  end_date_local: v.optional(v.string()),
+  days: v.optional(v.number()),
+  moving_time: v.optional(v.number()),
+  training_load: v.optional(v.number()),
+  weight: v.optional(v.number()),
+  secs: v.optional(v.array(v.number())),
+  values: v.optional(v.array(v.number())),
+  submax_values: v.optional(v.array(v.array(v.number()))),
+  submax_activity_id: v.optional(v.array(v.array(v.string()))),
+  start_index: v.optional(v.array(v.number())),
+  end_index: v.optional(v.array(v.number())),
+  activity_id: v.optional(v.array(v.string())),
+});
+
+export const HRCurveSchema = v.pipe(HRCurveSchemaRaw, v.transform(transformKeys));
+export type HRCurve = v.InferOutput<typeof HRCurveSchema>;
+
 // Decoder functions (internal use)
 export function decodeActivities(data: unknown): Activities {
   return v.parse(ActivitiesSchema, data);
@@ -176,4 +305,24 @@ export function decodeIntervalsDTO(data: unknown): IntervalsDTO {
 
 export function decodeActivityId(data: unknown): ActivityId {
   return v.parse(ActivityIdSchema, data);
+}
+
+export function decodeActivityStreams(data: unknown): ActivityStreams {
+  return v.parse(ActivityStreamsSchema, data);
+}
+
+export function decodeUpdateStreamsResult(data: unknown): UpdateStreamsResult {
+  return v.parse(UpdateStreamsResultSchema, data);
+}
+
+export function decodePowerCurve(data: unknown): PowerCurve {
+  return v.parse(PowerCurveSchema, data);
+}
+
+export function decodePaceCurve(data: unknown): PaceCurve {
+  return v.parse(PaceCurveSchema, data);
+}
+
+export function decodeHRCurve(data: unknown): HRCurve {
+  return v.parse(HRCurveSchema, data);
 }

@@ -5,6 +5,7 @@ import { EventsResource } from "./resources/events";
 import { AthletesResource } from "./resources/athletes";
 import { WellnessResource } from "./resources/wellness";
 import { LibraryResource } from "./resources/library";
+import { ChatsResource } from "./resources/chats";
 
 export class IntervalsClient {
   public readonly activities: ActivitiesResource;
@@ -12,6 +13,7 @@ export class IntervalsClient {
   public readonly athletes: AthletesResource;
   public readonly wellness: WellnessResource;
   public readonly library: LibraryResource;
+  public readonly chats: ChatsResource;
 
   constructor(config: IntervalsClientConfig) {
     const http = new IntervalsHttpClient(config);
@@ -20,5 +22,6 @@ export class IntervalsClient {
     this.athletes = new AthletesResource(http);
     this.wellness = new WellnessResource(http);
     this.library = new LibraryResource(http);
+    this.chats = new ChatsResource(http);
   }
 }
