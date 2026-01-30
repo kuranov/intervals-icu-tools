@@ -126,11 +126,11 @@ export class ChatsResource {
    */
   addActivityMessage(
     activityId: string | number,
-    text: string
+    content: string
   ): Promise<Result<Message, ApiError>> {
     return this.http.requestJson(
       `activity/${activityId}/messages`,
-      { method: "POST", json: transformKeysToSnake({ text }) },
+      { method: "POST", json: { content } },
       decodeMessage
     );
   }

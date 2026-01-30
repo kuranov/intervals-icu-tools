@@ -24,8 +24,8 @@ const MessageSchemaRaw = v.looseObject({
   chat_id: v.nullish(v.number()),
   activity_id: v.nullish(v.union([v.string(), v.number()])),
   athlete_id: v.nullish(v.string()),
-  created: v.string(),
-  text: v.string(),
+  created: v.nullish(v.string()),
+  content: v.nullish(v.string()), // "text" in our code, "content" in API
   seen: v.nullish(v.boolean()),
   athlete_name: v.nullish(v.string()),
   athlete_avatar: v.nullish(v.string()),
@@ -41,7 +41,7 @@ export type Messages = v.InferOutput<typeof MessagesSchema>;
 const NewMessageDTOSchemaRaw = v.looseObject({
   chat_id: v.nullish(v.number()),
   activity_id: v.nullish(v.union([v.string(), v.number()])),
-  text: v.string(),
+  content: v.nullish(v.string()), // message content
 });
 
 export const NewMessageDTOSchema = v.pipe(NewMessageDTOSchemaRaw, v.transform(transformKeys));
