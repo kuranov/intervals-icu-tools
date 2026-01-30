@@ -9,112 +9,112 @@ const ActivitySchemaRaw = v.looseObject({
   start_date_local: v.string(), // Activities always have a date
 
   // Optional fields
-  athlete_id: v.optional(v.union([v.string(), v.number()])),
-  name: v.optional(v.string()),
-  description: v.optional(v.string()),
-  start_date: v.optional(v.string()),
-  created: v.optional(v.string()),
-  timezone: v.optional(v.string()),
+  athlete_id: v.nullish(v.union([v.string(), v.number()])),
+  name: v.nullish(v.string()),
+  description: v.nullish(v.string()),
+  start_date: v.nullish(v.string()),
+  created: v.nullish(v.string()),
+  timezone: v.nullish(v.string()),
 
   // Basic metrics
-  distance: v.optional(v.number()),
-  moving_time: v.optional(v.number()),
-  elapsed_time: v.optional(v.number()),
-  total_elevation_gain: v.optional(v.number()),
-  calories: v.optional(v.number()),
+  distance: v.nullish(v.number()),
+  moving_time: v.nullish(v.number()),
+  elapsed_time: v.nullish(v.number()),
+  total_elevation_gain: v.nullish(v.number()),
+  calories: v.nullish(v.number()),
 
   // Training load & intensity
-  icu_training_load: v.optional(v.number()),
-  icu_intensity: v.optional(v.number()),
-  icu_joules: v.optional(v.number()),
-  icu_efficiency_factor: v.optional(v.number()),
-  trimp: v.optional(v.number()),
+  icu_training_load: v.nullish(v.number()),
+  icu_intensity: v.nullish(v.number()),
+  icu_joules: v.nullish(v.number()),
+  icu_efficiency_factor: v.nullish(v.number()),
+  trimp: v.nullish(v.number()),
 
   // Heart rate metrics
-  average_heartrate: v.optional(v.number()),
-  max_heartrate: v.optional(v.number()),
-  lthr: v.optional(v.number()),
-  icu_hr_zones: v.optional(v.array(v.number())),
-  icu_hr_zone_times: v.optional(v.array(v.number())),
+  average_heartrate: v.nullish(v.number()),
+  max_heartrate: v.nullish(v.number()),
+  lthr: v.nullish(v.number()),
+  icu_hr_zones: v.nullish(v.array(v.number())),
+  icu_hr_zone_times: v.nullish(v.array(v.number())),
 
   // Power metrics
-  average_watts: v.optional(v.number()),
-  weighted_average_watts: v.optional(v.number()),
-  max_watts: v.optional(v.number()),
-  p_max: v.optional(v.number()),
-  icu_power_zones: v.optional(v.array(v.number())),
-  icu_rolling_ftp: v.optional(v.number()),
-  icu_rolling_cp: v.optional(v.number()),
-  icu_power_hr: v.optional(v.number()),
+  average_watts: v.nullish(v.number()),
+  weighted_average_watts: v.nullish(v.number()),
+  max_watts: v.nullish(v.number()),
+  p_max: v.nullish(v.number()),
+  icu_power_zones: v.nullish(v.array(v.number())),
+  icu_rolling_ftp: v.nullish(v.number()),
+  icu_rolling_cp: v.nullish(v.number()),
+  icu_power_hr: v.nullish(v.number()),
 
   // Speed & pace metrics
-  average_speed: v.optional(v.number()),
-  max_speed: v.optional(v.number()),
-  threshold_pace: v.optional(v.number()),
-  gap: v.optional(v.number()),
-  icu_pace_zones: v.optional(v.array(v.number())),
+  average_speed: v.nullish(v.number()),
+  max_speed: v.nullish(v.number()),
+  threshold_pace: v.nullish(v.number()),
+  gap: v.nullish(v.number()),
+  icu_pace_zones: v.nullish(v.array(v.number())),
 
   // Cadence metrics
-  average_cadence: v.optional(v.number()),
-  max_cadence: v.optional(v.number()),
+  average_cadence: v.nullish(v.number()),
+  max_cadence: v.nullish(v.number()),
 
   // Subjective metrics
-  feel: v.optional(v.number()),
-  perceived_exertion: v.optional(v.number()),
-  session_rpe: v.optional(v.number()),
-  icu_rpe: v.optional(v.number()),
+  feel: v.nullish(v.number()),
+  perceived_exertion: v.nullish(v.number()),
+  session_rpe: v.nullish(v.number()),
+  icu_rpe: v.nullish(v.number()),
 
   // Activity metadata
-  trainer: v.optional(v.boolean()),
-  commute: v.optional(v.boolean()),
-  race: v.optional(v.boolean()),
-  analyzed: v.optional(v.boolean()),
-  source: v.optional(v.string()),
-  external_id: v.optional(v.string()),
-  strava_id: v.optional(v.union([v.string(), v.number()])),
+  trainer: v.nullish(v.boolean()),
+  commute: v.nullish(v.boolean()),
+  race: v.nullish(v.boolean()),
+  analyzed: v.nullish(v.boolean()),
+  source: v.nullish(v.string()),
+  external_id: v.nullish(v.string()),
+  strava_id: v.nullish(v.union([v.string(), v.number()])),
 
   // Device & equipment
-  device_name: v.optional(v.string()),
-  power_meter: v.optional(v.string()),
-  power_meter_battery: v.optional(v.number()),
-  device_watts: v.optional(v.boolean()),
-  gear: v.optional(v.string()),
+  device_name: v.nullish(v.string()),
+  power_meter: v.nullish(v.string()),
+  power_meter_battery: v.nullish(v.number()),
+  device_watts: v.nullish(v.boolean()),
+  gear: v.nullish(v.string()),
 
   // Advanced metrics
-  decoupling: v.optional(v.number()),
-  icu_variability_index: v.optional(v.number()),
-  compliance: v.optional(v.number()),
-  icu_w_prime: v.optional(v.number()),
-  icu_max_wbal_depletion: v.optional(v.number()),
+  decoupling: v.nullish(v.number()),
+  icu_variability_index: v.nullish(v.number()),
+  compliance: v.nullish(v.number()),
+  icu_w_prime: v.nullish(v.number()),
+  icu_max_wbal_depletion: v.nullish(v.number()),
 
   // Altitude & environment
-  average_altitude: v.optional(v.number()),
-  max_altitude: v.optional(v.number()),
-  min_altitude: v.optional(v.number()),
+  average_altitude: v.nullish(v.number()),
+  max_altitude: v.nullish(v.number()),
+  min_altitude: v.nullish(v.number()),
 
   // Weather data
-  average_weather_temp: v.optional(v.number()),
-  average_temp: v.optional(v.number()),
-  max_temp: v.optional(v.number()),
-  min_temp: v.optional(v.number()),
-  average_wind_speed: v.optional(v.number()),
-  prevailing_wind_deg: v.optional(v.number()),
-  has_weather: v.optional(v.boolean()),
+  average_weather_temp: v.nullish(v.number()),
+  average_temp: v.nullish(v.number()),
+  max_temp: v.nullish(v.number()),
+  min_temp: v.nullish(v.number()),
+  average_wind_speed: v.nullish(v.number()),
+  prevailing_wind_deg: v.nullish(v.number()),
+  has_weather: v.nullish(v.boolean()),
 
   // Intervals & segments
-  icu_intervals_edited: v.optional(v.boolean()),
-  icu_lap_count: v.optional(v.number()),
-  has_segments: v.optional(v.boolean()),
-  route_id: v.optional(v.union([v.string(), v.number()])),
+  icu_intervals_edited: v.nullish(v.boolean()),
+  icu_lap_count: v.nullish(v.number()),
+  has_segments: v.nullish(v.boolean()),
+  route_id: v.nullish(v.union([v.string(), v.number()])),
 
   // OAuth & integration
-  oauth_client_id: v.optional(v.union([v.string(), v.number()])),
-  oauth_client_name: v.optional(v.string()),
+  oauth_client_id: v.nullish(v.union([v.string(), v.number()])),
+  oauth_client_name: v.nullish(v.string()),
 
   // Time breakdowns
-  icu_warmup_time: v.optional(v.number()),
-  icu_cooldown_time: v.optional(v.number()),
-  coasting_time: v.optional(v.number()),
+  icu_warmup_time: v.nullish(v.number()),
+  icu_cooldown_time: v.nullish(v.number()),
+  coasting_time: v.nullish(v.number()),
 });
 
 // Export the transformed schema (converts snake_case to camelCase)
@@ -127,17 +127,17 @@ export type Activities = v.InferOutput<typeof ActivitiesSchema>;
 
 // Interval schema (raw snake_case from API)
 const IntervalSchemaRaw = v.looseObject({
-  id: v.optional(v.number()),
-  type: v.optional(v.string()),
-  start: v.optional(v.number()),
-  end: v.optional(v.number()),
-  distance: v.optional(v.number()),
-  duration: v.optional(v.number()),
-  average_watts: v.optional(v.number()),
-  average_heartrate: v.optional(v.number()),
-  average_cadence: v.optional(v.number()),
-  average_speed: v.optional(v.number()),
-  icu_training_load: v.optional(v.number()),
+  id: v.nullish(v.number()),
+  type: v.nullish(v.string()),
+  start: v.nullish(v.number()),
+  end: v.nullish(v.number()),
+  distance: v.nullish(v.number()),
+  duration: v.nullish(v.number()),
+  average_watts: v.nullish(v.number()),
+  average_heartrate: v.nullish(v.number()),
+  average_cadence: v.nullish(v.number()),
+  average_speed: v.nullish(v.number()),
+  icu_training_load: v.nullish(v.number()),
 });
 
 // Export the transformed schema (converts snake_case to camelCase)
@@ -147,7 +147,7 @@ export type Interval = v.InferOutput<typeof IntervalSchema>;
 
 // IntervalsDTO schema (response from intervals endpoints, raw)
 const IntervalsDTOSchemaRaw = v.looseObject({
-  intervals: v.optional(v.array(IntervalSchema)),
+  intervals: v.nullish(v.array(IntervalSchema)),
 });
 
 export const IntervalsDTOSchema = v.pipe(IntervalsDTOSchemaRaw, v.transform(transformKeys));
@@ -163,10 +163,10 @@ export type ActivityId = v.InferOutput<typeof ActivityIdSchema>;
 
 // Anomaly schema (stream anomalies, raw)
 const AnomalySchemaRaw = v.looseObject({
-  start_index: v.optional(v.number()),
-  end_index: v.optional(v.number()),
-  value: v.optional(v.number()),
-  valueEnd: v.optional(v.number()),
+  start_index: v.nullish(v.number()),
+  end_index: v.nullish(v.number()),
+  value: v.nullish(v.number()),
+  valueEnd: v.nullish(v.number()),
 });
 
 export const AnomalySchema = v.pipe(AnomalySchemaRaw, v.transform(transformKeys));
@@ -174,14 +174,14 @@ export type Anomaly = v.InferOutput<typeof AnomalySchema>;
 
 // ActivityStream schema (individual stream, raw)
 const ActivityStreamSchemaRaw = v.looseObject({
-  type: v.optional(v.string()),
-  name: v.optional(v.string()),
-  data: v.optional(v.any()), // Object with index -> value mapping
-  data2: v.optional(v.any()), // Secondary data object
-  valueTypeIsArray: v.optional(v.boolean()),
-  anomalies: v.optional(v.array(AnomalySchema)),
-  custom: v.optional(v.boolean()),
-  allNull: v.optional(v.boolean()),
+  type: v.nullish(v.string()),
+  name: v.nullish(v.string()),
+  data: v.nullish(v.any()), // Object with index -> value mapping
+  data2: v.nullish(v.any()), // Secondary data object
+  valueTypeIsArray: v.nullish(v.boolean()),
+  anomalies: v.nullish(v.array(AnomalySchema)),
+  custom: v.nullish(v.boolean()),
+  allNull: v.nullish(v.boolean()),
 });
 
 export const ActivityStreamSchema = v.pipe(ActivityStreamSchemaRaw, v.transform(transformKeys));
@@ -193,8 +193,8 @@ export type ActivityStreams = v.InferOutput<typeof ActivityStreamsSchema>;
 
 // UpdateStreamsResult schema (response from PUT streams, raw)
 const UpdateStreamsResultSchemaRaw = v.looseObject({
-  updated: v.optional(v.array(v.string())),
-  deleted: v.optional(v.array(v.string())),
+  updated: v.nullish(v.array(v.string())),
+  deleted: v.nullish(v.array(v.string())),
 });
 
 export const UpdateStreamsResultSchema = v.pipe(UpdateStreamsResultSchemaRaw, v.transform(transformKeys));
@@ -202,37 +202,37 @@ export type UpdateStreamsResult = v.InferOutput<typeof UpdateStreamsResultSchema
 
 // PowerCurve schema (raw)
 const PowerCurveSchemaRaw = v.looseObject({
-  id: v.optional(v.string()),
-  after_kj: v.optional(v.number()),
-  filters: v.optional(v.array(v.any())),
-  label: v.optional(v.string()),
-  filter_label: v.optional(v.string()),
-  percentile: v.optional(v.number()),
-  start_date_local: v.optional(v.string()),
-  end_date_local: v.optional(v.string()),
-  days: v.optional(v.number()),
-  moving_time: v.optional(v.number()),
-  training_load: v.optional(v.number()),
-  weight: v.optional(v.number()),
-  secs: v.optional(v.array(v.number())),
-  values: v.optional(v.array(v.number())),
-  submax_values: v.optional(v.array(v.array(v.number()))),
-  submax_activity_id: v.optional(v.array(v.array(v.string()))),
-  start_index: v.optional(v.array(v.number())),
-  end_index: v.optional(v.array(v.number())),
-  activity_id: v.optional(v.array(v.string())),
-  watts_per_kg: v.optional(v.array(v.number())),
-  wkg_activity_id: v.optional(v.array(v.string())),
-  submax_watts_per_kg: v.optional(v.array(v.array(v.number()))),
-  submax_wkg_activity_id: v.optional(v.array(v.array(v.string()))),
-  powerModels: v.optional(v.array(v.any())),
-  ranks: v.optional(v.any()),
-  mapPlot: v.optional(v.any()),
-  stream_type: v.optional(v.string()),
-  stream_name: v.optional(v.string()),
-  watts: v.optional(v.array(v.number())),
-  vo2max_5m: v.optional(v.number()),
-  compound_score_5m: v.optional(v.number()),
+  id: v.nullish(v.string()),
+  after_kj: v.nullish(v.number()),
+  filters: v.nullish(v.array(v.any())),
+  label: v.nullish(v.string()),
+  filter_label: v.nullish(v.string()),
+  percentile: v.nullish(v.number()),
+  start_date_local: v.nullish(v.string()),
+  end_date_local: v.nullish(v.string()),
+  days: v.nullish(v.number()),
+  moving_time: v.nullish(v.number()),
+  training_load: v.nullish(v.number()),
+  weight: v.nullish(v.number()),
+  secs: v.nullish(v.array(v.number())),
+  values: v.nullish(v.array(v.number())),
+  submax_values: v.nullish(v.array(v.array(v.number()))),
+  submax_activity_id: v.nullish(v.array(v.array(v.string()))),
+  start_index: v.nullish(v.array(v.number())),
+  end_index: v.nullish(v.array(v.number())),
+  activity_id: v.nullish(v.array(v.string())),
+  watts_per_kg: v.nullish(v.array(v.number())),
+  wkg_activity_id: v.nullish(v.array(v.string())),
+  submax_watts_per_kg: v.nullish(v.array(v.array(v.number()))),
+  submax_wkg_activity_id: v.nullish(v.array(v.array(v.string()))),
+  powerModels: v.nullish(v.array(v.any())),
+  ranks: v.nullish(v.any()),
+  mapPlot: v.nullish(v.any()),
+  stream_type: v.nullish(v.string()),
+  stream_name: v.nullish(v.string()),
+  watts: v.nullish(v.array(v.number())),
+  vo2max_5m: v.nullish(v.number()),
+  compound_score_5m: v.nullish(v.number()),
 });
 
 export const PowerCurveSchema = v.pipe(PowerCurveSchemaRaw, v.transform(transformKeys));
@@ -240,26 +240,26 @@ export type PowerCurve = v.InferOutput<typeof PowerCurveSchema>;
 
 // PaceCurve schema (raw)
 const PaceCurveSchemaRaw = v.looseObject({
-  id: v.optional(v.string()),
-  filters: v.optional(v.array(v.any())),
-  label: v.optional(v.string()),
-  filter_label: v.optional(v.string()),
-  percentile: v.optional(v.number()),
-  start_date_local: v.optional(v.string()),
-  end_date_local: v.optional(v.string()),
-  days: v.optional(v.number()),
-  moving_time: v.optional(v.number()),
-  training_load: v.optional(v.number()),
-  weight: v.optional(v.number()),
-  distance: v.optional(v.array(v.number())),
-  values: v.optional(v.array(v.number())),
-  submax_values: v.optional(v.array(v.array(v.number()))),
-  submax_activity_id: v.optional(v.array(v.array(v.string()))),
-  start_index: v.optional(v.array(v.number())),
-  end_index: v.optional(v.array(v.number())),
-  activity_id: v.optional(v.array(v.string())),
-  type: v.optional(v.picklist(["POWER", "HR", "PACE", "GAP"])),
-  paceModels: v.optional(v.array(v.any())),
+  id: v.nullish(v.string()),
+  filters: v.nullish(v.array(v.any())),
+  label: v.nullish(v.string()),
+  filter_label: v.nullish(v.string()),
+  percentile: v.nullish(v.number()),
+  start_date_local: v.nullish(v.string()),
+  end_date_local: v.nullish(v.string()),
+  days: v.nullish(v.number()),
+  moving_time: v.nullish(v.number()),
+  training_load: v.nullish(v.number()),
+  weight: v.nullish(v.number()),
+  distance: v.nullish(v.array(v.number())),
+  values: v.nullish(v.array(v.number())),
+  submax_values: v.nullish(v.array(v.array(v.number()))),
+  submax_activity_id: v.nullish(v.array(v.array(v.string()))),
+  start_index: v.nullish(v.array(v.number())),
+  end_index: v.nullish(v.array(v.number())),
+  activity_id: v.nullish(v.array(v.string())),
+  type: v.nullish(v.picklist(["POWER", "HR", "PACE", "GAP"])),
+  paceModels: v.nullish(v.array(v.any())),
 });
 
 export const PaceCurveSchema = v.pipe(PaceCurveSchemaRaw, v.transform(transformKeys));
@@ -267,24 +267,24 @@ export type PaceCurve = v.InferOutput<typeof PaceCurveSchema>;
 
 // HRCurve schema (raw)
 const HRCurveSchemaRaw = v.looseObject({
-  id: v.optional(v.string()),
-  filters: v.optional(v.array(v.any())),
-  label: v.optional(v.string()),
-  filter_label: v.optional(v.string()),
-  percentile: v.optional(v.number()),
-  start_date_local: v.optional(v.string()),
-  end_date_local: v.optional(v.string()),
-  days: v.optional(v.number()),
-  moving_time: v.optional(v.number()),
-  training_load: v.optional(v.number()),
-  weight: v.optional(v.number()),
-  secs: v.optional(v.array(v.number())),
-  values: v.optional(v.array(v.number())),
-  submax_values: v.optional(v.array(v.array(v.number()))),
-  submax_activity_id: v.optional(v.array(v.array(v.string()))),
-  start_index: v.optional(v.array(v.number())),
-  end_index: v.optional(v.array(v.number())),
-  activity_id: v.optional(v.array(v.string())),
+  id: v.nullish(v.string()),
+  filters: v.nullish(v.array(v.any())),
+  label: v.nullish(v.string()),
+  filter_label: v.nullish(v.string()),
+  percentile: v.nullish(v.number()),
+  start_date_local: v.nullish(v.string()),
+  end_date_local: v.nullish(v.string()),
+  days: v.nullish(v.number()),
+  moving_time: v.nullish(v.number()),
+  training_load: v.nullish(v.number()),
+  weight: v.nullish(v.number()),
+  secs: v.nullish(v.array(v.number())),
+  values: v.nullish(v.array(v.number())),
+  submax_values: v.nullish(v.array(v.array(v.number()))),
+  submax_activity_id: v.nullish(v.array(v.array(v.string()))),
+  start_index: v.nullish(v.array(v.number())),
+  end_index: v.nullish(v.array(v.number())),
+  activity_id: v.nullish(v.array(v.string())),
 });
 
 export const HRCurveSchema = v.pipe(HRCurveSchemaRaw, v.transform(transformKeys));

@@ -23,12 +23,12 @@ const WorkoutSchemaRaw = v.looseObject({
   name: v.string(),
 
   // Optional fields
-  description: v.optional(v.string()),
-  folder_id: v.optional(v.number()),
-  activity_type: v.optional(ActivityTypeSchema),
-  file_contents: v.optional(v.string()),
-  file_contents_base64: v.optional(v.string()),
-  tags: v.optional(v.array(v.string())),
+  description: v.nullish(v.string()),
+  folder_id: v.nullish(v.number()),
+  activity_type: v.nullish(ActivityTypeSchema),
+  file_contents: v.nullish(v.string()),
+  file_contents_base64: v.nullish(v.string()),
+  tags: v.nullish(v.array(v.string())),
 });
 
 export const WorkoutSchema = v.pipe(WorkoutSchemaRaw, v.transform(transformKeys));
@@ -50,17 +50,17 @@ const FolderSchemaRaw = v.looseObject({
   name: v.string(),
 
   // Optional fields
-  athlete_id: v.optional(v.string()),
-  description: v.optional(v.string()),
-  children: v.optional(v.array(WorkoutSchema)),
-  visibility: v.optional(VisibilitySchema),
-  start_date_local: v.optional(v.string()),
-  rollout_weeks: v.optional(v.number()),
-  auto_rollout_day: v.optional(v.number()),
-  read_only_workouts: v.optional(v.boolean()),
-  starting_ctl: v.optional(v.number()),
-  starting_atl: v.optional(v.number()),
-  activity_types: v.optional(v.array(v.optional(ActivityTypeSchema))),
+  athlete_id: v.nullish(v.string()),
+  description: v.nullish(v.string()),
+  children: v.nullish(v.array(WorkoutSchema)),
+  visibility: v.nullish(VisibilitySchema),
+  start_date_local: v.nullish(v.string()),
+  rollout_weeks: v.nullish(v.number()),
+  auto_rollout_day: v.nullish(v.number()),
+  read_only_workouts: v.nullish(v.boolean()),
+  starting_ctl: v.nullish(v.number()),
+  starting_atl: v.nullish(v.number()),
+  activity_types: v.nullish(v.array(v.nullish(ActivityTypeSchema))),
 });
 
 export const FolderSchema = v.pipe(FolderSchemaRaw, v.transform(transformKeys));

@@ -4,12 +4,12 @@ import { transformKeys } from "../utils/transform";
 // Chat schema (raw snake_case from API)
 const ChatSchemaRaw = v.looseObject({
   id: v.number(),
-  athlete_id: v.optional(v.number()),
-  created: v.optional(v.string()),
-  last_message: v.optional(v.string()),
-  unread_count: v.optional(v.number()),
-  athlete_name: v.optional(v.string()),
-  athlete_avatar: v.optional(v.string()),
+  athlete_id: v.nullish(v.number()),
+  created: v.nullish(v.string()),
+  last_message: v.nullish(v.string()),
+  unread_count: v.nullish(v.number()),
+  athlete_name: v.nullish(v.string()),
+  athlete_avatar: v.nullish(v.string()),
 });
 
 export const ChatSchema = v.pipe(ChatSchemaRaw, v.transform(transformKeys));
@@ -21,14 +21,14 @@ export type Chats = v.InferOutput<typeof ChatsSchema>;
 // Message schema (raw snake_case from API)
 const MessageSchemaRaw = v.looseObject({
   id: v.number(),
-  chat_id: v.optional(v.number()),
-  activity_id: v.optional(v.union([v.string(), v.number()])),
-  athlete_id: v.optional(v.number()),
+  chat_id: v.nullish(v.number()),
+  activity_id: v.nullish(v.union([v.string(), v.number()])),
+  athlete_id: v.nullish(v.number()),
   created: v.string(),
   text: v.string(),
-  seen: v.optional(v.boolean()),
-  athlete_name: v.optional(v.string()),
-  athlete_avatar: v.optional(v.string()),
+  seen: v.nullish(v.boolean()),
+  athlete_name: v.nullish(v.string()),
+  athlete_avatar: v.nullish(v.string()),
 });
 
 export const MessageSchema = v.pipe(MessageSchemaRaw, v.transform(transformKeys));
@@ -39,8 +39,8 @@ export type Messages = v.InferOutput<typeof MessagesSchema>;
 
 // NewMessageDTO schema (for sending messages, raw)
 const NewMessageDTOSchemaRaw = v.looseObject({
-  chat_id: v.optional(v.number()),
-  activity_id: v.optional(v.union([v.string(), v.number()])),
+  chat_id: v.nullish(v.number()),
+  activity_id: v.nullish(v.union([v.string(), v.number()])),
   text: v.string(),
 });
 
