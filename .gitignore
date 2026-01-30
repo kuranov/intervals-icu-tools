@@ -5,7 +5,11 @@ coverage
 *.log
 .env
 .env.*
+!.env.example
 .pnpm-store
+
+# Integration test output
+scripts/output/
 
 # Internal context for AI/development (not for public repo)
 .context/
