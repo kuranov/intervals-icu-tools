@@ -11,6 +11,9 @@ coverage
 # Integration test output
 scripts/output/
 
+# API Extractor temp files
+temp/
+
 # Internal context for AI/development (not for public repo)
 .context/
 

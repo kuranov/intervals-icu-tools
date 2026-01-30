@@ -12,7 +12,8 @@
     "reportFileName": "<unscopedPackageName>.api.md"
   },
   "docModel": {
-    "enabled": false
+    "enabled": true,
+    "apiJsonFilePath": "<projectFolder>/temp/<unscopedPackageName>.api.json"
   },
   "dtsRollup": {
     "enabled": false

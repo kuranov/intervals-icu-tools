@@ -15,6 +15,9 @@ importers:
         specifier: ^1.1.0
         version: 1.2.0(typescript@5.9.3)
     devDependencies:
+      '@microsoft/api-documenter':
+        specifier: ^7.28.6
+        version: 7.28.6(@types/node@22.19.3)
       '@microsoft/api-extractor':
         specifier: ^7.56.0
         version: 7.56.0(@types/node@22.19.3)
@@ -453,6 +456,10 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@microsoft/api-documenter@7.28.6':
+    resolution: {integrity: sha512-PI1Q//cg8Jx/IrpFWK3ph84zAFWizRkzJzE8xK0vZp32uzRoYYvOsElz63DGhP/MTwVhZ4ldKowR29oKCmuw5A==}
+    hasBin: true
 
   '@microsoft/api-extractor-model@7.32.2':
     resolution: {integrity: sha512-Ussc25rAalc+4JJs9HNQE7TuO9y6jpYQX9nWD1DhqUzYPBr3Lr7O9intf+ZY8kD5HnIqeIRJX7ccCT0QyBy2Ww==}
@@ -2451,6 +2458,18 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@microsoft/api-documenter@7.28.6(@types/node@22.19.3)':
+    dependencies:
+      '@microsoft/api-extractor-model': 7.32.2(@types/node@22.19.3)
+      '@microsoft/tsdoc': 0.16.0
+      '@rushstack/node-core-library': 5.19.1(@types/node@22.19.3)
+      '@rushstack/terminal': 0.21.0(@types/node@22.19.3)
+      '@rushstack/ts-command-line': 5.1.7(@types/node@22.19.3)
+      js-yaml: 4.1.1
+      resolve: 1.22.11
+    transitivePeerDependencies:
+      - '@types/node'
 
   '@microsoft/api-extractor-model@7.32.2(@types/node@22.19.3)':
     dependencies:
