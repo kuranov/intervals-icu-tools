@@ -35,6 +35,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:integration": "pnpm tsx scripts/test-raw-api.ts && pnpm tsx scripts/analyze-nulls.ts && pnpm tsx scripts/validate-schemas.ts",
+    "api-report": "api-extractor run --local",
+    "api-report:ci": "api-extractor run",
     "prepublishOnly": "pnpm run typecheck && pnpm run test && pnpm run build"
   },
   "keywords": [
@@ -58,6 +60,7 @@
     "valibot": "^1.1.0"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.56.0",
     "@redocly/cli": "^2.14.1",
     "@types/node": "^22.10.2",
     "msw": "^2.7.0",
