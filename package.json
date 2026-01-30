@@ -1,6 +1,6 @@
 {
   "name": "@kuranov/intervals-client",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Type-safe TypeScript client for the Intervals.icu API",
   "license": "MIT",
   "author": "Anton Kuranov <ya.kuranov@gmail.com>",
