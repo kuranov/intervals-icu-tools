@@ -4,7 +4,7 @@ import { transformKeys } from "../utils/transform";
 // Chat schema (raw snake_case from API)
 const ChatSchemaRaw = v.looseObject({
   id: v.number(),
-  athlete_id: v.nullish(v.number()),
+  athlete_id: v.nullish(v.string()),
   created: v.nullish(v.string()),
   last_message: v.nullish(v.string()),
   unread_count: v.nullish(v.number()),
@@ -23,7 +23,7 @@ const MessageSchemaRaw = v.looseObject({
   id: v.number(),
   chat_id: v.nullish(v.number()),
   activity_id: v.nullish(v.union([v.string(), v.number()])),
-  athlete_id: v.nullish(v.number()),
+  athlete_id: v.nullish(v.string()),
   created: v.string(),
   text: v.string(),
   seen: v.nullish(v.boolean()),

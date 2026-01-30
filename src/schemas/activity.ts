@@ -1,6 +1,17 @@
 import * as v from "valibot";
 import { transformKeys } from "../utils/transform";
 
+// StravaGear schema (equipment attached to activity)
+const StravaGearSchemaRaw = v.looseObject({
+  id: v.nullish(v.string()),
+  name: v.nullish(v.string()),
+  distance: v.nullish(v.number()),
+  primary: v.nullish(v.boolean()),
+});
+
+export const StravaGearSchema = v.pipe(StravaGearSchemaRaw, v.transform(transformKeys));
+export type StravaGear = v.InferOutput<typeof StravaGearSchema>;
+
 // Base Activity schema with commonly used fields (raw snake_case from API)
 const ActivitySchemaRaw = v.looseObject({
   // Required fields (API always returns these)
@@ -68,7 +79,7 @@ const ActivitySchemaRaw = v.looseObject({
   trainer: v.nullish(v.boolean()),
   commute: v.nullish(v.boolean()),
   race: v.nullish(v.boolean()),
-  analyzed: v.nullish(v.boolean()),
+  analyzed: v.nullish(v.string()), // date-time when activity was analyzed
   source: v.nullish(v.string()),
   external_id: v.nullish(v.string()),
   strava_id: v.nullish(v.union([v.string(), v.number()])),
@@ -76,9 +87,9 @@ const ActivitySchemaRaw = v.looseObject({
   // Device & equipment
   device_name: v.nullish(v.string()),
   power_meter: v.nullish(v.string()),
-  power_meter_battery: v.nullish(v.number()),
+  power_meter_battery: v.nullish(v.string()),
   device_watts: v.nullish(v.boolean()),
-  gear: v.nullish(v.string()),
+  gear: v.nullish(StravaGearSchema),
 
   // Advanced metrics
   decoupling: v.nullish(v.number()),

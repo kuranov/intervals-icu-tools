@@ -42,7 +42,7 @@ export const basicAthlete: Athlete = {
 
   // Account & permissions
   icuPermission: 'USER',
-  icuActivated: true,
+  icuActivated: '2022-06-15T10:30:00Z', // date-time string per OpenAPI spec
   icuAdmin: false,
   icuCoach: false,
   icuEmailVerified: true,

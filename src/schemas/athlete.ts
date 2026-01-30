@@ -43,7 +43,7 @@ const AthleteSchemaRaw = v.looseObject({
 
   // Account & permissions
   icu_permission: v.nullish(v.string()),
-  icu_activated: v.nullish(v.boolean()),
+  icu_activated: v.nullish(v.string()), // date-time string
   icu_admin: v.nullish(v.boolean()),
   icu_coach: v.nullish(v.boolean()),
   icu_email_verified: v.nullish(v.boolean()),

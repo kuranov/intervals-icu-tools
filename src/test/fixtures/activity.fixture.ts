@@ -66,7 +66,7 @@ export const cyclingWorkoutActivity: Activity = {
   trainer: false,
   commute: false,
   race: false,
-  analyzed: true,
+  analyzed: '2024-01-15T14:45:00Z', // date-time string per OpenAPI spec
   source: 'GARMIN',
   externalId: 'garmin-activity-987654321',
   stravaId: 11223344556,
@@ -74,9 +74,9 @@ export const cyclingWorkoutActivity: Activity = {
   // Device & equipment
   deviceName: 'Garmin Edge 1040',
   powerMeter: 'Quarq DZero',
-  powerMeterBattery: 85,
+  powerMeterBattery: '85%', // string per OpenAPI spec
   deviceWatts: true,
-  gear: 'Canyon Aeroad CF SLX',
+  gear: { id: 'b123456', name: 'Canyon Aeroad CF SLX', distance: 12500.5, primary: true }, // StravaGear object per OpenAPI spec
 
   // Advanced metrics
   decoupling: 2.3,
@@ -153,11 +153,11 @@ export const runningActivity: Activity = {
   trainer: false,
   commute: false,
   race: false,
-  analyzed: true,
+  analyzed: '2024-01-16T11:35:00Z',
   source: 'GARMIN',
 
   deviceName: 'Garmin Forerunner 965',
-  gear: 'Nike Vaporfly 3',
+  gear: { id: 's789012', name: 'Nike Vaporfly 3', distance: 450000, primary: true },
 
   hasWeather: true,
   averageWeatherTemp: 12,
@@ -206,7 +206,7 @@ export const trainerActivity: Activity = {
   trainer: true,
   commute: false,
   race: false,
-  analyzed: true,
+  analyzed: '2024-01-17T23:50:00Z',
   source: 'ZWIFT',
   externalId: 'zwift-12345',
 

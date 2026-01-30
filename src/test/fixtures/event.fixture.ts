@@ -76,10 +76,10 @@ export const plannedWorkoutEvent: Event = {
   // UI/Presentation
   entered: false,
   indoor: false,
-  forWeek: '2024-W03',
+  forWeek: false, // boolean per OpenAPI spec
 
   // Advanced attributes
-  target: 265,
+  target: '265', // string per OpenAPI spec
 };
 
 /**
@@ -133,7 +133,7 @@ export const raceEvent: Event = {
 
   entered: true,
   indoor: false,
-  forWeek: '2024-W06',
+  forWeek: true, // boolean per OpenAPI spec
 };
 
 /**

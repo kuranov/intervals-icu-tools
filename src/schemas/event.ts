@@ -84,14 +84,14 @@ const EventSchemaRaw = v.looseObject({
   // UI/Presentation
   entered: v.nullish(v.boolean()),
   indoor: v.nullish(v.boolean()),
-  for_week: v.nullish(v.string()),
+  for_week: v.nullish(v.boolean()),
 
   // Workout file conversion fields
   workout_filename: v.nullish(v.string()),
   workout_file_base64: v.nullish(v.string()),
 
   // Advanced attributes
-  target: v.nullish(v.number()),
+  target: v.nullish(v.string()),
   sub_type: v.nullish(v.string()),
 });
 
