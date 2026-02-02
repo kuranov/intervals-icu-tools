@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import { transformKeys } from "../utils/transform";
+import { transformKeys, type CamelCaseKeys } from "../utils/transform";
 
 // Base Event schema with commonly used fields (raw snake_case from API)
 const EventSchemaRaw = v.looseObject({
@@ -98,10 +98,10 @@ const EventSchemaRaw = v.looseObject({
 // Export the transformed schema (converts snake_case to camelCase)
 export const EventSchema = v.pipe(EventSchemaRaw, v.transform(transformKeys));
 
-export type Event = v.InferOutput<typeof EventSchema>;
+export type Event = CamelCaseKeys<v.InferOutput<typeof EventSchemaRaw>>;
 
 export const EventsSchema = v.array(EventSchema);
-export type Events = v.InferOutput<typeof EventsSchema>;
+export type Events = Event[];
 
 // EventEx schema (for create/update - includes file upload fields, raw)
 const EventExSchemaRaw = v.looseObject({
@@ -130,7 +130,7 @@ const EventExSchemaRaw = v.looseObject({
 });
 
 export const EventExSchema = v.pipe(EventExSchemaRaw, v.transform(transformKeys));
-export type EventEx = v.InferOutput<typeof EventExSchema>;
+export type EventEx = CamelCaseKeys<v.InferOutput<typeof EventExSchemaRaw>>;
 
 // DoomedEvent schema (for bulk delete, raw)
 const DoomedEventSchemaRaw = v.looseObject({
@@ -139,7 +139,7 @@ const DoomedEventSchemaRaw = v.looseObject({
 });
 
 export const DoomedEventSchema = v.pipe(DoomedEventSchemaRaw, v.transform(transformKeys));
-export type DoomedEvent = v.InferOutput<typeof DoomedEventSchema>;
+export type DoomedEvent = CamelCaseKeys<v.InferOutput<typeof DoomedEventSchemaRaw>>;
 
 // DeleteEventsResponse schema (raw)
 const DeleteEventsResponseSchemaRaw = v.looseObject({
@@ -147,9 +147,7 @@ const DeleteEventsResponseSchemaRaw = v.looseObject({
 });
 
 export const DeleteEventsResponseSchema = v.pipe(DeleteEventsResponseSchemaRaw, v.transform(transformKeys));
-export type DeleteEventsResponse = v.InferOutput<
-  typeof DeleteEventsResponseSchema
->;
+export type DeleteEventsResponse = CamelCaseKeys<v.InferOutput<typeof DeleteEventsResponseSchemaRaw>>;
 
 // Event tags schema
 export const EventTagsSchema = v.array(v.string());
@@ -165,7 +163,7 @@ const ApplyPlanDTOSchemaRaw = v.looseObject({
 });
 
 export const ApplyPlanDTOSchema = v.pipe(ApplyPlanDTOSchemaRaw, v.transform(transformKeys));
-export type ApplyPlanDTO = v.InferOutput<typeof ApplyPlanDTOSchema>;
+export type ApplyPlanDTO = CamelCaseKeys<v.InferOutput<typeof ApplyPlanDTOSchemaRaw>>;
 
 // DuplicateEventsDTO schema (for duplicating events, raw)
 const DuplicateEventsDTOSchemaRaw = v.looseObject({
@@ -175,7 +173,7 @@ const DuplicateEventsDTOSchemaRaw = v.looseObject({
 });
 
 export const DuplicateEventsDTOSchema = v.pipe(DuplicateEventsDTOSchemaRaw, v.transform(transformKeys));
-export type DuplicateEventsDTO = v.InferOutput<typeof DuplicateEventsDTOSchema>;
+export type DuplicateEventsDTO = CamelCaseKeys<v.InferOutput<typeof DuplicateEventsDTOSchemaRaw>>;
 
 // Decoder functions (internal use)
 export function decodeEvents(data: unknown): Events {

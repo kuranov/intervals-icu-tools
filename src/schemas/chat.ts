@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import { transformKeys } from "../utils/transform";
+import { transformKeys, type CamelCaseKeys } from "../utils/transform";
 
 // Chat schema (raw snake_case from API)
 const ChatSchemaRaw = v.looseObject({
@@ -13,10 +13,10 @@ const ChatSchemaRaw = v.looseObject({
 });
 
 export const ChatSchema = v.pipe(ChatSchemaRaw, v.transform(transformKeys));
-export type Chat = v.InferOutput<typeof ChatSchema>;
+export type Chat = CamelCaseKeys<v.InferOutput<typeof ChatSchemaRaw>>;
 
 export const ChatsSchema = v.array(ChatSchema);
-export type Chats = v.InferOutput<typeof ChatsSchema>;
+export type Chats = Chat[];
 
 // Message schema (raw snake_case from API)
 const MessageSchemaRaw = v.looseObject({
@@ -32,10 +32,10 @@ const MessageSchemaRaw = v.looseObject({
 });
 
 export const MessageSchema = v.pipe(MessageSchemaRaw, v.transform(transformKeys));
-export type Message = v.InferOutput<typeof MessageSchema>;
+export type Message = CamelCaseKeys<v.InferOutput<typeof MessageSchemaRaw>>;
 
 export const MessagesSchema = v.array(MessageSchema);
-export type Messages = v.InferOutput<typeof MessagesSchema>;
+export type Messages = Message[];
 
 // NewMessageDTO schema (for sending messages, raw)
 const NewMessageDTOSchemaRaw = v.looseObject({
@@ -45,7 +45,7 @@ const NewMessageDTOSchemaRaw = v.looseObject({
 });
 
 export const NewMessageDTOSchema = v.pipe(NewMessageDTOSchemaRaw, v.transform(transformKeys));
-export type NewMessageDTO = v.InferOutput<typeof NewMessageDTOSchema>;
+export type NewMessageDTO = CamelCaseKeys<v.InferOutput<typeof NewMessageDTOSchemaRaw>>;
 
 // Decoder functions (internal use)
 export function decodeChat(data: unknown): Chat {

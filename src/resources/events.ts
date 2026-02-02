@@ -29,7 +29,7 @@ export type ListEventsOptions = {
   /** Max number of events to return */
   limit?: number;
   /** Calendar ID filter */
-  calendar_id?: number;
+  calendarId?: number;
   /** Convert workouts to format (zwo, mrc, erg, or fit) */
   ext?: string;
   /** Percentage for converting fixed power targets into range (default: 2.5) */
@@ -89,8 +89,8 @@ export class EventsResource {
       searchParams.category = options.category.join(",");
     if (options?.limit !== undefined)
       searchParams.limit = String(options.limit);
-    if (options?.calendar_id !== undefined)
-      searchParams.calendar_id = String(options.calendar_id);
+    if (options?.calendarId !== undefined)
+      searchParams.calendar_id = String(options.calendarId);
     if (options?.ext) searchParams.ext = options.ext;
     if (options?.powerRange !== undefined)
       searchParams.powerRange = String(options.powerRange);

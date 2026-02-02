@@ -7,6 +7,24 @@ export function toCamelCase(str: string): string {
 }
 
 /**
+ * Convert snake_case string literal to camelCase (type-level)
+ * Examples: "start_date_local" → "startDateLocal"
+ */
+type SnakeToCamel<S extends string> = S extends `${infer T}_${infer U}`
+  ? `${T}${Capitalize<SnakeToCamel<U>>}`
+  : S;
+
+/**
+ * Transform object keys from snake_case to camelCase (type-level)
+ * Preserves value types, handles nested objects and arrays
+ */
+export type CamelCaseKeys<T> = T extends (infer U)[]
+  ? CamelCaseKeys<U>[]
+  : T extends Record<string, unknown>
+    ? { [K in keyof T as SnakeToCamel<K & string>]: CamelCaseKeys<T[K]> }
+    : T;
+
+/**
  * Convert camelCase string to snake_case
  * Examples: startDateLocal → start_date_local, averageHr → average_hr
  */

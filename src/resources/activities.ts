@@ -32,7 +32,7 @@ export type ListActivitiesOptions = {
   /** Local ISO-8601 date or date and time (defaults to now) */
   newest?: string;
   /** Only return activities on this route */
-  route_id?: number;
+  routeId?: number;
   /** Return at most this many activities */
   limit?: number;
   /** Comma separated list of field names to include (default is all) */
@@ -102,8 +102,8 @@ export class ActivitiesResource {
     const searchParams: Record<string, string> = {};
     if (options?.oldest) searchParams.oldest = options.oldest;
     if (options?.newest) searchParams.newest = options.newest;
-    if (options?.route_id !== undefined)
-      searchParams.route_id = String(options.route_id);
+    if (options?.routeId !== undefined)
+      searchParams.route_id = String(options.routeId);
     if (options?.limit !== undefined)
       searchParams.limit = String(options.limit);
     if (options?.fields) searchParams.fields = options.fields.join(",");

@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import { transformKeys } from "../utils/transform";
+import { transformKeys, type CamelCaseKeys } from "../utils/transform";
 
 // Base Athlete schema (raw snake_case from API)
 const AthleteSchemaRaw = v.looseObject({
@@ -72,7 +72,7 @@ const AthleteSchemaRaw = v.looseObject({
 });
 
 export const AthleteSchema = v.pipe(AthleteSchemaRaw, v.transform(transformKeys));
-export type Athlete = v.InferOutput<typeof AthleteSchema>;
+export type Athlete = CamelCaseKeys<v.InferOutput<typeof AthleteSchemaRaw>>;
 
 // AthleteUpdateDTO schema (raw)
 const AthleteUpdateDTOSchemaRaw = v.looseObject({
@@ -88,7 +88,7 @@ const AthleteUpdateDTOSchemaRaw = v.looseObject({
 });
 
 export const AthleteUpdateDTOSchema = v.pipe(AthleteUpdateDTOSchemaRaw, v.transform(transformKeys));
-export type AthleteUpdateDTO = v.InferOutput<typeof AthleteUpdateDTOSchema>;
+export type AthleteUpdateDTO = CamelCaseKeys<v.InferOutput<typeof AthleteUpdateDTOSchemaRaw>>;
 
 // WithSportSettings schema (athlete with sport settings, raw)
 const WithSportSettingsSchemaRaw = v.looseObject({
@@ -111,13 +111,13 @@ const WithSportSettingsSchemaRaw = v.looseObject({
 });
 
 export const WithSportSettingsSchema = v.pipe(WithSportSettingsSchemaRaw, v.transform(transformKeys));
-export type WithSportSettings = v.InferOutput<typeof WithSportSettingsSchema>;
+export type WithSportSettings = CamelCaseKeys<v.InferOutput<typeof WithSportSettingsSchemaRaw>>;
 
 // AthleteSettings schema (dynamic key-value for device settings, raw)
 const AthleteSettingsSchemaRaw = v.looseObject({});
 
 export const AthleteSettingsSchema = v.pipe(AthleteSettingsSchemaRaw, v.transform(transformKeys));
-export type AthleteSettings = v.InferOutput<typeof AthleteSettingsSchema>;
+export type AthleteSettings = CamelCaseKeys<v.InferOutput<typeof AthleteSettingsSchemaRaw>>;
 
 // AthleteProfile schema (raw)
 const AthleteProfileSchemaRaw = v.looseObject({
@@ -139,7 +139,7 @@ const AthleteProfileSchemaRaw = v.looseObject({
 });
 
 export const AthleteProfileSchema = v.pipe(AthleteProfileSchemaRaw, v.transform(transformKeys));
-export type AthleteProfile = v.InferOutput<typeof AthleteProfileSchema>;
+export type AthleteProfile = CamelCaseKeys<v.InferOutput<typeof AthleteProfileSchemaRaw>>;
 
 // SummaryWithCats schema (summary for followed athletes, raw)
 const SummaryWithCatsSchemaRaw = v.looseObject({
@@ -162,10 +162,10 @@ const SummaryWithCatsSchemaRaw = v.looseObject({
 });
 
 export const SummaryWithCatsSchema = v.pipe(SummaryWithCatsSchemaRaw, v.transform(transformKeys));
-export type SummaryWithCats = v.InferOutput<typeof SummaryWithCatsSchema>;
+export type SummaryWithCats = CamelCaseKeys<v.InferOutput<typeof SummaryWithCatsSchemaRaw>>;
 
 export const AthleteSummarySchema = v.array(SummaryWithCatsSchema);
-export type AthleteSummary = v.InferOutput<typeof AthleteSummarySchema>;
+export type AthleteSummary = SummaryWithCats[];
 
 // Decoder functions (internal use)
 export function decodeAthlete(data: unknown): Athlete {

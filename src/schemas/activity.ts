@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import { transformKeys } from "../utils/transform";
+import { transformKeys, type CamelCaseKeys } from "../utils/transform";
 
 // StravaGear schema (equipment attached to activity)
 const StravaGearSchemaRaw = v.looseObject({
@@ -10,7 +10,7 @@ const StravaGearSchemaRaw = v.looseObject({
 });
 
 export const StravaGearSchema = v.pipe(StravaGearSchemaRaw, v.transform(transformKeys));
-export type StravaGear = v.InferOutput<typeof StravaGearSchema>;
+export type StravaGear = CamelCaseKeys<v.InferOutput<typeof StravaGearSchemaRaw>>;
 
 // Base Activity schema with commonly used fields (raw snake_case from API)
 const ActivitySchemaRaw = v.looseObject({
@@ -131,10 +131,10 @@ const ActivitySchemaRaw = v.looseObject({
 // Export the transformed schema (converts snake_case to camelCase)
 export const ActivitySchema = v.pipe(ActivitySchemaRaw, v.transform(transformKeys));
 
-export type Activity = v.InferOutput<typeof ActivitySchema>;
+export type Activity = CamelCaseKeys<v.InferOutput<typeof ActivitySchemaRaw>>;
 
 export const ActivitiesSchema = v.array(ActivitySchema);
-export type Activities = v.InferOutput<typeof ActivitiesSchema>;
+export type Activities = Activity[];
 
 // Interval schema (raw snake_case from API)
 const IntervalSchemaRaw = v.looseObject({
@@ -154,7 +154,7 @@ const IntervalSchemaRaw = v.looseObject({
 // Export the transformed schema (converts snake_case to camelCase)
 export const IntervalSchema = v.pipe(IntervalSchemaRaw, v.transform(transformKeys));
 
-export type Interval = v.InferOutput<typeof IntervalSchema>;
+export type Interval = CamelCaseKeys<v.InferOutput<typeof IntervalSchemaRaw>>;
 
 // IntervalsDTO schema (response from intervals endpoints, raw)
 const IntervalsDTOSchemaRaw = v.looseObject({
@@ -162,7 +162,7 @@ const IntervalsDTOSchemaRaw = v.looseObject({
 });
 
 export const IntervalsDTOSchema = v.pipe(IntervalsDTOSchemaRaw, v.transform(transformKeys));
-export type IntervalsDTO = v.InferOutput<typeof IntervalsDTOSchema>;
+export type IntervalsDTO = CamelCaseKeys<v.InferOutput<typeof IntervalsDTOSchemaRaw>>;
 
 // ActivityId schema (response from delete endpoint, raw)
 const ActivityIdSchemaRaw = v.looseObject({
@@ -170,7 +170,7 @@ const ActivityIdSchemaRaw = v.looseObject({
 });
 
 export const ActivityIdSchema = v.pipe(ActivityIdSchemaRaw, v.transform(transformKeys));
-export type ActivityId = v.InferOutput<typeof ActivityIdSchema>;
+export type ActivityId = CamelCaseKeys<v.InferOutput<typeof ActivityIdSchemaRaw>>;
 
 // Anomaly schema (stream anomalies, raw)
 const AnomalySchemaRaw = v.looseObject({
@@ -181,7 +181,7 @@ const AnomalySchemaRaw = v.looseObject({
 });
 
 export const AnomalySchema = v.pipe(AnomalySchemaRaw, v.transform(transformKeys));
-export type Anomaly = v.InferOutput<typeof AnomalySchema>;
+export type Anomaly = CamelCaseKeys<v.InferOutput<typeof AnomalySchemaRaw>>;
 
 // ActivityStream schema (individual stream, raw)
 const ActivityStreamSchemaRaw = v.looseObject({
@@ -196,11 +196,11 @@ const ActivityStreamSchemaRaw = v.looseObject({
 });
 
 export const ActivityStreamSchema = v.pipe(ActivityStreamSchemaRaw, v.transform(transformKeys));
-export type ActivityStream = v.InferOutput<typeof ActivityStreamSchema>;
+export type ActivityStream = CamelCaseKeys<v.InferOutput<typeof ActivityStreamSchemaRaw>>;
 
 // ActivityStreams schema (array of streams)
 export const ActivityStreamsSchema = v.array(ActivityStreamSchema);
-export type ActivityStreams = v.InferOutput<typeof ActivityStreamsSchema>;
+export type ActivityStreams = ActivityStream[];
 
 // UpdateStreamsResult schema (response from PUT streams, raw)
 const UpdateStreamsResultSchemaRaw = v.looseObject({
@@ -209,7 +209,7 @@ const UpdateStreamsResultSchemaRaw = v.looseObject({
 });
 
 export const UpdateStreamsResultSchema = v.pipe(UpdateStreamsResultSchemaRaw, v.transform(transformKeys));
-export type UpdateStreamsResult = v.InferOutput<typeof UpdateStreamsResultSchema>;
+export type UpdateStreamsResult = CamelCaseKeys<v.InferOutput<typeof UpdateStreamsResultSchemaRaw>>;
 
 // PowerCurve schema (raw)
 const PowerCurveSchemaRaw = v.looseObject({
@@ -247,7 +247,7 @@ const PowerCurveSchemaRaw = v.looseObject({
 });
 
 export const PowerCurveSchema = v.pipe(PowerCurveSchemaRaw, v.transform(transformKeys));
-export type PowerCurve = v.InferOutput<typeof PowerCurveSchema>;
+export type PowerCurve = CamelCaseKeys<v.InferOutput<typeof PowerCurveSchemaRaw>>;
 
 // PaceCurve schema (raw)
 const PaceCurveSchemaRaw = v.looseObject({
@@ -274,7 +274,7 @@ const PaceCurveSchemaRaw = v.looseObject({
 });
 
 export const PaceCurveSchema = v.pipe(PaceCurveSchemaRaw, v.transform(transformKeys));
-export type PaceCurve = v.InferOutput<typeof PaceCurveSchema>;
+export type PaceCurve = CamelCaseKeys<v.InferOutput<typeof PaceCurveSchemaRaw>>;
 
 // HRCurve schema (raw)
 const HRCurveSchemaRaw = v.looseObject({
@@ -299,7 +299,7 @@ const HRCurveSchemaRaw = v.looseObject({
 });
 
 export const HRCurveSchema = v.pipe(HRCurveSchemaRaw, v.transform(transformKeys));
-export type HRCurve = v.InferOutput<typeof HRCurveSchema>;
+export type HRCurve = CamelCaseKeys<v.InferOutput<typeof HRCurveSchemaRaw>>;
 
 // Decoder functions (internal use)
 export function decodeActivities(data: unknown): Activities {

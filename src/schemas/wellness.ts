@@ -1,5 +1,5 @@
 import * as v from "valibot";
-import { transformKeys } from "../utils/transform";
+import { transformKeys, type CamelCaseKeys } from "../utils/transform";
 
 /**
  * Menstrual phase enum
@@ -19,7 +19,7 @@ const SportInfoSchemaRaw = v.looseObject({
 });
 
 export const SportInfoSchema = v.pipe(SportInfoSchemaRaw, v.transform(transformKeys));
-export type SportInfo = v.InferOutput<typeof SportInfoSchema>;
+export type SportInfo = CamelCaseKeys<v.InferOutput<typeof SportInfoSchemaRaw>>;
 
 /**
  * Wellness record schema (raw)
@@ -91,13 +91,13 @@ const WellnessSchemaRaw = v.looseObject({
 });
 
 export const WellnessSchema = v.pipe(WellnessSchemaRaw, v.transform(transformKeys));
-export type Wellness = v.InferOutput<typeof WellnessSchema>;
+export type Wellness = CamelCaseKeys<v.InferOutput<typeof WellnessSchemaRaw>>;
 
 /**
  * Array of wellness records
  */
 export const WellnessListSchema = v.array(WellnessSchema);
-export type WellnessList = v.InferOutput<typeof WellnessListSchema>;
+export type WellnessList = Wellness[];
 
 /**
  * Decode a single wellness record

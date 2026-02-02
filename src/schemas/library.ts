@@ -1,6 +1,6 @@
 import * as v from "valibot";
 import { ActivityTypeSchema } from "./common";
-import { transformKeys } from "../utils/transform";
+import { transformKeys, type CamelCaseKeys } from "../utils/transform";
 
 /**
  * Folder/Plan type enum
@@ -32,13 +32,13 @@ const WorkoutSchemaRaw = v.looseObject({
 });
 
 export const WorkoutSchema = v.pipe(WorkoutSchemaRaw, v.transform(transformKeys));
-export type Workout = v.InferOutput<typeof WorkoutSchema>;
+export type Workout = CamelCaseKeys<v.InferOutput<typeof WorkoutSchemaRaw>>;
 
 /**
  * Array of workouts
  */
 export const WorkoutsSchema = v.array(WorkoutSchema);
-export type Workouts = v.InferOutput<typeof WorkoutsSchema>;
+export type Workouts = Workout[];
 
 /**
  * Folder schema for organizing workouts (raw)
@@ -64,13 +64,13 @@ const FolderSchemaRaw = v.looseObject({
 });
 
 export const FolderSchema = v.pipe(FolderSchemaRaw, v.transform(transformKeys));
-export type Folder = v.InferOutput<typeof FolderSchema>;
+export type Folder = CamelCaseKeys<v.InferOutput<typeof FolderSchemaRaw>>;
 
 /**
  * Array of folders
  */
 export const FoldersSchema = v.array(FolderSchema);
-export type Folders = v.InferOutput<typeof FoldersSchema>;
+export type Folders = Folder[];
 
 /**
  * Workout tags (simple string array)
