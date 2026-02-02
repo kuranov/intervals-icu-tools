@@ -74,8 +74,8 @@ const AthleteSchemaRaw = v.looseObject({
 export const AthleteSchema = v.pipe(AthleteSchemaRaw, v.transform(transformKeys));
 export type Athlete = CamelCaseKeys<v.InferOutput<typeof AthleteSchemaRaw>>;
 
-// AthleteUpdateDTO schema (raw)
-const AthleteUpdateDTOSchemaRaw = v.looseObject({
+// UpdateAthleteInput schema (raw)
+const UpdateAthleteInputSchemaRaw = v.looseObject({
   name: v.nullish(v.string()),
   email: v.nullish(v.string()),
   avatar_url: v.nullish(v.string()),
@@ -87,8 +87,8 @@ const AthleteUpdateDTOSchemaRaw = v.looseObject({
   timezone: v.nullish(v.string()),
 });
 
-export const AthleteUpdateDTOSchema = v.pipe(AthleteUpdateDTOSchemaRaw, v.transform(transformKeys));
-export type AthleteUpdateDTO = CamelCaseKeys<v.InferOutput<typeof AthleteUpdateDTOSchemaRaw>>;
+export const UpdateAthleteInputSchema = v.pipe(UpdateAthleteInputSchemaRaw, v.transform(transformKeys));
+export type UpdateAthleteInput = CamelCaseKeys<v.InferOutput<typeof UpdateAthleteInputSchemaRaw>>;
 
 // WithSportSettings schema (athlete with sport settings, raw)
 const WithSportSettingsSchemaRaw = v.looseObject({

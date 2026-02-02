@@ -1,4 +1,4 @@
-import type { Activity, ActivityStreams, UpdateStreamsResult } from '../../schemas/activity';
+import type { Activity, ActivityStreams, UpdateStreamsResponse } from '../../schemas/activity';
 
 /**
  * Realistic activity fixture representing a cycling workout with power data.
@@ -275,9 +275,9 @@ export const activityStreams: ActivityStreams = [
 ];
 
 /**
- * Update streams result fixture showing updated and deleted streams.
+ * Update streams response fixture showing updated and deleted streams.
  */
-export const updateStreamsResult: UpdateStreamsResult = {
+export const updateStreamsResponse: UpdateStreamsResponse = {
   updated: ['watts', 'heartrate', 'cadence'],
   deleted: ['old_stream'],
 };
@@ -287,5 +287,5 @@ export const activityFixtures = {
   running: runningActivity,
   trainer: trainerActivity,
   streams: activityStreams,
-  updateResult: updateStreamsResult,
+  updateResponse: updateStreamsResponse,
 };

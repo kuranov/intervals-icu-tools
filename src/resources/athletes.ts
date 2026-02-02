@@ -9,7 +9,7 @@ import {
   decodeAthleteProfile,
   decodeAthleteSummary,
   type Athlete,
-  type AthleteUpdateDTO,
+  type UpdateAthleteInput,
   type WithSportSettings,
   type AthleteSettings,
   type AthleteProfile,
@@ -45,7 +45,7 @@ export class AthletesResource {
    */
   update(
     id: string | number,
-    data: Partial<AthleteUpdateDTO>
+    data: Partial<UpdateAthleteInput>
   ): Promise<Result<Athlete, ApiError>> {
     return this.http.requestJson(
       `athlete/${id}`,

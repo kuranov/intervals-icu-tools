@@ -156,13 +156,13 @@ export const IntervalSchema = v.pipe(IntervalSchemaRaw, v.transform(transformKey
 
 export type Interval = CamelCaseKeys<v.InferOutput<typeof IntervalSchemaRaw>>;
 
-// IntervalsDTO schema (response from intervals endpoints, raw)
-const IntervalsDTOSchemaRaw = v.looseObject({
+// IntervalsResponse schema (response from intervals endpoints, raw)
+const IntervalsResponseSchemaRaw = v.looseObject({
   intervals: v.nullish(v.array(IntervalSchema)),
 });
 
-export const IntervalsDTOSchema = v.pipe(IntervalsDTOSchemaRaw, v.transform(transformKeys));
-export type IntervalsDTO = CamelCaseKeys<v.InferOutput<typeof IntervalsDTOSchemaRaw>>;
+export const IntervalsResponseSchema = v.pipe(IntervalsResponseSchemaRaw, v.transform(transformKeys));
+export type IntervalsResponse = CamelCaseKeys<v.InferOutput<typeof IntervalsResponseSchemaRaw>>;
 
 // ActivityId schema (response from delete endpoint, raw)
 const ActivityIdSchemaRaw = v.looseObject({
@@ -202,14 +202,14 @@ export type ActivityStream = CamelCaseKeys<v.InferOutput<typeof ActivityStreamSc
 export const ActivityStreamsSchema = v.array(ActivityStreamSchema);
 export type ActivityStreams = ActivityStream[];
 
-// UpdateStreamsResult schema (response from PUT streams, raw)
-const UpdateStreamsResultSchemaRaw = v.looseObject({
+// UpdateStreamsResponse schema (response from PUT streams, raw)
+const UpdateStreamsResponseSchemaRaw = v.looseObject({
   updated: v.nullish(v.array(v.string())),
   deleted: v.nullish(v.array(v.string())),
 });
 
-export const UpdateStreamsResultSchema = v.pipe(UpdateStreamsResultSchemaRaw, v.transform(transformKeys));
-export type UpdateStreamsResult = CamelCaseKeys<v.InferOutput<typeof UpdateStreamsResultSchemaRaw>>;
+export const UpdateStreamsResponseSchema = v.pipe(UpdateStreamsResponseSchemaRaw, v.transform(transformKeys));
+export type UpdateStreamsResponse = CamelCaseKeys<v.InferOutput<typeof UpdateStreamsResponseSchemaRaw>>;
 
 // PowerCurve schema (raw)
 const PowerCurveSchemaRaw = v.looseObject({
@@ -310,8 +310,8 @@ export function decodeActivity(data: unknown): Activity {
   return v.parse(ActivitySchema, data);
 }
 
-export function decodeIntervalsDTO(data: unknown): IntervalsDTO {
-  return v.parse(IntervalsDTOSchema, data);
+export function decodeIntervalsResponse(data: unknown): IntervalsResponse {
+  return v.parse(IntervalsResponseSchema, data);
 }
 
 export function decodeActivityId(data: unknown): ActivityId {
@@ -322,8 +322,8 @@ export function decodeActivityStreams(data: unknown): ActivityStreams {
   return v.parse(ActivityStreamsSchema, data);
 }
 
-export function decodeUpdateStreamsResult(data: unknown): UpdateStreamsResult {
-  return v.parse(UpdateStreamsResultSchema, data);
+export function decodeUpdateStreamsResponse(data: unknown): UpdateStreamsResponse {
+  return v.parse(UpdateStreamsResponseSchema, data);
 }
 
 export function decodePowerCurve(data: unknown): PowerCurve {

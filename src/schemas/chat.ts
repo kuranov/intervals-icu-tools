@@ -37,15 +37,15 @@ export type Message = CamelCaseKeys<v.InferOutput<typeof MessageSchemaRaw>>;
 export const MessagesSchema = v.array(MessageSchema);
 export type Messages = Message[];
 
-// NewMessageDTO schema (for sending messages, raw)
-const NewMessageDTOSchemaRaw = v.looseObject({
+// CreateMessageInput schema (for sending messages, raw)
+const CreateMessageInputSchemaRaw = v.looseObject({
   chat_id: v.nullish(v.number()),
   activity_id: v.nullish(v.union([v.string(), v.number()])),
   content: v.nullish(v.string()), // message content
 });
 
-export const NewMessageDTOSchema = v.pipe(NewMessageDTOSchemaRaw, v.transform(transformKeys));
-export type NewMessageDTO = CamelCaseKeys<v.InferOutput<typeof NewMessageDTOSchemaRaw>>;
+export const CreateMessageInputSchema = v.pipe(CreateMessageInputSchemaRaw, v.transform(transformKeys));
+export type CreateMessageInput = CamelCaseKeys<v.InferOutput<typeof CreateMessageInputSchemaRaw>>;
 
 // Decoder functions (internal use)
 export function decodeChat(data: unknown): Chat {

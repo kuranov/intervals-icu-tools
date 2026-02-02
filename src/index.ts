@@ -20,12 +20,12 @@ export type {
   Activity,
   Activities,
   Interval,
-  IntervalsDTO,
+  IntervalsResponse,
   ActivityId,
   ActivityStream,
   ActivityStreams,
   Anomaly,
-  UpdateStreamsResult,
+  UpdateStreamsResponse,
   PowerCurve,
   PaceCurve,
   HRCurve,
@@ -35,18 +35,18 @@ export type {
 export type {
   Event,
   Events,
-  EventEx,
-  DoomedEvent,
+  EventInput,
+  DeleteEventInput,
   DeleteEventsResponse,
   EventTags,
-  ApplyPlanDTO,
-  DuplicateEventsDTO,
+  ApplyPlanInput,
+  DuplicateEventsInput,
 } from "./schemas/event";
 
 // Data types - Athletes
 export type {
   Athlete,
-  AthleteUpdateDTO,
+  UpdateAthleteInput,
   WithSportSettings,
   AthleteSettings,
   AthleteProfile,
@@ -76,7 +76,7 @@ export type {
   Chats,
   Message,
   Messages,
-  NewMessageDTO,
+  CreateMessageInput,
 } from "./schemas/chat";
 
 // Common schemas

@@ -5,21 +5,21 @@ import type { IntervalsHttpClient } from "../http/httpClient";
 import {
   decodeActivities,
   decodeActivity,
-  decodeIntervalsDTO,
+  decodeIntervalsResponse,
   decodeActivityId,
   decodeActivityStreams,
-  decodeUpdateStreamsResult,
+  decodeUpdateStreamsResponse,
   decodePowerCurve,
   decodePaceCurve,
   decodeHRCurve,
   type Activities,
   type Activity,
-  type IntervalsDTO,
+  type IntervalsResponse,
   type ActivityId,
   type Interval,
   type ActivityStreams,
   type ActivityStream,
-  type UpdateStreamsResult,
+  type UpdateStreamsResponse,
   type PowerCurve,
   type PaceCurve,
   type HRCurve,
@@ -171,11 +171,11 @@ export class ActivitiesResource {
   /**
    * Get activity intervals.
    */
-  getIntervals(id: string | number): Promise<Result<IntervalsDTO, ApiError>> {
+  getIntervals(id: string | number): Promise<Result<IntervalsResponse, ApiError>> {
     return this.http.requestJson(
       `activity/${id}/intervals`,
       {},
-      decodeIntervalsDTO
+      decodeIntervalsResponse
     );
   }
 
@@ -188,7 +188,7 @@ export class ActivitiesResource {
     id: string | number,
     intervals: Interval[],
     options?: UpdateIntervalsOptions
-  ): Promise<Result<IntervalsDTO, ApiError>> {
+  ): Promise<Result<IntervalsResponse, ApiError>> {
     const searchParams: Record<string, string> = {};
     if (options?.all !== undefined) searchParams.all = String(options.all);
 
@@ -201,7 +201,7 @@ export class ActivitiesResource {
           ? searchParams
           : undefined,
       },
-      decodeIntervalsDTO
+      decodeIntervalsResponse
     );
   }
 
@@ -211,11 +211,11 @@ export class ActivitiesResource {
   deleteIntervals(
     id: string | number,
     intervals: Interval[]
-  ): Promise<Result<IntervalsDTO, ApiError>> {
+  ): Promise<Result<IntervalsResponse, ApiError>> {
     return this.http.requestJson(
       `activity/${id}/delete-intervals`,
       { method: "PUT", json: transformKeysToSnake(intervals) },
-      decodeIntervalsDTO
+      decodeIntervalsResponse
     );
   }
 
@@ -226,11 +226,11 @@ export class ActivitiesResource {
     id: string | number,
     intervalId: number,
     interval: Partial<Interval>
-  ): Promise<Result<IntervalsDTO, ApiError>> {
+  ): Promise<Result<IntervalsResponse, ApiError>> {
     return this.http.requestJson(
       `activity/${id}/intervals/${intervalId}`,
       { method: "PUT", json: transformKeysToSnake(interval) },
-      decodeIntervalsDTO
+      decodeIntervalsResponse
     );
   }
 
@@ -240,11 +240,11 @@ export class ActivitiesResource {
   splitInterval(
     id: string | number,
     splitAt: number
-  ): Promise<Result<IntervalsDTO, ApiError>> {
+  ): Promise<Result<IntervalsResponse, ApiError>> {
     return this.http.requestJson(
       `activity/${id}/split-interval`,
       { method: "PUT", searchParams: { splitAt: String(splitAt) } },
-      decodeIntervalsDTO
+      decodeIntervalsResponse
     );
   }
 
@@ -300,11 +300,11 @@ export class ActivitiesResource {
   updateStreams(
     id: string | number,
     streams: ActivityStream[]
-  ): Promise<Result<UpdateStreamsResult, ApiError>> {
+  ): Promise<Result<UpdateStreamsResponse, ApiError>> {
     return this.http.requestJson(
       `activity/${id}/streams`,
       { method: "PUT", json: transformKeysToSnake(streams) },
-      decodeUpdateStreamsResult
+      decodeUpdateStreamsResponse
     );
   }
 
@@ -314,7 +314,7 @@ export class ActivitiesResource {
   updateStreamsCsv(
     id: string | number,
     csv: string
-  ): Promise<Result<UpdateStreamsResult, ApiError>> {
+  ): Promise<Result<UpdateStreamsResponse, ApiError>> {
     return this.http.requestJson(
       `activity/${id}/streams.csv`,
       {
@@ -322,7 +322,7 @@ export class ActivitiesResource {
         headers: { "Content-Type": "text/csv" },
         body: csv,
       },
-      decodeUpdateStreamsResult
+      decodeUpdateStreamsResponse
     );
   }
 

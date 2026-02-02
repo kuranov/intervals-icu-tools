@@ -9,12 +9,12 @@ import {
   decodeEventTags,
   type Events,
   type Event,
-  type EventEx,
-  type DoomedEvent,
+  type EventInput,
+  type DeleteEventInput,
   type DeleteEventsResponse,
   type EventTags,
-  type ApplyPlanDTO,
-  type DuplicateEventsDTO,
+  type ApplyPlanInput,
+  type DuplicateEventsInput,
 } from "../schemas/event";
 import { transformKeysToSnake } from "../utils/transform";
 import { decodeActivity, type Activity } from "../schemas/activity";
@@ -134,7 +134,7 @@ export class EventsResource {
    */
   create(
     athleteId: string | number,
-    event: EventEx,
+    event: EventInput,
     options?: CreateEventOptions
   ): Promise<Result<Event, ApiError>> {
     const searchParams: Record<string, string> = {};
@@ -160,7 +160,7 @@ export class EventsResource {
   update(
     athleteId: string | number,
     eventId: number,
-    event: Partial<EventEx>
+    event: Partial<EventInput>
   ): Promise<Result<Event, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/events/${eventId}`,
@@ -196,7 +196,7 @@ export class EventsResource {
    */
   createMultiple(
     athleteId: string | number,
-    events: EventEx[],
+    events: EventInput[],
     options?: CreateMultipleEventsOptions
   ): Promise<Result<Events, ApiError>> {
     const searchParams: Record<string, string> = {};
@@ -227,7 +227,7 @@ export class EventsResource {
    */
   deleteBulk(
     athleteId: string | number,
-    events: DoomedEvent[]
+    events: DeleteEventInput[]
   ): Promise<Result<DeleteEventsResponse, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/events/bulk-delete`,
@@ -319,7 +319,7 @@ export class EventsResource {
    */
   applyPlan(
     athleteId: string | number,
-    data: ApplyPlanDTO
+    data: ApplyPlanInput
   ): Promise<Result<Events, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/events/apply-plan`,
@@ -333,7 +333,7 @@ export class EventsResource {
    */
   duplicateEvents(
     athleteId: string | number,
-    data: DuplicateEventsDTO
+    data: DuplicateEventsInput
   ): Promise<Result<Events, ApiError>> {
     return this.http.requestJson(
       `athlete/${athleteId}/duplicate-events`,

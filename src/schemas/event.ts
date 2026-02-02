@@ -103,8 +103,8 @@ export type Event = CamelCaseKeys<v.InferOutput<typeof EventSchemaRaw>>;
 export const EventsSchema = v.array(EventSchema);
 export type Events = Event[];
 
-// EventEx schema (for create/update - includes file upload fields, raw)
-const EventExSchemaRaw = v.looseObject({
+// EventInput schema (for create/update - includes file upload fields, raw)
+const EventInputSchemaRaw = v.looseObject({
   // Base event fields
   category: v.nullish(v.string()),
   start_date_local: v.nullish(v.string()),
@@ -129,17 +129,17 @@ const EventExSchemaRaw = v.looseObject({
   file_contents_base64: v.nullish(v.string()),
 });
 
-export const EventExSchema = v.pipe(EventExSchemaRaw, v.transform(transformKeys));
-export type EventEx = CamelCaseKeys<v.InferOutput<typeof EventExSchemaRaw>>;
+export const EventInputSchema = v.pipe(EventInputSchemaRaw, v.transform(transformKeys));
+export type EventInput = CamelCaseKeys<v.InferOutput<typeof EventInputSchemaRaw>>;
 
-// DoomedEvent schema (for bulk delete, raw)
-const DoomedEventSchemaRaw = v.looseObject({
+// DeleteEventInput schema (for bulk delete, raw)
+const DeleteEventInputSchemaRaw = v.looseObject({
   id: v.nullish(v.number()),
   external_id: v.nullish(v.string()),
 });
 
-export const DoomedEventSchema = v.pipe(DoomedEventSchemaRaw, v.transform(transformKeys));
-export type DoomedEvent = CamelCaseKeys<v.InferOutput<typeof DoomedEventSchemaRaw>>;
+export const DeleteEventInputSchema = v.pipe(DeleteEventInputSchemaRaw, v.transform(transformKeys));
+export type DeleteEventInput = CamelCaseKeys<v.InferOutput<typeof DeleteEventInputSchemaRaw>>;
 
 // DeleteEventsResponse schema (raw)
 const DeleteEventsResponseSchemaRaw = v.looseObject({
@@ -153,8 +153,8 @@ export type DeleteEventsResponse = CamelCaseKeys<v.InferOutput<typeof DeleteEven
 export const EventTagsSchema = v.array(v.string());
 export type EventTags = v.InferOutput<typeof EventTagsSchema>;
 
-// ApplyPlanDTO schema (for applying a plan to calendar, raw)
-const ApplyPlanDTOSchemaRaw = v.looseObject({
+// ApplyPlanInput schema (for applying a plan to calendar, raw)
+const ApplyPlanInputSchemaRaw = v.looseObject({
   folder_id: v.number(),
   oldest: v.string(),
   newest: v.string(),
@@ -162,18 +162,18 @@ const ApplyPlanDTOSchemaRaw = v.looseObject({
   update_plan_applied: v.nullish(v.boolean()),
 });
 
-export const ApplyPlanDTOSchema = v.pipe(ApplyPlanDTOSchemaRaw, v.transform(transformKeys));
-export type ApplyPlanDTO = CamelCaseKeys<v.InferOutput<typeof ApplyPlanDTOSchemaRaw>>;
+export const ApplyPlanInputSchema = v.pipe(ApplyPlanInputSchemaRaw, v.transform(transformKeys));
+export type ApplyPlanInput = CamelCaseKeys<v.InferOutput<typeof ApplyPlanInputSchemaRaw>>;
 
-// DuplicateEventsDTO schema (for duplicating events, raw)
-const DuplicateEventsDTOSchemaRaw = v.looseObject({
+// DuplicateEventsInput schema (for duplicating events, raw)
+const DuplicateEventsInputSchemaRaw = v.looseObject({
   event_ids: v.array(v.number()),
   offset_days: v.number(),
   copy_to_athlete_id: v.nullish(v.union([v.string(), v.number()])),
 });
 
-export const DuplicateEventsDTOSchema = v.pipe(DuplicateEventsDTOSchemaRaw, v.transform(transformKeys));
-export type DuplicateEventsDTO = CamelCaseKeys<v.InferOutput<typeof DuplicateEventsDTOSchemaRaw>>;
+export const DuplicateEventsInputSchema = v.pipe(DuplicateEventsInputSchemaRaw, v.transform(transformKeys));
+export type DuplicateEventsInput = CamelCaseKeys<v.InferOutput<typeof DuplicateEventsInputSchemaRaw>>;
 
 // Decoder functions (internal use)
 export function decodeEvents(data: unknown): Events {

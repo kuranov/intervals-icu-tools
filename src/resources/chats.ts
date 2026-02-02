@@ -11,7 +11,7 @@ import {
   type Chats,
   type Message,
   type Messages,
-  type NewMessageDTO,
+  type CreateMessageInput,
 } from "../schemas/chat";
 import { transformKeysToSnake } from "../utils/transform";
 
@@ -72,7 +72,7 @@ export class ChatsResource {
   /**
    * Send a message to a chat.
    */
-  sendMessage(data: NewMessageDTO): Promise<Result<Message, ApiError>> {
+  sendMessage(data: CreateMessageInput): Promise<Result<Message, ApiError>> {
     return this.http.requestJson(
       "chats/send-message",
       { method: "POST", json: transformKeysToSnake(data) },
