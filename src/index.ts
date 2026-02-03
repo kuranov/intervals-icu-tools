@@ -31,6 +31,19 @@ export type {
   HRCurve,
 } from "./schemas/activity";
 
+// Decoder functions for Activities (useful for webhook payload parsing)
+export {
+  decodeActivity,
+  decodeActivities,
+  decodeIntervalsResponse,
+  decodeActivityId,
+  decodeActivityStreams,
+  decodeUpdateStreamsResponse,
+  decodePowerCurve,
+  decodePaceCurve,
+  decodeHRCurve,
+} from "./schemas/activity";
+
 // Data types - Events
 export type {
   Event,
@@ -41,6 +54,14 @@ export type {
   EventTags,
   ApplyPlanInput,
   DuplicateEventsInput,
+} from "./schemas/event";
+
+// Decoder functions for Events
+export {
+  decodeEvent,
+  decodeEvents,
+  decodeDeleteEventsResponse,
+  decodeEventTags,
 } from "./schemas/event";
 
 // Data types - Athletes
@@ -54,11 +75,26 @@ export type {
   AthleteSummary,
 } from "./schemas/athlete";
 
+// Decoder functions for Athletes
+export {
+  decodeAthlete,
+  decodeWithSportSettings,
+  decodeAthleteSettings,
+  decodeAthleteProfile,
+  decodeAthleteSummary,
+} from "./schemas/athlete";
+
 // Data types - Wellness
 export type {
   Wellness,
   WellnessList,
   SportInfo,
+} from "./schemas/wellness";
+
+// Decoder functions for Wellness
+export {
+  decodeWellness,
+  decodeWellnessList,
 } from "./schemas/wellness";
 
 // Data types - Library
@@ -70,6 +106,15 @@ export type {
   WorkoutTags,
 } from "./schemas/library";
 
+// Decoder functions for Library
+export {
+  decodeWorkout,
+  decodeWorkouts,
+  decodeFolder,
+  decodeFolders,
+  decodeWorkoutTags,
+} from "./schemas/library";
+
 // Data types - Chats
 export type {
   Chat,
@@ -77,6 +122,14 @@ export type {
   Message,
   Messages,
   CreateMessageInput,
+} from "./schemas/chat";
+
+// Decoder functions for Chats
+export {
+  decodeChat,
+  decodeChats,
+  decodeMessage,
+  decodeMessages,
 } from "./schemas/chat";
 
 // Common schemas
