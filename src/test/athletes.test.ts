@@ -79,6 +79,34 @@ describe('AthletesResource', () => {
       }
     });
 
+    test('update icuNotes and icuTags: sends snake_case to API', async () => {
+      server.use(
+        http.put(`${baseUrl}/athlete/123`, async ({ request }) => {
+          const body = (await request.json()) as { icu_notes: string; icu_tags: string[] };
+          expect(body.icu_notes).toBe('Some notes about the athlete');
+          expect(body.icu_tags).toEqual(['tag1', 'tag2']);
+          return HttpResponse.json({
+            id: 123,
+            name: 'Test Athlete',
+            icu_notes: 'Some notes about the athlete',
+            icu_tags: ['tag1', 'tag2'],
+          });
+        }),
+      );
+
+      const client = new IntervalsClient({ auth: { type: 'apiKey', apiKey: 'test' } });
+      const result = await client.athletes.update(123, {
+        icuNotes: 'Some notes about the athlete',
+        icuTags: ['tag1', 'tag2'],
+      });
+
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.value.icuNotes).toBe('Some notes about the athlete');
+        expect(result.value.icuTags).toEqual(['tag1', 'tag2']);
+      }
+    });
+
     test('partial update: updates only specified fields', async () => {
       server.use(
         http.put(`${baseUrl}/athlete/123`, async ({ request }) => {

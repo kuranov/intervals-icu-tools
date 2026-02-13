@@ -69,6 +69,8 @@ const AthleteSchemaRaw = v.looseObject({
   // Preferences
   currency: v.nullish(v.string()),
   icu_wellness_keys: v.nullish(v.array(v.string())),
+  icu_notes: v.nullish(v.string()),
+  icu_tags: v.nullish(v.array(v.string())),
 });
 
 export const AthleteSchema = v.pipe(AthleteSchemaRaw, v.transform(transformKeys));
@@ -85,6 +87,8 @@ const UpdateAthleteInputSchemaRaw = v.looseObject({
   city: v.nullish(v.string()),
   country: v.nullish(v.string()),
   timezone: v.nullish(v.string()),
+  icu_notes: v.nullish(v.string()),
+  icu_tags: v.nullish(v.array(v.string())),
 });
 
 export const UpdateAthleteInputSchema = v.pipe(UpdateAthleteInputSchemaRaw, v.transform(transformKeys));
