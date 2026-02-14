@@ -67,7 +67,7 @@ const client = new IntervalsClient({
 });
 
 // List recent activities
-const result = await client.activities.list(0, {
+const result = await client.activities.list("i12345", {
   oldest: '2024-01-01',
   limit: 10,
 });
@@ -243,17 +243,17 @@ const split = await client.activities.splitInterval(123456, 150);
 
 ```ts
 // List events (planned workouts, notes, etc.)
-const events = await client.events.list(0, {
+const events = await client.events.list("i12345", {
   oldest: '2024-01-01',
   newest: '2024-01-31',
   category: ['WORKOUT', 'NOTES'],
 });
 
 // Get a single event
-const event = await client.events.get(0, 789);
+const event = await client.events.get("i12345", 789);
 
 // Create an event
-const newEvent = await client.events.create(0, {
+const newEvent = await client.events.create("i12345", {
   name: 'Morning Workout',
   category: 'WORKOUT',
   start_date_local: '2024-01-15',
@@ -261,21 +261,21 @@ const newEvent = await client.events.create(0, {
 });
 
 // Update an event
-const updated = await client.events.update(0, 789, {
+const updated = await client.events.update("i12345", 789, {
   name: 'Updated Workout Name',
 });
 
 // Delete an event
-const deleted = await client.events.delete(0, 789);
+const deleted = await client.events.delete("i12345", 789);
 
 // Bulk create events
-const bulkEvents = await client.events.createMultiple(0, [
+const bulkEvents = await client.events.createMultiple("i12345", [
   { name: 'Workout 1', start_date_local: '2024-01-15', category: 'WORKOUT' },
   { name: 'Workout 2', start_date_local: '2024-01-16', category: 'WORKOUT' },
 ]);
 
 // Bulk delete events
-const bulkDeleted = await client.events.deleteBulk(0, [
+const bulkDeleted = await client.events.deleteBulk("i12345", [
   { id: 100 },
   { id: 101 },
   { external_id: 'external-123' },
@@ -283,39 +283,39 @@ const bulkDeleted = await client.events.deleteBulk(0, [
 
 // Update multiple events in a date range
 const updatedRange = await client.events.updateMultiple(
-  0,
+  "i12345",
   { hide_from_athlete: true },
   { oldest: '2024-01-01', newest: '2024-01-31' }
 );
 
 // List event tags
-const tags = await client.events.listTags(0);
+const tags = await client.events.listTags("i12345");
 ```
 
 ### Working with athletes
 
 ```ts
 // Get athlete with sport settings
-const athlete = await client.athletes.get(0);
+const athlete = await client.athletes.get("i12345");
 if (athlete.ok) {
   console.log(athlete.value.name);
   console.log(athlete.value.sportSettings);
 }
 
 // Update athlete
-const updated = await client.athletes.update(123, {
+const updated = await client.athletes.update("i12345", {
   name: 'Updated Name',
   weight: 72,
   timezone: 'America/New_York',
 });
 
 // Get athlete settings for a device
-const desktopSettings = await client.athletes.getSettings(0, 'desktop');
-const phoneSettings = await client.athletes.getSettings(0, 'phone');
-const tabletSettings = await client.athletes.getSettings(0, 'tablet');
+const desktopSettings = await client.athletes.getSettings("i12345", 'desktop');
+const phoneSettings = await client.athletes.getSettings("i12345", 'phone');
+const tabletSettings = await client.athletes.getSettings("i12345", 'tablet');
 
 // Get athlete profile (includes FTP, thresholds, etc.)
-const profile = await client.athletes.getProfile(0);
+const profile = await client.athletes.getProfile("i12345");
 if (profile.ok) {
   console.log(`FTP: ${profile.value.ftp}`);
   console.log(`Max HR: ${profile.value.maxHeartrate}`);
@@ -323,7 +323,7 @@ if (profile.ok) {
 }
 
 // Get athlete summary (CTL, ATL, TSB, etc.)
-const summary = await client.athletes.getSummary(0, {
+const summary = await client.athletes.getSummary("i12345", {
   start: '2024-01-01',
   end: '2024-01-31',
   tags: ['cycling', 'running'],
@@ -339,7 +339,7 @@ if (summary.ok) {
 
 ```ts
 // List wellness records for a date range
-const records = await client.wellness.list(0, {
+const records = await client.wellness.list("i12345", {
   oldest: '2024-01-01',
   newest: '2024-01-31',
 });
@@ -350,7 +350,7 @@ if (records.ok) {
 }
 
 // Get wellness for a specific date
-const wellness = await client.wellness.get(0, '2024-01-15');
+const wellness = await client.wellness.get("i12345", '2024-01-15');
 if (wellness.ok) {
   console.log(`Weight: ${wellness.value.weight}kg`);
   console.log(`Resting HR: ${wellness.value.restingHR}bpm`);
@@ -359,7 +359,7 @@ if (wellness.ok) {
 }
 
 // Update wellness for a date
-const updated = await client.wellness.update(0, '2024-01-15', {
+const updated = await client.wellness.update("i12345", '2024-01-15', {
   weight: 71.5,
   sleepSecs: 28800, // 8 hours
   soreness: 3,
@@ -369,7 +369,7 @@ const updated = await client.wellness.update(0, '2024-01-15', {
 });
 
 // Bulk update multiple wellness records
-const bulkUpdate = await client.wellness.updateBulk(0, [
+const bulkUpdate = await client.wellness.updateBulk("i12345", [
   { id: '2024-01-15', weight: 70.5, restingHR: 55 },
   { id: '2024-01-16', weight: 70.3, restingHR: 54 },
   { id: '2024-01-17', weight: 70.1, restingHR: 53 },
@@ -438,7 +438,7 @@ const newTokens = await refreshResponse.json();
 
 ```ts
 // List all workouts in your library
-const workouts = await client.library.listWorkouts(0);
+const workouts = await client.library.listWorkouts("i12345");
 if (workouts.ok) {
   workouts.value.forEach((w) => {
     console.log(`${w.name} (${w.activityType})`);
@@ -446,14 +446,14 @@ if (workouts.ok) {
 }
 
 // Get a specific workout
-const workout = await client.library.getWorkout(0, 123);
+const workout = await client.library.getWorkout("i12345", 123);
 if (workout.ok) {
   console.log(`Workout: ${workout.value.name}`);
   console.log(`Description: ${workout.value.description}`);
 }
 
 // Create a new workout
-const newWorkout = await client.library.createWorkout(0, {
+const newWorkout = await client.library.createWorkout("i12345", {
   name: '5x5min @ FTP',
   description: '5 x 5min @ FTP with 3min recovery',
   folder_id: 10,
@@ -462,22 +462,22 @@ const newWorkout = await client.library.createWorkout(0, {
 });
 
 // Update a workout
-const updated = await client.library.updateWorkout(0, 123, {
+const updated = await client.library.updateWorkout("i12345", 123, {
   name: 'Updated Workout Name',
   description: 'New description',
 });
 
 // Delete a workout
-const deleted = await client.library.deleteWorkout(0, 123);
+const deleted = await client.library.deleteWorkout("i12345", 123);
 
 // Create multiple workouts at once
-const bulkWorkouts = await client.library.createMultipleWorkouts(0, [
+const bulkWorkouts = await client.library.createMultipleWorkouts("i12345", [
   { name: 'Workout 1', folder_id: 10, activity_type: 'Ride' },
   { name: 'Workout 2', folder_id: 10, activity_type: 'Ride' },
 ]);
 
 // List folders and plans
-const folders = await client.library.listFolders(0);
+const folders = await client.library.listFolders("i12345");
 if (folders.ok) {
   folders.value.forEach((f) => {
     console.log(`${f.name} (${f.type})`);
@@ -486,7 +486,7 @@ if (folders.ok) {
 }
 
 // Create a folder
-const newFolder = await client.library.createFolder(0, {
+const newFolder = await client.library.createFolder("i12345", {
   type: 'FOLDER',
   name: 'Cycling Workouts',
   description: 'My cycling library',
@@ -494,7 +494,7 @@ const newFolder = await client.library.createFolder(0, {
 });
 
 // Create a training plan
-const newPlan = await client.library.createFolder(0, {
+const newPlan = await client.library.createFolder("i12345", {
   type: 'PLAN',
   name: 'Base Building Plan',
   description: '12-week aerobic base',
@@ -506,16 +506,16 @@ const newPlan = await client.library.createFolder(0, {
 });
 
 // Update a folder
-const updatedFolder = await client.library.updateFolder(0, 10, {
+const updatedFolder = await client.library.updateFolder("i12345", 10, {
   name: 'Updated Folder Name',
   description: 'New description',
 });
 
 // Delete a folder
-const deletedFolder = await client.library.deleteFolder(0, 10);
+const deletedFolder = await client.library.deleteFolder("i12345", 10);
 
 // List all workout tags
-const tags = await client.library.listTags(0);
+const tags = await client.library.listTags("i12345");
 if (tags.ok) {
   console.log('Tags:', tags.value.join(', '));
 }
